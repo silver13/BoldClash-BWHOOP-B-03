@@ -1,15 +1,14 @@
 #include "config.h"
 
-#ifdef FURIBEE_6MM_8K
+#ifdef BOLDCLASH_716MM_8K
 
 float motormap(float input)
 {
 	// this is a thrust to pwm function
 	//  float 0 to 1 input and output
 	// output can go negative slightly
-	// measured eachine motors and prop, stock battery
+    // boldclash f03 with 716 motors ant 4 blade prop
 	// a*x^2 + b*x + c
-	// a = 0.262 , b = 0.771 , c = -0.0258
 
 	if (input > 1)
 		input = 1;

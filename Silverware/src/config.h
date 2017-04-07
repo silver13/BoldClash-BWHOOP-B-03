@@ -148,7 +148,7 @@
 #define MOTOR_FILTER
 
 // clip feedforward attempts to resolve issues that occur near full throttle
-//#define CLIP_FF
+#define CLIP_FF
 
 // pwm frequency for motor control
 // a higher frequency makes the motors more linear
@@ -162,7 +162,7 @@
 //#define MOTOR_CURVE_6MM_490HZ
 //#define MOTOR_CURVE_85MM_8KHZ
 //#define MOTOR_CURVE_85MM_32KHZ
-#define FURIBEE_6MM_8K
+#define BOLDCLASH_716MM_8K
 
 #define THROTTLE_TRANSIENT_COMPENSATION
 
