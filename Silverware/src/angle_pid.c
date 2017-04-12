@@ -8,10 +8,12 @@
 
 #define APIDNUMBER 2
 
-//                             ANGLE PIDS      
+// ANGLE PIDS - used in level mode
+// acro pids are also used at the same time in level mode
+
 // yaw is done by the rate yaw pid
 // Kp                       ROLL     PITCH  
-float apidkp[APIDNUMBER] = { 11e-2, 11e-2 };
+float apidkp[APIDNUMBER] = { 7e-2, 7e-2 };
 
 // Ki                        ROLL     PITCH  
 float apidki[APIDNUMBER] = { 0e-2, 0e-2 };   

@@ -348,6 +348,8 @@ float min = score[0];
 			minindex = i;
 		}
 }
+// add an offset because it seems to be usually early
+minindex++;
 
 #undef VDROP_FACTOR
 #define VDROP_FACTOR  minindex * 0.1f
