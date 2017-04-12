@@ -56,15 +56,15 @@
 // i2c driver to use ( dummy - disables i2c )
 // hardware i2c used PB6 and 7 by default ( can also use PA9 and 10)
 
-#define USE_HARDWARE_I2C
-//#define USE_SOFTWARE_I2C
+//#define USE_HARDWARE_I2C
+#define USE_SOFTWARE_I2C
 //#define USE_DUMMY_I2C
 
 // I2C speed: fast = no delays 
 // slow1 = for i2c without pull-up resistors
 // slow2 = i2c failsafe speed
-//#define SOFTI2C_SPEED_FAST
-#define SOFTI2C_SPEED_SLOW1
+#define SOFTI2C_SPEED_FAST
+//#define SOFTI2C_SPEED_SLOW1
 //#define SOFTI2C_SPEED_SLOW2
 
 // hardware i2c speed ( 1000, 400 , 200 , 100Khz)
