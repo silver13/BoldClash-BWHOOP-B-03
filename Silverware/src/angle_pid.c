@@ -18,6 +18,9 @@ float apidkp[APIDNUMBER] = { 7e-2, 7e-2 };
 // Ki                        ROLL     PITCH  
 float apidki[APIDNUMBER] = { 0e-2, 0e-2 };   
 
+// Kd
+float apidkd[APIDNUMBER] = { 5e-2, 5e-2 }; 
+
 // code variables below
 
 // rate limit
@@ -33,6 +36,8 @@ extern float gyro[3];
 float aierror[APIDNUMBER] = { 0, 0};
 float apidoutput[APIDNUMBER];
 float angleerror[3];
+
+float lasterror[APIDNUMBER];
 
 float apid(int x)
 {
@@ -67,7 +72,10 @@ float apid(int x)
 	// I term       
 	apidoutput[x] += aierror[x];
 
-
+extern float timefactor;
+      
+    apidoutput[x] = apidoutput[x] - (angleerror[x] - lasterror[x]) * apidkd[x] * timefactor  ;
+    lasterror[x] = angleerror[x];
 
 	limitf(&apidoutput[x], OUTLIMIT_FLOAT);
 
