@@ -7,6 +7,7 @@ typedef struct debug
 	float adcfilt;
 	float totaltime;	
 	float timefilt;
+    float adcreffilt;
 } debug_type;
 
 

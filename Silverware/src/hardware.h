@@ -46,12 +46,10 @@
 // invert - leds turn on when high
 #define LED1_INVERT
 #define LED2_INVERT
-//#define LED3_INVERT
-//#define LED4_INVERT
+
 
 // softi2c pins definitons:
 // sda - out/in , sck - out
-
 
 // i2c driver to use ( dummy - disables i2c )
 // hardware i2c used PB6 and 7 by default ( can also use PA9 and 10)
@@ -120,13 +118,11 @@
 #define BATTERYPORT GPIOA
 #define BATTERY_ADC_CHANNEL ADC_Channel_5
 
-// divider setting for adc uses 2 measurements
-// the adc readout can be found in debug mode , debug.adcfilt
-// #enable DEBUG should be in config.h
 // default for 1/2 divider
-#define ADC_BATT_VOLTAGE 3.67
-#define ADC_READOUT 2727.0
+// change this factor to get a correct battery voltage
+#define ADC_SCALEFACTOR 0.001364
 
+#define ADC_VREF_SCALE
 
 // SPI PINS DEFINITONS ( for radio ic )
 // MOSI , CLK , SS - outputs , MISO input

@@ -164,7 +164,7 @@
 //#define MOTOR_CURVE_85MM_32KHZ
 #define BOLDCLASH_716MM_8K
 
-#define THROTTLE_TRANSIENT_COMPENSATION
+//#define THROTTLE_TRANSIENT_COMPENSATION
 
 // lost quad beeps using motors (30 sec timeout)
 //#define MOTOR_BEEPS

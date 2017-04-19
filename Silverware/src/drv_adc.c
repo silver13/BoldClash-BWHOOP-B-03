@@ -16,6 +16,20 @@ extern debug_type debug;
 #define ADC_READOUT 2727
 #endif
 
+typedef struct {
+__IO uint16_t word1;
+__IO uint16_t word2;
+
+} adcrefcal;
+
+
+uint16_t adcref_read(adcrefcal* adcref_address) {
+return adcref_address ->word1;
+}
+
+
+float vref_cal;
+
 void adc_init(void)
 {	 
   ADC_InitTypeDef     ADC_InitStructure;
@@ -65,8 +79,9 @@ void adc_init(void)
 	
   ADC_ChannelConfig(ADC1, ADC_Channel_Vrefint , ADC_SampleTime_239_5Cycles); 
  
-	ADC_ChannelConfig(ADC1, BATTERY_ADC_CHANNEL , ADC_SampleTime_239_5Cycles); 
+  ADC_ChannelConfig(ADC1, BATTERY_ADC_CHANNEL , ADC_SampleTime_239_5Cycles); 
 
+  ADC_VrefintCmd(ENABLE);
 	
   ADC_GetCalibrationFactor(ADC1);
   
@@ -75,6 +90,11 @@ void adc_init(void)
   ADC_StartOfConversion(ADC1);
 	
   DMA_Cmd(DMA1_Channel1, ENABLE);
+ 
+ // reference is measured a 3.3v, we are powered by 2.8, so a 1.17 multiplier
+ // different vccs will translate to a different adc scale factor,
+ // so actual vcc is not important as long as the voltage is correct in the end 
+  vref_cal =  1.17857f * (float) ( adcref_read ((adcrefcal *) 0x1FFFF7BA) );
 }
 
 float adc_read(int channel)
@@ -84,12 +104,14 @@ float adc_read(int channel)
 		case 0:
 		#ifdef DEBUG
 		lpf(&debug.adcfilt , (float) adcarray[0] , 0.998);
-		#endif
-		//return mapf( (float) adcarray[0] , 2727.0 , 3050.0 , 3.77 , 4.22);	
-		return (float) adcarray[0] * ((float)(ADC_BATT_VOLTAGE)/(float) (ADC_READOUT)) ;
+		#endif	
+		return (float) adcarray[0] * ((float) ADC_SCALEFACTOR) ;
 		
 		case 1:
-		return adcarray[1];
+        #ifdef DEBUG
+        lpf(&debug.adcreffilt , (float) adcarray[1] , 0.998);
+        #endif	
+		return vref_cal / (float) adcarray[1];
 		
 		default:			
 	  return 0;
@@ -112,7 +134,7 @@ float adc_read(int channel)
 		return 4.20f;	
 		
 		case 1:
-		return adcarray[1];
+		return 1.0f;
 		
 		default:			
 	  return 0;

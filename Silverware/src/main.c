@@ -85,6 +85,7 @@ float looptime;
 float vbattfilt = 0.0;
 float vbatt = 4.2;
 float vbatt_comp = 4.2;
+float vreffilt = 1.0;
 
 unsigned int lastlooptime;
 // signal for lowbattery
@@ -169,21 +170,12 @@ aux[CH_AUX1] = 1;
 #endif
 	rx_init();
 
-/*
-if ( RCC->CSR & 0x80000000 )
-{
-	// low power reset flag
-	// not functioning
-	failloop(3);
-}
-*/
 	
 int count = 0;
 	
 while ( count < 64 )
 {
 	vbattfilt += adc_read(0);
-//	startvref += adc_read(1);
 	delay(1000);
 	count++;
 }
@@ -284,8 +276,12 @@ if ( liberror )
 		
 		extern void imu_calc(void);		
 		imu_calc();		
-
-		float battadc = adc_read(0);
+#ifdef ADC_VREF_SCALE
+		float battadc = adc_read(0)*vreffilt; 
+        lpf ( &vreffilt , adc_read(1)  , 0.9968f);	
+#else
+        float battadc = adc_read(0); 
+#endif        
 		vbatt = battadc;
 		
 // all flight calculations and motors
@@ -298,11 +294,7 @@ if ( liberror )
 		// average of all 4 motor thrusts
 		// should be proportional with battery current			
 		extern float thrsum; // from control.c
-		
-		//vref = startvref / adc_read(1) ;
-		
-	//	lpf ( &vref, startvref / adc_read(1) , 0.9968f );
-		
+	
 		// filter motorpwm so it has the same delay as the filtered voltage
 		// ( or they can use a single filter)		
 		lpf ( &thrfilt , thrsum , 0.9968f);	// 0.5 sec at 1.6ms loop time	
