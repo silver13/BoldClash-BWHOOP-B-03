@@ -147,7 +147,7 @@
 //#define SOFTSPI_4WIRE
 
 // check for radio chip ( 3 times flash = not found)
-//#define RADIO_CHECK
+#define RADIO_CHECK
 
 // radio type
 #define XN297L_3WIRE
