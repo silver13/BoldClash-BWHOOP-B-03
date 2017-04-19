@@ -1,5 +1,5 @@
-TARGET=h8blue
-EXECUTABLE=h8blue.elf
+TARGET=bwhoop
+EXECUTABLE=bwhoop.elf
 
 CC=arm-none-eabi-gcc
 LD=arm-none-eabi-gcc
