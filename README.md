@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/silver13/H8mini_blue_board.svg?branch=master)](https://travis-ci.org/silver13/H8mini_blue_board)
+[![Build Status](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03.svg?branch=master)](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03)
 
 ### BoldClash BWHOOP B-03
 
