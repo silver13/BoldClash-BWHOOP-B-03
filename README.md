@@ -5,11 +5,13 @@
 
 ### work in progress
 
+The CLK and DAT pads on the board are marked in reverse. The same pads in the connector are marked correctly. The connector is wired ( Batt+) ( Gnd ) ( DAT ) ( SCK ) . It's a Microjst 1.25 pitch connector. Don't wire positive to st-link as you may overcharge the battery if conencted or damage st-link.
+
 
 The programming has the "keil usb bug" and as such it needs a workaround.
 
 
-Specific Blue instructions:
+Specific Blue instructions ( same flashing procedure):
 https://www.rcgroups.com/forums/showthread.php?2721755-H8-blue-board-flashing-instructions#post35501995
 
 
