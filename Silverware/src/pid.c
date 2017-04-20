@@ -38,16 +38,17 @@ THE SOFTWARE.
 
 #include "defines.h"
 
-
+// current pid tuning by SirDomsen
+// for boldclash BWHOOP B-03
 
 // Kp											ROLL       PITCH     YAW
-float pidkp[PIDNUMBER] = { 17.0e-2 , 17.0e-2  , 10e-1 }; 
+float pidkp[PIDNUMBER] = { 12.0e-2 , 16.7e-2  , 6e-1 }; 
 
 // Ki											ROLL       PITCH     YAW
-float pidki[PIDNUMBER] = { 10e-1  , 10e-1 , 5e-1 };	
+float pidki[PIDNUMBER] = { 9e-1  , 5e-1 , 3e-1 };	
 
 // Kd											ROLL       PITCH     YAW
-float pidkd[PIDNUMBER] = { 15.0e-1 , 15.0e-1  , 0.0e-1 };	
+float pidkd[PIDNUMBER] = { 6.0e-1 , 15.40e-1  , 5.0e-1 };	
 
 
 
@@ -56,10 +57,10 @@ float pidkd[PIDNUMBER] = { 15.0e-1 , 15.0e-1  , 0.0e-1 };
 
 
 // output limit			
-const float outlimit[PIDNUMBER] = { 0.5 , 0.5 , 0.4 };
+const float outlimit[PIDNUMBER] = { 0.8 , 0.8 , 0.4 };
 
 // limit of integral term (abs)
-const float integrallimit[PIDNUMBER] = { 0.5 , 0.5 , 0.4 };
+const float integrallimit[PIDNUMBER] = { 0.8 , 0.8 , 0.4 };
 
 
 
