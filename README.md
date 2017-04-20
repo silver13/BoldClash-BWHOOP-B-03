@@ -1,15 +1,17 @@
-[![Build Status](https://travis-ci.org/silver13/H8mini_blue_board.svg?branch=master)](https://travis-ci.org/silver13/H8mini_blue_board)
+[![Build Status](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03.svg?branch=master)](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03)
 
 ### BoldClash BWHOOP B-03
 
+Currently does not account for centered throttle! ( no altitude hold )
 
 ### work in progress
+Programming connector is a Microjst 1.25 pitch connector. Don't wire positive to st-link as you may overcharge the battery if connected or damage st-link.
 
 
-The programming has the "keil usb bug" and as such it needs a workaround.
+The programming has the "keil usb bug" and as such it needs a workaround. The bug concerns windows only.
 
 
-Specific Blue instructions:
+Specific instructions same as: BlueH8 instructions:
 https://www.rcgroups.com/forums/showthread.php?2721755-H8-blue-board-flashing-instructions#post35501995
 
 
