@@ -5,7 +5,7 @@
 Currently does not account for centered throttle! ( no altitude hold )
 
 ### work in progress
-Programming connector is a Microjst 1.25 pitch connector. Don't wire positive to st-link as you may overcharge the battery if conencted or damage st-link.
+Programming connector is a Microjst 1.25 pitch connector. Don't wire positive to st-link as you may overcharge the battery if connected or damage st-link.
 
 
 The programming has the "keil usb bug" and as such it needs a workaround. The bug concerns windows only.
