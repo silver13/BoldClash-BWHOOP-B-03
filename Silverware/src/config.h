@@ -153,16 +153,16 @@
 // pwm frequency for motor control
 // a higher frequency makes the motors more linear
 // in Hz
-#define PWMFREQ 8000
+#define PWMFREQ 32000
 
 // motor curve to use
 // the pwm frequency has to be set independently
 // 720motors - use 8khz and curve none.
-//#define MOTOR_CURVE_NONE
+#define MOTOR_CURVE_NONE
 //#define MOTOR_CURVE_6MM_490HZ
 //#define MOTOR_CURVE_85MM_8KHZ
 //#define MOTOR_CURVE_85MM_32KHZ
-#define BOLDCLASH_716MM_8K
+//#define BOLDCLASH_716MM_8K
 
 //#define THROTTLE_TRANSIENT_COMPENSATION
 
@@ -231,7 +231,7 @@
 #define TRIM_ROLL 0.0
 
 // disable motors for testing
-// #define NOMOTORS
+//#define NOMOTORS
 
 // throttle direct to motors for thrust measure
 // #define MOTORS_TO_THROTTLE
