@@ -47,7 +47,7 @@
 // in volts
 #define VDROP_FACTOR 0.7
 
-#define AUTO_VDROP_FACTOR
+//#define AUTO_VDROP_FACTOR
 
 // voltage hysteresys
 // in volts
