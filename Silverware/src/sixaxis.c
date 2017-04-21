@@ -42,6 +42,12 @@ THE SOFTWARE.
 
 #include "debug.h"
 
+
+
+// this works only on newer boards (non mpu-6050)
+// on older boards the hw gyro setting controls the acc as well
+#define ACC_LOW_PASS_FILTER 5
+
 extern debug_type debug;
 
 // temporary fix for compatibility between versions
@@ -49,7 +55,7 @@ extern debug_type debug;
 #define GYRO_ID_1 0x68 
 #endif
 #ifndef GYRO_ID_2
-#define GYRO_ID_2 0x78
+#define GYRO_ID_2 0x98
 #endif
 #ifndef GYRO_ID_3
 #define GYRO_ID_3 0x7D
@@ -94,9 +100,7 @@ int sixaxis_check( void)
 	#ifndef DISABLE_GYRO_CHECK
 	// read "who am I" register
 	int id = i2c_readreg( 117 );
-	// new board returns 78h (unknown gyro maybe mpu-6500 compatible) marked m681
-	// old board returns 68h (mpu - 6050)
-	// a new (rare) gyro marked m540 returns 7Dh
+
 	#ifdef DEBUG
 	debug.gyroid = id;
 	#endif

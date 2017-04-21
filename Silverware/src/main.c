@@ -350,7 +350,9 @@ minindex++;
 		if ( lowbatt ) hyst = HYST;
 		else hyst = 0.0f;
 		
-		if ( vbattfilt + (float) VDROP_FACTOR * thrfilt <(float) VBATTLOW + hyst ) lowbatt = 1;
+		if (( vbattfilt + (float) VDROP_FACTOR * thrfilt <(float) VBATTLOW + hyst )
+            || ( vbattfilt < ( float ) VBATTLOW_MIN ) )
+            lowbatt = 1;
 		else lowbatt = 0;
 
 	vbatt_comp = vbattfilt + (float) VDROP_FACTOR * thrfilt; 	

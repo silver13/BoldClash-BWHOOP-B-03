@@ -39,6 +39,8 @@
 // volts
 #define VBATTLOW 3.5
 
+// lvc starts flashing under this raw value regardless of throttle
+#define VBATTLOW_MIN 2.7
 // compensation for battery voltage vs throttle drop
 // increase if battery low comes on at max throttle
 // decrease if battery low warning goes away at high throttle
@@ -54,12 +56,17 @@
 
 
 // lower throttle when battery below treshold
-#define LVC_PREVENT_RESET
+//#define LVC_PREVENT_RESET
 
 // threshold for above (volts)
 #define LVC_PREVENT_RESET_VOLTAGE 2.85
 
 
+// lower throttle when battery below treshold
+#define LVC_LOWER_THROTTLE
+#define LVC_LOWER_THROTTLE_VOLTAGE 3.40
+#define LVC_LOWER_THROTTLE_VOLTAGE_RAW 2.80
+#define LVC_LOWER_THROTTLE_KP 3.0
 
 // Gyro LPF filter frequency
 // gyro filter 0 = 250hz delay 0.97mS
@@ -86,9 +93,6 @@
 //#define SOFT_LPF_NONE
 
 
-// this works only on newer boards (non mpu-6050)
-// on older boards the hw gyro setting controls the acc as well
-#define ACC_LOW_PASS_FILTER 5
 
 
 // switch function selection
