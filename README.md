@@ -21,3 +21,5 @@ The gcc version compiles close to 16k, and may need turning off features in orde
 ### Wiki
 http://sirdomsen.diskstation.me/dokuwiki/doku.php?id=start
 
+* added a new way of lowering throttle below a certain voltage
+* lvc now flashes below an "uncompensated" voltage, too, just in case
