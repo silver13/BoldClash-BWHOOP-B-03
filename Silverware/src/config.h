@@ -47,7 +47,7 @@
 // in volts
 #define VDROP_FACTOR 0.7
 
-#define AUTO_VDROP_FACTOR
+//#define AUTO_VDROP_FACTOR
 
 // voltage hysteresys
 // in volts
@@ -56,17 +56,12 @@
 
 
 // lower throttle when battery below treshold
-//#define LVC_PREVENT_RESET
-
-// threshold for above (volts)
-#define LVC_PREVENT_RESET_VOLTAGE 2.85
-
-
-// lower throttle when battery below treshold
 #define LVC_LOWER_THROTTLE
 #define LVC_LOWER_THROTTLE_VOLTAGE 3.40
 #define LVC_LOWER_THROTTLE_VOLTAGE_RAW 2.80
 #define LVC_LOWER_THROTTLE_KP 3.0
+
+
 
 // Gyro LPF filter frequency
 // gyro filter 0 = 250hz delay 0.97mS
@@ -157,16 +152,16 @@
 // pwm frequency for motor control
 // a higher frequency makes the motors more linear
 // in Hz
-#define PWMFREQ 32000
+#define PWMFREQ 16000
 
 // motor curve to use
 // the pwm frequency has to be set independently
 // 720motors - use 8khz and curve none.
-#define MOTOR_CURVE_NONE
+//#define MOTOR_CURVE_NONE
 //#define MOTOR_CURVE_6MM_490HZ
 //#define MOTOR_CURVE_85MM_8KHZ
 //#define MOTOR_CURVE_85MM_32KHZ
-//#define BOLDCLASH_716MM_8K
+#define BOLDCLASH_716MM_8K
 
 //#define THROTTLE_TRANSIENT_COMPENSATION
 

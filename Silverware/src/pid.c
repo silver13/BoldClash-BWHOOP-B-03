@@ -24,12 +24,14 @@ THE SOFTWARE.
 
 
 //#define RECTANGULAR_RULE_INTEGRAL
-#define MIDPOINT_RULE_INTEGRAL
-//#define SIMPSON_RULE_INTEGRAL
+//#define MIDPOINT_RULE_INTEGRAL
+#define SIMPSON_RULE_INTEGRAL
 
 
 //#define NORMAL_DTERM
 #define NEW_DTERM
+
+//#define ANTI_WINDUP_DISABLE
 
 #include <stdbool.h>
 #include "pid.h"
@@ -41,26 +43,27 @@ THE SOFTWARE.
 // current pid tuning by SirDomsen
 // for boldclash BWHOOP B-03
 
-// Kp											ROLL       PITCH     YAW
-float pidkp[PIDNUMBER] = { 12.0e-2 , 16.7e-2  , 6e-1 }; 
 
-// Ki											ROLL       PITCH     YAW
-float pidki[PIDNUMBER] = { 9e-1  , 5e-1 , 3e-1 };	
+// Kp	                  ROLL       PITCH     YAW
+float pidkp[PIDNUMBER] = { 12.0e-2 , 12.0e-2  , 6e-1 }; 
 
-// Kd											ROLL       PITCH     YAW
-float pidkd[PIDNUMBER] = { 6.0e-1 , 15.40e-1  , 5.0e-1 };	
+// Ki		              ROLL       PITCH     YAW
+float pidki[PIDNUMBER] = { 9e-1  , 9e-1 , 3e-1 };	
 
+// Kd			          ROLL       PITCH     YAW
+float pidkd[PIDNUMBER] = { 6.0e-1 , 6.0e-1  , 5.0e-1 };	
 
-
+// "setpoint weighting" 0.0 - 1.0 where 0.0 = normal pid
+float b[3] = { 0.0 , 0.0 , 0.0};
 
 
 
 
 // output limit			
-const float outlimit[PIDNUMBER] = { 0.8 , 0.8 , 0.4 };
+const float outlimit[PIDNUMBER] = { 0.8 , 0.8 , 0.5 };
 
 // limit of integral term (abs)
-const float integrallimit[PIDNUMBER] = { 0.8 , 0.8 , 0.4 };
+const float integrallimit[PIDNUMBER] = { 0.8 , 0.8 , 0.5 };
 
 
 
@@ -116,7 +119,10 @@ float pid(int x )
 				if (( pidoutput[x] == -outlimit[x])&& ( error[x] < 0) )
 				{
 					iwindup = 1;				
-				}
+				}              
+                #ifdef ANTI_WINDUP_DISABLE
+                iwindup = 0;
+                #endif
         if ( !iwindup)
 				{
 				#ifdef MIDPOINT_RULE_INTEGRAL
@@ -142,7 +148,10 @@ float pid(int x )
 				limitf( &ierror[x] , integrallimit[x] );
 				
 				// P term
-                pidoutput[x] = error[x] * pidkp[x] ;
+                pidoutput[x] = error[x] * ( 1 - b[x])* pidkp[x] ;
+				
+				// b
+                pidoutput[x] +=  - ( b[x])* pidkp[x] * gyro[x]  ;
 				
 				
 				// I term	

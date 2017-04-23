@@ -374,13 +374,6 @@ extern float throttlehpf( float in );
 		    }
 #endif
 	
-#ifdef LVC_PREVENT_RESET
-extern float vbatt;
-if (vbatt < (float) LVC_PREVENT_RESET_VOLTAGE) 
-{
-	throttle = 0;
-}
-#endif
 
 
 #ifdef LVC_LOWER_THROTTLE
