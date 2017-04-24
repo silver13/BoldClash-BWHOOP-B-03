@@ -30,6 +30,7 @@ THE SOFTWARE.
 
 //#define NORMAL_DTERM
 #define NEW_DTERM
+//#define MAX_FLAT_LPF_DIFF_DTERM
 
 //#define ANTI_WINDUP_DISABLE
 
@@ -91,6 +92,9 @@ static float lastrate[PIDNUMBER];
 static float lastratexx[PIDNUMBER][2];
 #endif
 
+#ifdef MAX_FLAT_LPF_DIFF_DTERM
+static float lastratexx[PIDNUMBER][4];
+#endif
 
 #ifdef SIMPSON_RULE_INTEGRAL
 static float lasterror2[PIDNUMBER];
@@ -164,14 +168,23 @@ float pid(int x )
 					lastrate[x] = gyro[x];
 				#endif
 
-			  #ifdef NEW_DTERM
-					pidoutput[x] = pidoutput[x] - ( ( 0.5f) *gyro[x] 
-								- (0.5f) * lastratexx[x][1] ) * pidkd[x] * timefactor  ;
-									
+                #ifdef NEW_DTERM
+                    pidoutput[x] = pidoutput[x] - ( ( 0.5f) *gyro[x] 
+                                - (0.5f) * lastratexx[x][1] ) * pidkd[x] * timefactor  ;
+                                    
+                    lastratexx[x][1] = lastratexx[x][0];
+                    lastratexx[x][0] = gyro[x];
+               #endif
+			
+               #ifdef MAX_FLAT_LPF_DIFF_DTERM 
+					pidoutput[x] = pidoutput[x] - ( + 0.125f *gyro[x] + 0.250f * lastratexx[x][0]
+								- 0.250f * lastratexx[x][2] - ( 0.125f) * lastratexx[x][3]) * pidkd[x] * timefactor 						;
+				
+					lastratexx[x][3] = lastratexx[x][2];
+					lastratexx[x][2] = lastratexx[x][1];
 					lastratexx[x][1] = lastratexx[x][0];
 					lastratexx[x][0] = gyro[x];
-			  #endif
-				
+				#endif            
 
 				  limitf(  &pidoutput[x] , outlimit[x]);
 

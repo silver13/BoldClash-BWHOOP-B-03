@@ -175,7 +175,7 @@
 // enable auto lower throttle near max throttle to keep control
 // comment out to disable
 //#define MIX_LOWER_THROTTLE
-
+//#define MIX_INCREASE_THROTTLE
 
 // Radio protocol selection
 // select only one

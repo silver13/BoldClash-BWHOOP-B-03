@@ -271,11 +271,19 @@ if ( liberror )
 			// endless loop
 		}
 
-	
+        // read gyro and accelerometer data	
 		sixaxis_read();
 		
-		extern void imu_calc(void);		
-		imu_calc();		
+		
+        // all flight calculations and motors
+		control();
+
+        // attitude calculations for level mode
+ 		extern void imu_calc(void);		
+		imu_calc();       
+      
+// battery low logic
+
 #ifdef ADC_VREF_SCALE
 		float battadc = adc_read(0)*vreffilt; 
         lpf ( &vreffilt , adc_read(1)  , 0.9968f);	
@@ -283,11 +291,6 @@ if ( liberror )
         float battadc = adc_read(0); 
 #endif        
 		vbatt = battadc;
-		
-// all flight calculations and motors
-		control();
-
-// battery low logic
 		
 		float hyst;
 
@@ -409,6 +412,7 @@ else
 
 
 #if ( RGB_LED_NUMBER > 0)
+// RGB led control
 extern	void rgb_led_lvc( void);
 rgb_led_lvc( );
 #endif
@@ -433,7 +437,8 @@ rgb_led_lvc( );
         }
     }
 #endif
-		
+
+// receiver function
 checkrx();
 
 		

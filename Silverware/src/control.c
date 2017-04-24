@@ -91,8 +91,7 @@ float rxcopy[4];
 void control( void)
 {	
 
-	// rates / expert mode
-
+// rates / expert mode
 float rate_multiplier = 1.0;
 	
 	if ( aux[RATES]  )
@@ -218,32 +217,11 @@ float rate_multiplier = 1.0;
 pid_precalc();	
 
 
-	// dual mode build
+	// flight control
 	if (aux[LEVELMODE]&&!acro_override)
-	  {			// level mode
-		extern	void stick_vector( float);
-		extern float errorvect[];	
-		float yawerror[3];
-			
-		stick_vector( 0 );
-			
-			extern float GEstG[3];
-		
-			float yawrate = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD;
-			
-			yawerror[0] = GEstG[1] * yawrate;
-			yawerror[1] = - GEstG[0] * yawrate;
-			yawerror[2] = GEstG[2] * yawrate;
-
-	  angleerror[0] = errorvect[0] * RADTODEG;// - attitude[0] + (float) TRIM_ROLL;
-		angleerror[1] = errorvect[1] * RADTODEG;// - attitude[1] + (float) TRIM_PITCH;
-			
-		for ( int i = 0 ; i <2; i++)
-			{
-			error[i] = apid(i) + yawerror[i] - gyro[i];
-			}
-			
-		error[2] = yawerror[2]  - gyro[2];
+	  {	   // level mode
+           // level calculations done after to reduce latency in acro mode
+          
 	  }
 	else
 	  {	// rate mode
@@ -420,7 +398,7 @@ pidoutput[2] = -pidoutput[2];
 #endif
 	
 
-#ifdef MIX_LOWER_THROTTLE
+#if ( defined MIX_LOWER_THROTTLE || defined MIX_INCREASE_THROTTLE)
 
 //#define MIX_INCREASE_THROTTLE
 
@@ -446,7 +424,7 @@ pidoutput[2] = -pidoutput[2];
 
 
 		  float overthrottle = 0;
-			float underthrottle = 0.001f;
+		  float underthrottle = 0.001f;
 		
 		  for (int i = 0; i < 4; i++)
 		    {
@@ -456,6 +434,8 @@ pidoutput[2] = -pidoutput[2];
 						underthrottle = mix[i];
 		    }
 
+#ifdef MIX_LOWER_THROTTLE
+            
 		  overthrottle -= MIX_MOTOR_MAX ;
 
 		  if (overthrottle > (float)MIX_THROTTLE_REDUCTION_MAX)
@@ -472,7 +452,10 @@ pidoutput[2] = -pidoutput[2];
 		  else
 			  overthrottlefilt -= 0.01f;
 #endif
-			
+#else
+overthrottle = 0.0f;        
+#endif
+          
 #ifdef MIX_INCREASE_THROTTLE
 // under			
 			
@@ -589,6 +572,37 @@ thrsum = 0;
 		thrsum = thrsum / 4;
 		
 	}// end motors on
+
+    
+    if (aux[LEVELMODE]&&!acro_override)
+    {
+        // level mode calculations done after to save time
+        // the 1ms latency should not affect cascaded pids significantly
+        
+      	extern	void stick_vector( float);
+		extern float errorvect[];	
+		float yawerror[3];		
+		stick_vector( 0 );
+			
+			extern float GEstG[3];
+		
+			float yawrate = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD;
+			
+			yawerror[0] = GEstG[1] * yawrate;
+			yawerror[1] = - GEstG[0] * yawrate;
+			yawerror[2] = GEstG[2] * yawrate;
+
+	  angleerror[0] = errorvect[0] * RADTODEG;// - attitude[0] + (float) TRIM_ROLL;
+		angleerror[1] = errorvect[1] * RADTODEG;// - attitude[1] + (float) TRIM_PITCH;
+			
+		for ( int i = 0 ; i <2; i++)
+			{
+			error[i] = apid(i) + yawerror[i] - gyro[i];
+			}
+
+		error[2] = yawerror[2]  - gyro[2];  
+    }
+    
 	
 }
 
