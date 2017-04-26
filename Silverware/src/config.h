@@ -152,7 +152,7 @@
 // pwm frequency for motor control
 // a higher frequency makes the motors more linear
 // in Hz
-#define PWMFREQ 16000
+#define PWMFREQ 24000
 
 // motor curve to use
 // the pwm frequency has to be set independently
@@ -161,7 +161,8 @@
 //#define MOTOR_CURVE_6MM_490HZ
 //#define MOTOR_CURVE_85MM_8KHZ
 //#define MOTOR_CURVE_85MM_32KHZ
-#define BOLDCLASH_716MM_8K
+//#define BOLDCLASH_716MM_8K
+#define BOLDCLASH_716MM_24K
 
 //#define THROTTLE_TRANSIENT_COMPENSATION
 
