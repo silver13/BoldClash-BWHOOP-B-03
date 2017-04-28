@@ -14,8 +14,7 @@ DEFS = -DUSE_STDPERIPH_DRIVER -DSTM32F031
 STARTUP = $(topdir)/Libraries/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc_ride7/startup_stm32f030.s
 
 MCU = cortex-m0
-MCFLAGS = -mcpu=$(MCU) -g -ggdb -mthumb -fdata-sections -ffunction-sections -fsingle-precision-constant -ffast-math -nostartfiles   --specs=nano.specs
-
+MCFLAGS = -mcpu=$(MCU) -g -ggdb -mthumb -fdata-sections -ffunction-sections -fsingle-precision-constant -ffast-math -nostartfiles   --specs=nano.specs -flto
 
 INCLUDES = -I$(topdir)/Silverware/src/ \
 	-I$(topdir)/Libraries/CMSIS/Device/ST/STM32F0xx/Include/ \
@@ -51,6 +50,7 @@ $(TARGET): $(EXECUTABLE)
 
 $(EXECUTABLE): $(SRC) $(STARTUP)
 	$(CC) $(CFLAGS) $^ -lm -o $@
+	arm-none-eabi-size $(EXECUTABLE)
 	
 
 clean:
