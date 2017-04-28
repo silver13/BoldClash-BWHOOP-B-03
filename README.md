@@ -21,6 +21,7 @@ http://sirdomsen.diskstation.me/dokuwiki/doku.php?id=start
 
 ### changes
 
+* autovdrop improved, and better compensation
 * new measured motor curve at 24K pwm
 * added a new way of lowering throttle below a certain voltage
 * lvc now flashes below an "uncompensated" voltage, too, just in case
