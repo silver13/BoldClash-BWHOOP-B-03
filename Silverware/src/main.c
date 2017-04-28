@@ -90,8 +90,8 @@ float vreffilt = 1.0;
 unsigned int lastlooptime;
 // signal for lowbattery
 int lowbatt = 1;	
-// signal for lowbattery second threshold
-int lowbatt2 = 1;
+
+//int minindex = 0;
 
 // holds the main four channels, roll, pitch , yaw , throttle
 float rx[4];
@@ -301,9 +301,19 @@ if ( liberror )
 		// filter motorpwm so it has the same delay as the filtered voltage
 		// ( or they can use a single filter)		
 		lpf ( &thrfilt , thrsum , 0.9968f);	// 0.5 sec at 1.6ms loop time	
-		
-		lpf ( &vbattfilt , battadc , 0.9968f);		
 
+        static float vbattfilt_corr = 4.2;
+        // li-ion battery model compensation time decay ( 3 sec )
+        lpf ( &vbattfilt_corr , vbattfilt , FILTERCALC( 1000 , 3000e3) );
+	
+        lpf ( &vbattfilt , battadc , 0.9968f);
+
+
+// compensation factor for li-ion internal model
+// zero to bypass
+#define CF1 0.25f
+
+        float tempvolt = vbattfilt*( 1.00f + CF1 )  - vbattfilt_corr* ( CF1 );
 
 #ifdef AUTO_VDROP_FACTOR
 
@@ -312,14 +322,13 @@ static float lastin[12];
 static float vcomp[12];
 static float score[12];
 static int current_index = 0;
+static int minindex = 0;
 
-int minindex = 0;
-float min = score[0];
+int i = current_index;
 
+if( thrfilt > 0.1f )
 {
-	int i = current_index;
-
-	vcomp[i] = vbattfilt + (float) i *0.1f * thrfilt;
+	vcomp[i] = tempvolt + (float) i *0.1f * thrfilt;
 		
 	if ( lastin[i] < 0.1f ) lastin[i] = vcomp[i];
 	float temp;
@@ -329,37 +338,44 @@ float min = score[0];
 	 temp = vcomp[i] - lastin[i] + FILTERCALC( 1000*12 , 1000e3) *lastout[i];
 		lastin[i] = vcomp[i];
 		lastout[i] = temp;
-	 lpf ( &score[i] , fabsf(temp) , FILTERCALC( 1000*12 , 10e6 ) );
+	 lpf ( &score[i] , temp*temp , FILTERCALC( 1000*12 , 10e6 ) );
 
-	}
+	
 	current_index++;
 	if ( current_index >= 12 ) current_index = 0;
 
-	for ( int i = 0 ; i < 12; i++ )
-	{
-	 if ( score[i] < min )  
-		{
-			min = score[i];
-			minindex = i;
-		}
-}
-// add an offset because it seems to be usually early
-minindex++;
+    float min = score[0]; 
+    
+    if (current_index == 11)
+    {
+        for ( int i = 0 ; i < 12; i++ )
+        {
+         if ( (score[i]) < min )  
+            {
+                min = (score[i]);
+                minindex = i;
+                // add an offset because it seems to be usually early
+                minindex++;
+            }
+        }   
+    }
 
+}
 #undef VDROP_FACTOR
 #define VDROP_FACTOR  minindex * 0.1f
 #endif
 
 		if ( lowbatt ) hyst = HYST;
 		else hyst = 0.0f;
-		
-		if (( vbattfilt + (float) VDROP_FACTOR * thrfilt <(float) VBATTLOW + hyst )
+
+		if (( tempvolt + (float) VDROP_FACTOR * thrfilt <(float) VBATTLOW + hyst )
             || ( vbattfilt < ( float ) VBATTLOW_MIN ) )
             lowbatt = 1;
 		else lowbatt = 0;
 
-	vbatt_comp = vbattfilt + (float) VDROP_FACTOR * thrfilt; 	
+        vbatt_comp = tempvolt + (float) VDROP_FACTOR * thrfilt; 	
 
+            
 #ifdef DEBUG
 		debug.vbatt_comp = vbatt_comp ;
 #endif		

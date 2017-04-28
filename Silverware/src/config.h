@@ -41,13 +41,11 @@
 
 // lvc starts flashing under this raw value regardless of throttle
 #define VBATTLOW_MIN 2.7
-// compensation for battery voltage vs throttle drop
-// increase if battery low comes on at max throttle
-// decrease if battery low warning goes away at high throttle
-// in volts
-#define VDROP_FACTOR 0.7
 
-//#define AUTO_VDROP_FACTOR
+// compensation for battery voltage vs throttle drop
+#define VDROP_FACTOR 0.7
+// calculate above factor automatically
+#define AUTO_VDROP_FACTOR
 
 // voltage hysteresys
 // in volts
@@ -57,8 +55,8 @@
 
 // lower throttle when battery below treshold
 #define LVC_LOWER_THROTTLE
-#define LVC_LOWER_THROTTLE_VOLTAGE 3.40
-#define LVC_LOWER_THROTTLE_VOLTAGE_RAW 2.80
+#define LVC_LOWER_THROTTLE_VOLTAGE 3.30
+#define LVC_LOWER_THROTTLE_VOLTAGE_RAW 2.70
 #define LVC_LOWER_THROTTLE_KP 3.0
 
 
