@@ -19,7 +19,17 @@ The gcc version compiles close to 16k, and may need turning off features in orde
 ### Wiki
 http://sirdomsen.diskstation.me/dokuwiki/doku.php?id=start
 
-### changes
+
+### 02.05.17
+* level pid is tuned more aggressive
+* added filter between level pid and  acro pid
+* fixed issue where "Overclock" option broke level mode (i2c) - overclock can be used on the bwhoop now
+* removed level mode I term - this was not usually used
+* minor cleanup and efficiency
+* GCC autovdrop now functional
+* LVC throttle lowering disabled by default just in case it malfunctions
+
+### initial changes
 
 * autovdrop improved, and better compensation
 * new measured motor curve at 24K pwm
