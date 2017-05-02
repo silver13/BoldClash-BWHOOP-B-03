@@ -44,16 +44,15 @@ stickvector[1] *=mag2;
 
 // find error between stick vector and quad orientation
 // vector cross product 
-  errorvect[0]= (GEstG[1]*stickvector[2]) - (GEstG[2]*stickvector[1]);
-  errorvect[1]= (GEstG[2]*stickvector[0]) - (GEstG[0]*stickvector[2]);
+  errorvect[1]= -((GEstG[1]*stickvector[2]) - (GEstG[2]*stickvector[1]));
+  errorvect[0]= (GEstG[2]*stickvector[0]) - (GEstG[0]*stickvector[2]);
 
 // some limits just in case
-limitf( & errorvect[0] , 1.0);
-limitf( & errorvect[1] , 1.0);
 
-float temp = errorvect[0];
-errorvect[0] = (errorvect[1]);
-errorvect[1] = (- temp);
+limitf( &errorvect[0] , 1.0);
+limitf( &errorvect[1] , 1.0);
+
+
 
 }
 

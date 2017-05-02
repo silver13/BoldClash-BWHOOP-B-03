@@ -8,12 +8,13 @@
 
 #ifdef XN297L_3WIRE
 
+extern void mosi_input( void);
 extern int spi_recvbyte( void);
 
 void xn_writereg( int reg , int val)
 {
-	reg = reg&0x0000003F;
-	reg = reg|0x00000020;
+	reg = reg&0x3F;
+	reg = reg|0x20;
 	spi_cson();
 	spi_sendbyte( reg);
 	spi_sendbyte( val);
@@ -22,9 +23,10 @@ void xn_writereg( int reg , int val)
 
 int xn_readreg( int reg)
 {
-	reg = reg&0x0000001F;
+	reg = reg&0x1F;
 	spi_cson();
 	spi_sendbyte( reg);
+    mosi_input( );
 	int val =spi_recvbyte();
 	spi_csoff();
 	return val;
@@ -45,9 +47,10 @@ void xn_readpayload( int *data , int size )
 	int index = 0;
 	spi_cson();
 	spi_sendbyte( B01100001 ); // read rx payload
+     mosi_input();
 	while(index<size)
 	{
-	data[index]=	spi_recvbyte();
+	data[index]= spi_recvbyte();
 	index++;
 	}
 	spi_csoff();

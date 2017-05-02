@@ -112,7 +112,7 @@ float pid(int x )
 
         if (onground) 
 				{
-           ierror[x] *= 0.8f;
+                ierror[x] *= 0.98f;
 				}
 	
 				int iwindup = 0;

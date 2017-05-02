@@ -51,7 +51,7 @@ void mosi_input( void)
 	{
 	mosi_out = 0;
 	mosi_init_struct.GPIO_Mode = GPIO_Mode_IN;
-  GPIO_Init(SPI_MOSI_PORT, &mosi_init_struct);	
+    GPIO_Init(SPI_MOSI_PORT, &mosi_init_struct); 
 	}
 	
 }
@@ -62,7 +62,7 @@ void mosi_output( void)
 	{
 	mosi_out = 1;
 	mosi_init_struct.GPIO_Mode = GPIO_Mode_OUT;
-  GPIO_Init(SPI_MOSI_PORT, &mosi_init_struct);	
+    GPIO_Init(SPI_MOSI_PORT, &mosi_init_struct);	
 	}
 	
 }
@@ -113,76 +113,94 @@ for ( int i =7 ; i >=0 ; i--)
 	}
 }
 
-/*
-int spi_sendrecvbyte2( int data)
-{ 
-	int recv = 0;
-	for ( int i =7 ; i >=0 ; i--)
-	{
-		if ( (data) & (1<<7)  ) 
-		{
-			MOSIHIGH;
-		}
-		else 
-		{
-			MOSILOW;
-		}
-		SCKHIGH;
-		data = data<<1;
-		if ( READMISO ) recv= recv|(1<<7);
-		recv = recv<<1;
-		SCKLOW;
-	}	
-	  recv = recv>>8;
-    return recv;
-}
-*/
-
-/*
- int spi_sendrecvbyte( int data)
-{ int recv = 0;
-
-	for ( int i = 7 ; i >=0 ; i--)
-	{
-		recv = recv<<1;
-		if ( (data) & (1<<7)  ) 
-		{
-			MOSIHIGH;
-		}
-		else 
-		{
-			MOSILOW;
-		}
-		
-		data = data<<1;
-		
-		SCKHIGH;
-		
-		if ( READMISO ) recv= recv|1;
-
-		SCKLOW;
-		
-	}	
-
-    return recv;
-}
-*/
 
  int spi_recvbyte( void)
 { int recv = 0;
-  mosi_input();
+
 	for ( int i = 7 ; i >=0 ; i--)
 	{
-		recv = recv<<1;
-		
-		
+						
 		SCKHIGH;
-		
-		if ( READMOSI ) recv= recv|1;
 
+		recv = recv<<1;
+
+        recv = recv|((SPI_MOSI_PORT->IDR & (int)SPI_MOSI_PIN)?1:0);
+        
 		SCKLOW;
 		
 	}	
+
+    return recv;
+}
+
+
+ int spi_recvbyte_unrolled( void)
+{ uint8_t recv = 0;
+						
+		SCKHIGH;
+
+		recv = recv<<1;
+
+        recv = recv|((SPI_MOSI_PORT->IDR & SPI_MOSI_PIN)?1:0);
+        
+		SCKLOW;
+    
+    	SCKHIGH;
+
+		recv = recv<<1;
+
+        recv = recv|((SPI_MOSI_PORT->IDR & SPI_MOSI_PIN)?1:0);
+        
+		SCKLOW;
+    
+    	SCKHIGH;
+
+		recv = recv<<1;
+
+        recv = recv|((SPI_MOSI_PORT->IDR & SPI_MOSI_PIN)?1:0);
+        
+		SCKLOW;
+        
+        SCKHIGH;
+
+		recv = recv<<1;
+
+        recv = recv|((SPI_MOSI_PORT->IDR & SPI_MOSI_PIN)?1:0);
+        
+		SCKLOW;
+        
+        		SCKHIGH;
+
+		recv = recv<<1;
+
+        recv = recv|((SPI_MOSI_PORT->IDR & SPI_MOSI_PIN)?1:0);
+        
+		SCKLOW;
+        
+        		SCKHIGH;
+
+		recv = recv<<1;
+
+        recv = recv|((SPI_MOSI_PORT->IDR & SPI_MOSI_PIN)?1:0);
+        
+		SCKLOW;
+        
+        		SCKHIGH;
+
+		recv = recv<<1;
+
+        recv = recv|((SPI_MOSI_PORT->IDR & SPI_MOSI_PIN)?1:0);
+        
+		SCKLOW;
+        
+        		SCKHIGH;
+
+		recv = recv<<1;
+
+        recv = recv|((SPI_MOSI_PORT->IDR & SPI_MOSI_PIN)?1:0);
+        
+		SCKLOW;
+			
 
     return recv;
 }

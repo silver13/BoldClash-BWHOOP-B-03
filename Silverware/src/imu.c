@@ -85,7 +85,6 @@ float Q_rsqrt( float number )
 
 void vectorcopy(float *vector1, float *vector2);
 
-static unsigned long gptimer;
 
 float atan2approx(float y, float x);
 
@@ -109,35 +108,20 @@ void vectorcopy(float *vector1, float *vector2)
 	  }
 }
 
+extern float looptime;
 
 void imu_calc(void)
 {
 
 
-	float EstG[3];
-	float deltatime;	// time in seconds
-
-
-	vectorcopy(&EstG[0], &GEstG[0]);
-
-
-	unsigned long time = gettime();
-	deltatime = time - gptimer;
-	gptimer = time;
-	if (deltatime < 1)
-		deltatime = 1;
-	if (deltatime > 20000)
-		deltatime = 20000;
-	deltatime = deltatime * 1e-6f;	// uS to seconds
-
 
 // remove bias
-  accel[0] = accel[0] - accelcal[0];
-	accel[1] = accel[1] - accelcal[1];
+    accel[0] = accel[0] - accelcal[0];
+    accel[1] = accel[1] - accelcal[1];
 
 
 // reduce to accel in G
-for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++)
 	  {
 		  accel[i] *= ( 1/ 2048.0f);
 	  }
@@ -146,23 +130,21 @@ for (int i = 0; i < 3; i++)
 	float deltaGyroAngle[3];
 
 	for ( int i = 0 ; i < 3 ; i++)
-	{
-	deltaGyroAngle[i] = (gyro[i]) * deltatime;
-	}
+    {
+        deltaGyroAngle[i] = (gyro[i]) * looptime;
+    }
 	
 	
-	EstG[2] = EstG[2] - (deltaGyroAngle[0]) * EstG[0];
-	EstG[0] = (deltaGyroAngle[0]) * EstG[2] +  EstG[0];
+	GEstG[2] = GEstG[2] - (deltaGyroAngle[0]) * GEstG[0];
+	GEstG[0] = (deltaGyroAngle[0]) * GEstG[2] +  GEstG[0];
 
 
-	EstG[1] =  EstG[1] + (deltaGyroAngle[1]) * EstG[2];
-	EstG[2] = -(deltaGyroAngle[1]) * EstG[1] +  EstG[2];
+	GEstG[1] =  GEstG[1] + (deltaGyroAngle[1]) * GEstG[2];
+	GEstG[2] = -(deltaGyroAngle[1]) * GEstG[1] +  GEstG[2];
 
 
-	EstG[0] = EstG[0] - (deltaGyroAngle[2]) * EstG[1];
-	EstG[1] = (deltaGyroAngle[2]) * EstG[0] +  EstG[1];
-
-
+	GEstG[0] = GEstG[0] - (deltaGyroAngle[2]) * GEstG[1];
+	GEstG[1] = (deltaGyroAngle[2]) * GEstG[0] +  GEstG[1];
 
 
 // calc acc mag
@@ -171,46 +153,22 @@ for (int i = 0; i < 3; i++)
 	accmag = calcmagnitude(&accel[0]);
 
 
-	static unsigned int count = 0;
-
 	if ((accmag > ACC_MIN * ACC_1G) && (accmag < ACC_MAX * ACC_1G) && !DISABLE_ACC)
-	  {	
-		  if (count >= 3 || 1)	//
-		    {
-						// normalize acc
-					for (int axis = 0; axis < 3; axis++)
-					{
-						accel[axis] = accel[axis] * ( ACC_1G / accmag);
-					}
-			    float filtcoeff = lpfcalc(deltatime, FILTERTIME);
-			    for (int x = 0; x < 3; x++)
-			      {
-				      lpf(&EstG[x], accel[x], filtcoeff);
-			      }
-		    }
-		  count++;
-	  }
-	else
-	  {			
-			// acc mag out of bounds
-		  count = 0;
-			/*
-		  if ( gettime() % 20 == 5)
-		    {
-			    float mag = 0;
-			    mag = calcmagnitude(&EstG[0]);
-
-			    // normalize orientation vector
-
-			    for (int x = 0; x < 3; x++)
-			      {
-				      EstG[x] = EstG[x] * ( ACC_1G / mag);
-			      }
-		    }
-			*/
+	  {			 
+        // normalize acc
+        for (int axis = 0; axis < 3; axis++)
+        {
+            accel[axis] = accel[axis] * ( ACC_1G / accmag);
+        }
+        float filtcoeff = lpfcalc( looptime, FILTERTIME);
+        for (int x = 0; x < 3; x++)
+          {
+              lpf(&GEstG[x], accel[x], filtcoeff);
+          }
 	  }
 
-	vectorcopy(&GEstG[0], &EstG[0]);
+
+//	vectorcopy(&GEstG[0], &EstG[0]);
 #ifdef DEBUG
 	attitude[0] = atan2approx(EstG[0], EstG[2]) ;
 

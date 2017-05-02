@@ -50,7 +50,6 @@ int flipdir = 0;
 extern int onground;
 extern float GEstG[3];
 extern float rx[];
-extern float aierror[3];
 
 float rx_override[4];
 
@@ -170,7 +169,6 @@ void flip_sequencer()
 			rx_override[flipindex] = (float) LEVEL_MODE_ANGLE / (float) MAX_ANGLE_HI;
 		  else
 			rx_override[flipindex] = (float) - LEVEL_MODE_ANGLE / (float) MAX_ANGLE_HI;
-		  aierror[flipindex] = 0.0f; // reset integral term
 			if( gettime() - levelmodetime > LEVEL_MODE_TIME )
 					flipstage = STAGE_FLIP_EXIT;
 		break;

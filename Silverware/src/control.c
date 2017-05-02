@@ -39,7 +39,7 @@ THE SOFTWARE.
 #include "defines.h"
 
 
-extern float rx[7];
+extern float rx[];
 extern float gyro[3];
 extern int failsafe;
 extern float pidoutput[PIDNUMBER];
@@ -204,16 +204,17 @@ float rate_multiplier = 1.0;
 	if ( aux[HEADLESSMODE] ) 
 	{
 		while (yawangle < -3.14159265f)
-    yawangle += 6.28318531f;
+            yawangle += 6.28318531f;
 
-    while (yawangle >  3.14159265f)
-    yawangle -= 6.28318531f;
+        while (yawangle >  3.14159265f)
+            yawangle -= 6.28318531f;
 		
 		float temp = rxcopy[ROLL];
 		rxcopy[ROLL] = rxcopy[ROLL] * fastcos( yawangle) - rxcopy[PITCH] * fastsin(yawangle );
 		rxcopy[PITCH] = rxcopy[PITCH] * fastcos( yawangle) + temp * fastsin(yawangle ) ;
 	}
 #endif	
+
 pid_precalc();	
 
 
@@ -229,12 +230,8 @@ pid_precalc();
 		  error[0] = rxcopy[0] * (float) MAX_RATE * DEGTORAD  - gyro[0];
 		  error[1] = rxcopy[1] * (float) MAX_RATE * DEGTORAD  - gyro[1];
 
-			error[2] = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD  - gyro[2];
-			
-		  // reduce angle Iterm towards zero
-		  extern float aierror[3];
-		  for (int i = 0; i <= 1; i++)
-			  aierror[i] *= 0.8f;
+          error[2] = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD  - gyro[2];
+
 	  }
 
 
@@ -377,7 +374,7 @@ if ( throttle_p > 0 )
 }
 else throttle_i -= 0.001f;// ki on release
 
-if ( throttle_i > 1.0f) throttle_i = 1.0f;
+if ( throttle_i > 0.5f) throttle_i = 0.5f;
 if ( throttle_i < 0.0f) throttle_i = 0.0f;
 
 throttle -= throttle_p + throttle_i;
@@ -573,28 +570,28 @@ thrsum = 0;
 		
 	}// end motors on
 
-    
+   
     if (aux[LEVELMODE]&&!acro_override)
     {
         // level mode calculations done after to save time
         // the 1ms latency should not affect cascaded pids significantly
         
-      	extern	void stick_vector( float);
-		extern float errorvect[];	
-		float yawerror[3];		
-		stick_vector( 0 );
-			
-			extern float GEstG[3];
-		
-			float yawrate = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD;
-			
-			yawerror[0] = GEstG[1] * yawrate;
-			yawerror[1] = - GEstG[0] * yawrate;
-			yawerror[2] = GEstG[2] * yawrate;
+      	extern void stick_vector( float);
+		extern float errorvect[];					
+        extern float GEstG[3];
+        float yawerror[3];	
 
-	  angleerror[0] = errorvect[0] * RADTODEG;// - attitude[0] + (float) TRIM_ROLL;
-		angleerror[1] = errorvect[1] * RADTODEG;// - attitude[1] + (float) TRIM_PITCH;
-			
+		stick_vector( 0 );
+        
+        float yawrate = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD;
+        
+        yawerror[0] = GEstG[1] * yawrate;
+        yawerror[1] = - GEstG[0] * yawrate;
+        yawerror[2] = GEstG[2] * yawrate;
+        
+        for ( int i = 0 ; i <=1; i++)		
+           lpf( &angleerror[i] , errorvect[i]* RADTODEG , FILTERCALC( 1000 , 20000) );
+   
 		for ( int i = 0 ; i <2; i++)
 			{
 			error[i] = apid(i) + yawerror[i] - gyro[i];
