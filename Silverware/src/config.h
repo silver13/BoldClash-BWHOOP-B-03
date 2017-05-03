@@ -187,7 +187,7 @@
 //#define RX_CX10BLUE_PROTOCOL
 
 // 0 - 7 - power for telemetry
-#define TX_POWER 0
+#define TX_POWER 7
 
 
 // Flash saving features
