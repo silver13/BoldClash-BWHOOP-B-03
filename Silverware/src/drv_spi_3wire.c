@@ -6,7 +6,6 @@
 #include "config.h"
 
 #ifdef SOFTSPI_3WIRE
-#ifndef DISABLE_SPI_PINS	
 
 GPIO_InitTypeDef mosi_init_struct;
 int mosi_out = 0;
@@ -227,29 +226,6 @@ for ( int i =7 ; i >=0 ; i--)
 */
 
 #pragma pop
-
-#else
-// spi disabled (for pin setting)
-
-void spi_init(void)
-  {}
-void spi_cson(void)
-	{}
-void spi_csoff(void)
-	{}
-void spi_sendbyte( int x)
-	{ }
-int spi_sendrecvbyte( int x)
-	{ return 255;}
-int spi_sendzerorecvbyte( void )
-	{ return 255;}
- int spi_recvbyte( void)
- {
-	  return 255;
- }
-
-#endif
-
 
 #endif
 

@@ -127,8 +127,6 @@
 // SPI PINS DEFINITONS ( for radio ic )
 // MOSI , CLK , SS - outputs , MISO input
 
-//disable pins so they don't interfere with other pins 
-//#define DISABLE_SPI_PINS
 
 #define SPI_MOSI_PIN GPIO_Pin_0
 #define SPI_MOSI_PORT GPIOA
@@ -145,12 +143,13 @@
 //spi type
 #define SOFTSPI_3WIRE
 //#define SOFTSPI_4WIRE
+//#define SOFTSPI_NONE
 
 // check for radio chip ( 3 times flash = not found)
 #define RADIO_CHECK
 
 // radio type
-#define XN297L_3WIRE
+//#define RADIO_XN297
 #define RADIO_XN297L
 
 
@@ -166,7 +165,7 @@
 #define USE_PWM_DRIVER
 //#define USE_ESC_DRIVER
 //#define USE_DSHOT_DRIVER_BETA
-
+		
 // pwm pins disable
 // disable all pwm pins / function
 //#define DISABLE_PWM_PINS

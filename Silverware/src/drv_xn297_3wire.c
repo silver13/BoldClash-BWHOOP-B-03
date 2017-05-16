@@ -6,7 +6,7 @@
 #include "xn297.h"
 #include "hardware.h"
 
-#ifdef XN297L_3WIRE
+#ifdef SOFTSPI_3WIRE
 
 extern void mosi_input( void);
 extern int spi_recvbyte( void);

@@ -6,7 +6,6 @@
 #include "config.h"
 
 #ifdef SOFTSPI_4WIRE
-#ifndef DISABLE_SPI_PINS	
 
 void spi_init(void)
 {    
@@ -155,24 +154,6 @@ int spi_sendrecvbyte2( int data)
 
 #pragma pop
 
-#else
-// spi disabled (for pin setting)
-
-void spi_init(void)
-  {}
-void spi_cson(void)
-	{}
-void spi_csoff(void)
-	{}
-void spi_sendbyte( int x)
-	{ }
-int spi_sendrecvbyte( int x)
-	{ return 255;}
-int spi_sendzerorecvbyte( void )
-	{ return 255;}
-
-
-#endif
 #endif
 
 

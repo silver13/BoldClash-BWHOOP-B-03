@@ -4,8 +4,10 @@
 
 #include "project.h"
 #include "xn297.h"
+#include "hardware.h"
 
-#ifdef XN297
+// all cases except 3 wires radio
+#if !defined (SOFTSPI_3WIRE)
 
 void xn_writereg( int reg , int val)
 {

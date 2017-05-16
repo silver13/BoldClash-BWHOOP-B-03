@@ -10,7 +10,7 @@
       <TargetName>BWhoop</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060300::V5.06 update 3 (build 300)::ARMCC</pCCUsed>
+      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F030F4</Device>
@@ -643,6 +643,11 @@
               <FilePath>.\src\drv_spi_3wire.c</FilePath>
             </File>
             <File>
+              <FileName>drv_spi_none.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\drv_spi_none.c</FilePath>
+            </File>
+            <File>
               <FileName>drv_time.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\drv_time.c</FilePath>
@@ -812,5 +817,11 @@
       </Groups>
     </Target>
   </Targets>
+
+  <RTE>
+    <apis/>
+    <components/>
+    <files/>
+  </RTE>
 
 </Project>
