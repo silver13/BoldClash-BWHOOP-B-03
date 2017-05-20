@@ -161,6 +161,9 @@ THE SOFTWARE.
 #define HOPPING_NUMBER 4
 
 
+int current_PID_for_display = 0;
+int PID_index_delay = 0;
+
 
 
 #ifdef RX_BAYANG_BLE_APP
@@ -668,6 +671,14 @@ extern unsigned int total_time_in_air;
 extern unsigned int time_throttle_on;
 unsigned int uptime = gettime();
 
+
+int TLMorPID = 0; // 0 = TLM, 1 = PID+TLM
+
+#ifdef PID_GESTURE_TUNING
+TLMorPID = 1; // 0 = TLM, 1 = PID+TLM
+#endif
+
+	
 if (onground ==1)
 {
 	time_throttle_on = uptime;
@@ -715,12 +726,136 @@ buf[L++] = 0x01; // compulsory flags
 buf[L++] = 0x06; // flag value
 buf[L++] =  0x15;  // Length of next block
 buf[L++] =  0x16;  // Service Data
-buf[L++] =  0x1F; //datatype_and_packetID;  // xxxxyyyy -> yyyy = 1111 packet type ID (custom BLE type), xxxx = type of data in packet: 0001 -> telemetry
+
+// ------------------------- TLM+PID
+if (TLMorPID == 1)
+{
+buf[L++] =  0x2F; //PID+TLM datatype_and_packetID;  // xxxxyyyy -> yyyy = 1111 packet type ID (custom BLE type), xxxx = type of data in packet: 0001 -> telemetry, 0002->PID
 
 #ifdef MY_QUAD_MODEL
 	buf[L++] =  MY_QUAD_MODEL;
 #else
-	buf[L++] =  0x11;  // quad model (00 - unknown, 11- H8 mini blue board, 20 - H101... check config.h for details)
+	buf[L++] =  0x11;  // quad model (00 - unknown, 11- H8 mini blue board, 20 - H101... check comments at start of this file for details)
+#endif
+
+buf[L++] = random_seed; //already custom entry - need to be randomized
+#ifdef MY_QUAD_NAME
+//fill with characters from MY_QUAD_NAME (just first 6 chars)
+int string_len = 0;
+while (string_len< 6)
+	  {
+			if (MY_QUAD_NAME[string_len]=='\0') break;
+			buf[L++] = (char) MY_QUAD_NAME[string_len];
+			string_len++;
+		}
+
+//fill the rest (up to 6 bytes) with blanks
+for ( int i = string_len ; i < 6; i++)
+	{
+	buf[L++] = ' '; //blank
+	}
+#else
+buf[L++]=(char)'N';
+buf[L++]=(char)'O';
+buf[L++]=(char)'N';
+buf[L++]=(char)'A';
+buf[L++]=(char)'M';
+buf[L++]=(char)'E';
+#endif
+
+	
+extern int current_pid_term; //0 = pidkp, 1 = pidki, 2 = pidkd
+extern int current_pid_axis; //0 = roll, 1 = pitch, 2 = yaw
+
+//int selectedPID = 0; //inxed of selected PID for changing
+	
+int selectedPID = ((current_pid_term)*3)+(current_pid_axis);
+	
+buf[L++] =  (current_PID_for_display<<4)+selectedPID; // xy => x=current PID for display 0 - 14 (cycling...), y = selected PID for changing 0 - 14
+	
+buf[L++] = packetpersecond_short;
+	
+/*
+buf[L++] =  onground_and_bind; //binary xxxxabcd - xxxx = error code or warning, a -> 0 = stock TX, 1= other TX, b -> 0 = not failsafe, 1 = failsafe, c = 0 -> not bound, 1 -> bound, d = 0 -> in the air, 1 = on the ground;
+*/
+
+#ifdef COMBINE_PITCH_ROLL_PID_TUNING
+	buf[L++] =  B01000000+((rate_and_mode_value<<4)+onground_and_bind); //binary xxRMabcd - x = error code or warning, 1 = combined roll+pitch tuning, R = rate (0 - normal, 1 - fast) , M = mode (1 - level, 0 - acro); a -> 0 = stock TX, 1= other TX, b -> 0 = not failsafe, 1 = failsafe, c = 0 -> not bound, 1 -> bound, d = 0 -> in the air, 1 = on the ground;
+#else
+	buf[L++] =  (rate_and_mode_value<<4)+onground_and_bind; //binary x0RMabcd - x = error code or warning, 0 = no combined roll+pitch tuning, R = rate (0 - normal, 1 - fast) , M = mode (1 - level, 0 - acro); a -> 0 = stock TX, 1= other TX, b -> 0 = not failsafe, 1 = failsafe, c = 0 -> not bound, 1 -> bound, d = 0 -> in the air, 1 = on the ground;
+#endif
+	
+buf[L++] =  vbatt_comp_int>>8;  // Battery voltage compensated
+buf[L++] =  vbatt_comp_int;  // Battery voltage compensated
+
+
+extern float pidkp[]; // current_PID_for_display = 0, 1, 2
+extern float pidki[]; // current_PID_for_display = 3, 4, 5
+extern float pidkd[]; // current_PID_for_display = 6, 7, 8
+extern float apidkp[]; // current_PID_for_display = 9, 10
+extern float apidki[]; //  current_PID_for_display = 11, 12
+extern float apidkd[]; //  current_PID_for_display = 13, 14
+	
+unsigned long pid_for_display = 0;
+
+switch ( current_PID_for_display )
+ {
+	 case 0:pid_for_display =(uint16_t)(pidkp[0]*10000.0f);break;
+	 case 1:pid_for_display =(uint16_t)(pidkp[1]*10000.0f);break;
+	 case 2:pid_for_display =(uint16_t)(pidkp[2]*10000.0f);break;
+	 case 3:pid_for_display =(uint16_t)(pidki[0]*10000.0f);break;
+	 case 4:pid_for_display =(uint16_t)(pidki[1]*10000.0f);break;
+	 case 5:pid_for_display =(uint16_t)(pidki[2]*10000.0f);break;
+	 case 6:pid_for_display =(uint16_t)(pidkd[0]*10000.0f);break;
+	 case 7:pid_for_display =(uint16_t)(pidkd[1]*10000.0f);break;
+	 case 8:pid_for_display =(uint16_t)(pidkd[2]*10000.0f);break;
+/*
+	 //level mode PIDs - disabled for now...
+	 case 9:pid_for_display =(uint16_t)(apidkp[0]*10000.0f);break;
+	 case 10:pid_for_display =(uint16_t)(apidkp[1]*10000.0f);break;
+	 case 11:pid_for_display =(uint16_t)(apidki[0]*10000.0f);break;
+	 case 12:pid_for_display =(uint16_t)(apidki[1]*10000.0f);break;
+	 case 13:pid_for_display =(uint16_t)(apidkd[0]*10000.0f);break;
+	 case 14:pid_for_display =(uint16_t)(apidkd[1]*10000.0f);break;
+*/
+	 }
+
+/*buf[L++] =  total_time_in_air_time>>8;  // total time in air
+buf[L++] =  total_time_in_air_time;  // total time in air
+buf[L++] =  time>>8;
+buf[L++] =  time;
+*/	
+
+buf[L++] =  total_time_in_air_time>>8;  // total time in air
+buf[L++] =  total_time_in_air_time;  // total time in air	 
+buf[L++] =  time>>8;
+buf[L++] =  time;
+
+buf[L++] =  pid_for_display>>8;
+buf[L++] =  pid_for_display;
+	 
+L=L+3; //crc
+
+PID_index_delay++;
+int PID_index_limit = 8; // number of PIDs to display for acro mode tuning
+//if ((rate_and_mode_value&1) == 1) PID_index_limit = 14; // number of PIDs to display for level mode tuning
+if (PID_index_delay > 12) {
+	PID_index_delay = 0;
+	current_PID_for_display++;
+	if (current_PID_for_display > PID_index_limit) current_PID_for_display = 0;
+}
+
+}
+
+
+if (TLMorPID == 0)
+{
+	buf[L++] =  0x1F; //TLM datatype_and_packetID;  // xxxxyyyy -> yyyy = 1111 packet type ID (custom BLE type), xxxx = type of data in packet: 0001 -> telemetry, 0002->PID
+
+#ifdef MY_QUAD_MODEL
+	buf[L++] =  MY_QUAD_MODEL;
+#else
+	buf[L++] =  0x11;  // quad model (00 - unknown, 11- H8 mini blue board, 20 - H101... check comments at start of this file for details)
 #endif
 
 buf[L++] = random_seed; //already custom entry - need to be randomized
@@ -752,15 +887,15 @@ buf[L++] = packetpersecond_short;
 buf[L++] =  onground_and_bind; //binary xxxxabcd - xxxx = error code or warning, a -> 0 = stock TX, 1= other TX, b -> 0 = not failsafe, 1 = failsafe, c = 0 -> not bound, 1 -> bound, d = 0 -> in the air, 1 = on the ground;
 buf[L++] =  vbatt_comp_int>>8;  // Battery voltage compensated
 buf[L++] =  vbatt_comp_int;  // Battery voltage compensated
-buf[L++] =  total_time_in_air_time>>8;  // Battery voltage raw
-buf[L++] =  total_time_in_air_time;  // Battery voltage raw
+buf[L++] =  total_time_in_air_time>>8;  // total time in air
+buf[L++] =  total_time_in_air_time;  // total time in air
 buf[L++] =  time>>8;
 buf[L++] =  time;
 buf[L++] =  rate_and_mode_value; //xxxxxxRM //rate + mode R = rate (0 - normal, 1 - fast) , M = mode (1 - level, 0 - acro)
 buf[L++] =  0x00; //reserved for future use
 
 L=L+3; //crc
-
+}
 
 
 btLePacketEncode(buf, L, ch );
