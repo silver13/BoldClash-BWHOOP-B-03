@@ -55,11 +55,6 @@ float pidki[PIDNUMBER] = { 8.8e-1  , 8.8e-1 , 3e-1 };
 // Kd			          ROLL       PITCH     YAW
 float pidkd[PIDNUMBER] = { 5.5e-1 , 5.5e-1  , 0.0e-1 };	
 
-int number_of_increments[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
-int current_pid_axis = 0;
-int current_pid_term = 0;
-float * current_pid_term_pointer = pidkp;
-
 // "setpoint weighting" 0.0 - 1.0 where 0.0 = normal pid
 float b[3] = { 0.0 , 0.0 , 0.0};
 
@@ -76,6 +71,12 @@ const float integrallimit[PIDNUMBER] = { 0.8 , 0.8 , 0.5 };
 
 
 // non changable things below
+
+int number_of_increments[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+int current_pid_axis = 0;
+int current_pid_term = 0;
+float * current_pid_term_pointer = pidkp;
+
 float ierror[PIDNUMBER] = { 0 , 0 , 0};	
 
 float pidoutput[PIDNUMBER];
