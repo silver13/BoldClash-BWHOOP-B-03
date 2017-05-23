@@ -43,6 +43,7 @@ THE SOFTWARE.
 #include "rx.h"
 #include "drv_spi.h"
 #include "control.h"
+#include "pid.h"
 #include "defines.h"
 #include "drv_i2c.h"
 #include "drv_softi2c.h"
@@ -103,6 +104,7 @@ extern int failsafe;
 
 // for led flash on gestures
 int ledcommand = 0;
+int ledblink = 0;
 unsigned long ledcommandtime = 0;
 
 void failloop( int val);
@@ -406,6 +408,17 @@ else
 							    }
 							  ledflash(100000, 8);
 						  }
+						else if (ledblink)
+						{
+							if (!ledcommandtime)
+								  ledcommandtime = gettime();
+							if (gettime() - ledcommandtime > 500000)
+							    {
+								    ledblink--;
+								    ledcommandtime = 0;
+							    }
+							ledflash(500000, 1);
+						}
 						else
 					#endif // end gesture led flash
 				if ( aux[LEDS_ON] )

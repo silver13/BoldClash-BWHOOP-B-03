@@ -37,6 +37,7 @@ THE SOFTWARE.
 #include "flip_sequencer.h"
 #include "gestures.h"
 #include "defines.h"
+#include "led.h"
 
 
 extern float rx[];
@@ -63,6 +64,7 @@ extern char auxchange[AUXNUMBER];
 extern char aux[AUXNUMBER];
 
 extern int ledcommand;
+extern int ledblink;
 
 extern float apid(int x);
 
@@ -179,16 +181,47 @@ float rate_multiplier = 1.0;
 		    }
 		  else
 		    {
-			    ledcommand = 1;
+
 			    if (command == 2)
 			      {
 				      aux[CH_AUX1] = 1;
 
+				      ledcommand = 1;
 			      }
 			    if (command == 1)
 			      {
-				      aux[CH_AUX1] = 0;
+				      ledcommand = 1;
+							aux[CH_AUX1] = 0;
 			      }
+					#ifdef PID_GESTURE_TUNING
+						
+					int blink = 0;
+			    if (command == 4)
+			      {
+							// Cycle to next pid term (P I D)
+							blink = next_pid_term();
+			      }
+			    if (command == 5)
+			      {
+							// Cycle to next axis (Roll Pitch Yaw)
+							blink = next_pid_axis();
+			      }
+			    if (command == 6)
+			      {
+				      // Increase by 10%
+							blink = increase_pid();
+			      }
+			    if (command == 7)
+			      {
+							// Descrease by 10%
+				      blink = decrease_pid();
+			      }
+					// U D U - Next PID term
+					// U D D - Next PID Axis
+					// U D R - Increase value
+					// U D L - Descrease value
+					ledblink = blink; //Will cause led logic to blink the number of times ledblink has stored in it.
+					#endif
 		    }
 	  }
 		#endif		
