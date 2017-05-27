@@ -779,10 +779,13 @@ buf[L++] = packetpersecond_short;
 buf[L++] =  onground_and_bind; //binary xxxxabcd - xxxx = error code or warning, a -> 0 = stock TX, 1= other TX, b -> 0 = not failsafe, 1 = failsafe, c = 0 -> not bound, 1 -> bound, d = 0 -> in the air, 1 = on the ground;
 */
 
+	
 #ifdef COMBINE_PITCH_ROLL_PID_TUNING
 	buf[L++] =  B01000000+((rate_and_mode_value<<4)+onground_and_bind); //binary xxRMabcd - x = error code or warning, 1 = combined roll+pitch tuning, R = rate (0 - normal, 1 - fast) , M = mode (1 - level, 0 - acro); a -> 0 = stock TX, 1= other TX, b -> 0 = not failsafe, 1 = failsafe, c = 0 -> not bound, 1 -> bound, d = 0 -> in the air, 1 = on the ground;
+	int PID_pause = 8;
 #else
 	buf[L++] =  (rate_and_mode_value<<4)+onground_and_bind; //binary x0RMabcd - x = error code or warning, 0 = no combined roll+pitch tuning, R = rate (0 - normal, 1 - fast) , M = mode (1 - level, 0 - acro); a -> 0 = stock TX, 1= other TX, b -> 0 = not failsafe, 1 = failsafe, c = 0 -> not bound, 1 -> bound, d = 0 -> in the air, 1 = on the ground;
+	int PID_pause = 12;
 #endif
 	
 buf[L++] =  vbatt_comp_int>>8;  // Battery voltage compensated
@@ -839,9 +842,16 @@ L=L+3; //crc
 PID_index_delay++;
 int PID_index_limit = 8; // number of PIDs to display for acro mode tuning
 //if ((rate_and_mode_value&1) == 1) PID_index_limit = 14; // number of PIDs to display for level mode tuning
-if (PID_index_delay > 12) {
+if (PID_index_delay > PID_pause) {
 	PID_index_delay = 0;
 	current_PID_for_display++;
+	
+#ifdef COMBINE_PITCH_ROLL_PID_TUNING
+ if (current_PID_for_display == 1)	current_PID_for_display =2;
+ if (current_PID_for_display == 4)	current_PID_for_display =5;
+ if (current_PID_for_display == 7)	current_PID_for_display =8;
+#endif
+	
 	if (current_PID_for_display > PID_index_limit) current_PID_for_display = 0;
 }
 
