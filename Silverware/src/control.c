@@ -165,9 +165,9 @@ float rate_multiplier = 1.0;
 		#ifdef GESTURES2_ENABLE
 		int command = gestures2();
 
-		if (command)
+		if (command!=GESTURE_NONE)
 	  {
-		  if (command == 3)
+		  if (command == GESTURE_DDD)
 		    {
 			    gyro_cal();	// for flashing lights
 
@@ -184,13 +184,13 @@ float rate_multiplier = 1.0;
 		  else
 		    {
 
-			    if (command == 2)
+			    if (command == GESTURE_RRD)
 			      {
 				      aux[CH_AUX1] = 1;
 
 				      ledcommand = 1;
 			      }
-			    if (command == 1)
+			    if (command == GESTURE_LLD)
 			      {
 				      ledcommand = 1;
 							aux[CH_AUX1] = 0;
@@ -198,22 +198,22 @@ float rate_multiplier = 1.0;
 					#ifdef PID_GESTURE_TUNING
 						
 					int blink = 0;
-			    if (command == 4)
+			    if (command == GESTURE_UDU)
 			      {
 							// Cycle to next pid term (P I D)
 							blink = next_pid_term();
 			      }
-			    if (command == 5)
+			    if (command == GESTURE_UDD)
 			      {
 							// Cycle to next axis (Roll Pitch Yaw)
 							blink = next_pid_axis();
 			      }
-			    if (command == 6)
+			    if (command == GESTURE_UDR)
 			      {
 				      // Increase by 10%
 							blink = increase_pid();
 			      }
-			    if (command == 7)
+			    if (command == GESTURE_UDL)
 			      {
 							// Descrease by 10%
 				      blink = decrease_pid();

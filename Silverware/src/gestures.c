@@ -189,7 +189,7 @@ int gesture_sequence(int currentgesture)
 
 			    //change buffer so it does not trigger again
 			    gbuffer[1] = GESTURE_OTHER;
-			    return 1;
+			    return GESTURE_LLD;
 		    }
 
 		
@@ -199,7 +199,7 @@ int gesture_sequence(int currentgesture)
 
 			    //change buffer so it does not trigger again
 			    gbuffer[1] = GESTURE_OTHER;
-			    return 2;
+			    return GESTURE_RRD;
 		    }
 
 		
@@ -209,7 +209,7 @@ int gesture_sequence(int currentgesture)
 
 			    //change buffer so it does not trigger again
 			    gbuffer[1] = GESTURE_OTHER;
-			    return 3;
+			    return GESTURE_DDD;
 		    }
 			#ifdef PID_GESTURE_TUNING
 			if (check_command ( &gbuffer[0] , &command4[0] ))
@@ -218,7 +218,7 @@ int gesture_sequence(int currentgesture)
 
 			    //change buffer so it does not trigger again
 			    gbuffer[1] = GESTURE_OTHER;
-			    return 4;
+			    return GESTURE_UDU;
 		    }
 				
 			if (check_command ( &gbuffer[0] , &command5[0] ))
@@ -227,7 +227,7 @@ int gesture_sequence(int currentgesture)
 
 			    //change buffer so it does not trigger again
 			    gbuffer[1] = GESTURE_OTHER;
-			    return 5;
+			    return GESTURE_UDD;
 		    }
 				
 			if (check_command ( &gbuffer[0] , &command6[0] ))
@@ -236,7 +236,7 @@ int gesture_sequence(int currentgesture)
 
 			    //change buffer so it does not trigger again
 			    gbuffer[1] = GESTURE_OTHER;
-			    return 6;
+			    return GESTURE_UDR;
 		    }
 			if (check_command ( &gbuffer[0] , &command7[0] ))
 		    {
@@ -244,11 +244,11 @@ int gesture_sequence(int currentgesture)
 
 			    //change buffer so it does not trigger again
 			    gbuffer[1] = GESTURE_OTHER;
-			    return 7;
+			    return GESTURE_UDL;
 		    }
 			#endif
 
 	  }
 
-	return 0;
+	return GESTURE_NONE;
 }
