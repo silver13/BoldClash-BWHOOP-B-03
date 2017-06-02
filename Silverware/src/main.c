@@ -218,7 +218,7 @@ extern float accelcal[3];
 #endif
 
 
-extern unsigned int liberror;
+extern int liberror;
 if ( liberror ) 
 {
 	  #ifdef SERIAL_INFO	
