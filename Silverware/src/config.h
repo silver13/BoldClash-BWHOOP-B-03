@@ -209,8 +209,10 @@
 #define COMBINE_PITCH_ROLL_PID_TUNING
 
 // flash save method
-// flash_save 2 - accel data only to option bytes
-#define FLASH_SAVE2
+// flash_save 1: pids + accel calibration
+// flash_save 2: accel calibration to option bytes
+#define FLASH_SAVE1
+//#define FLASH_SAVE2
 
 
 //##################################

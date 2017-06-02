@@ -70,8 +70,10 @@ debug_type debug;
 
 // hal
 void clk_init(void);
-
 void imu_init(void);
+extern void flash_load( void);
+extern void flash_hard_coded_pid_identifier(void);
+
 
 // looptime in seconds
 float looptime;
@@ -101,7 +103,7 @@ char auxchange[AUXNUMBER];
 extern int rxmode;
 // failsafe on / off
 extern int failsafe;
-
+extern float hardcoded_pid_identifier;
 
 // for led flash on gestures
 int ledcommand = 0;
@@ -217,6 +219,13 @@ extern float accelcal[3];
  accelcal[1] = flash2_readdata( OB->DATA1 ) - 127;
 #endif
 
+#ifdef FLASH_SAVE1
+// read pid identifier for values in file pid.c
+    flash_hard_coded_pid_identifier();
+
+// load flash saved variables
+    flash_load( );
+#endif
 
 extern int liberror;
 if ( liberror ) 
