@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include "defines.h"
 #include "drv_time.h"
 #include "sixaxis.h"
-#include "drv_fmc.h"
+#include "drv_fmc2.h"
 #include "flip_sequencer.h"
 #include "gestures.h"
 #include "defines.h"
@@ -150,9 +150,10 @@ float rate_multiplier = 1.0;
 			    gyro_cal();	// for flashing lights		
 			
 			    acc_cal();
-				  extern float accelcal[3];			  
-				  fmc_write( accelcal[0] + 127 , accelcal[1] + 127);
-
+				  extern float accelcal[3];	
+                  #ifdef FLASH_SAVE2
+				  flash2_fmc_write( accelcal[0] + 127 , accelcal[1] + 127);
+                  #endif
 			    // reset loop time so max loop time is not exceeding
 			    extern unsigned lastlooptime;
 			    lastlooptime = gettime();
@@ -172,8 +173,9 @@ float rate_multiplier = 1.0;
 
 			    acc_cal();
 				  extern float accelcal[3];
-				  
-				  fmc_write( accelcal[0] + 127 , accelcal[1] + 127);
+				  #ifdef FLASH_SAVE2
+				  flash2_fmc_write( accelcal[0] + 127 , accelcal[1] + 127);
+                  #endif
 
 			    // reset loop time 
 			    extern unsigned lastlooptime;

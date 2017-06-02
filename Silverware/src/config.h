@@ -208,7 +208,9 @@
 #define PID_GESTURE_TUNING
 #define COMBINE_PITCH_ROLL_PID_TUNING
 
-
+// flash save method
+// flash_save 2 - accel data only to option bytes
+#define FLASH_SAVE2
 
 
 //##################################

@@ -49,6 +49,7 @@ THE SOFTWARE.
 #include "drv_softi2c.h"
 #include "drv_serial.h"
 #include "buzzer.h"
+#include "drv_fmc2.h"
 
 #include "binary.h"
 
@@ -208,14 +209,13 @@ serial_init();
 
 
 	imu_init();
-	
+
+#ifdef FLASH_SAVE2
 // read accelerometer calibration values from option bytes ( 2* 8bit)
 extern float accelcal[3];
-extern int readdata( int datanumber);
-
- accelcal[0] = readdata( OB->DATA0 ) - 127;
- accelcal[1] = readdata( OB->DATA1 ) - 127;
-
+ accelcal[0] = flash2_readdata( OB->DATA0 ) - 127;
+ accelcal[1] = flash2_readdata( OB->DATA1 ) - 127;
+#endif
 
 
 extern unsigned int liberror;

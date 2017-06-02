@@ -598,6 +598,11 @@
               <FilePath>.\src\drv_fmc1.c</FilePath>
             </File>
             <File>
+              <FileName>drv_fmc2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\drv_fmc2.c</FilePath>
+            </File>
+            <File>
               <FileName>drv_gpio.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\drv_gpio.c</FilePath>
