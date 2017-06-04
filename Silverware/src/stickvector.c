@@ -5,20 +5,33 @@
 #include <string.h>
 
 
-
 extern float rxcopy[];
 extern float GEstG[3];
 extern float Q_rsqrt( float number );
 
-
+// error vector between stick position and quad orientation
+// this is the output of this function
 float errorvect[3];
+// cache the last result so it does not get calculated everytime
+float last_rx[2] = {13.13f , 12.12f};
+float stickvector[3] = { 0 , 0 , 1};
+
+
+
 
 void stick_vector( float maxangle)
 {
+// only compute stick rotation if values changed
+if ( last_rx[0] == rxcopy[0] && last_rx[1] == rxcopy[1] )
+{
+     
+}
+else
+{
+    last_rx[0] = rxcopy[0];
+    last_rx[1] = rxcopy[1]; 
 	
-float stickvector[3];	
 	
-
 float pitch, roll;
 
 	// rotate down vector to match stick position
@@ -40,7 +53,7 @@ else mag2 = 0.707f;
 
 stickvector[0] *=mag2;
 stickvector[1] *=mag2;	
-
+}
 
 // find error between stick vector and quad orientation
 // vector cross product 
