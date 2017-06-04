@@ -628,30 +628,31 @@ thrsum = 0;
    
     if (aux[LEVELMODE]&&!acro_override)
     {
-        // level mode calculations done after to save time
-        // the 1ms latency should not affect cascaded pids significantly
+        // level mode calculations done after to reduce latency
+        // the 1ms extra latency should not affect cascaded pids significantly
         
       	extern void stick_vector( float);
-		extern float errorvect[];					
-        extern float GEstG[3];
-        float yawerror[3];	
+		extern float errorvect[]; // level mode angle error calculated by stick_vector.c					
+        extern float GEstG[3]; // gravity vector for yaw feedforward
+        float yawerror[3] = {0}; // yaw rotation vector
 
-		stick_vector( 0 );
-        
-        float yawrate = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD;
-        
+        // calculate roll / pitch error
+		stick_vector( 0 ); 
+           
+        float yawrate = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD;            
+        // apply yaw from the top of the quad            
         yawerror[0] = GEstG[1] * yawrate;
         yawerror[1] = - GEstG[0] * yawrate;
         yawerror[2] = GEstG[2] * yawrate;
-        
-        for ( int i = 0 ; i <=1; i++)		
-           lpf( &angleerror[i] , errorvect[i]* RADTODEG , FILTERCALC( 1000 , 20000) );
-   
-		for ( int i = 0 ; i <2; i++)
+
+        // pitch and roll
+		for ( int i = 0 ; i <=1; i++)
 			{
+            lpf( &angleerror[i] , errorvect[i] , FILTERCALC( LOOPTIME , 20000) );
+                
 			error[i] = apid(i) + yawerror[i] - gyro[i];
 			}
-
+        // yaw
 		error[2] = yawerror[2]  - gyro[2];  
     }
     
