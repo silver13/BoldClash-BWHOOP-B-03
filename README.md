@@ -13,7 +13,7 @@ Compiling instructions ( uses Keil uVision IDE):
 https://www.rcgroups.com/forums/showthread.php?2877480-Compilation-instructions-for-silverware#post37391059
 
 ### Level / acro mode change
-By default "gestures" are used to change modes, move the stick left - left - down for acro mode , and right - right - down for level mode.
+By default "gestures" are used to change modes, move the stick *left-left-down* for acro mode , and *right-right-down* for level mode.
 
 ### Pid gestures and save
 Pid gestures allow the pilot to change the acro mode pids by a percentage, and such tune the quadcopter without a computer. The new pids can be saved so that they will be restored after the quad is power cycled.The new pids will remain active if saved, until the pid values in file pid.c are changed. If the values are not changed, flashing the quad will not erase the pids unless the erase command is manually issued when programming.
