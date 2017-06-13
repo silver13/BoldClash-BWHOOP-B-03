@@ -27,7 +27,7 @@ The gesture for accel calibration is down - down - down. If pids have been chang
 ### Telemetry
 DeviationTx and multimodule+taranis can support telemetry, this requires no changes from the defaults on the quad. For devo, when selecting the Bayang protocol, hit Enter to see options, and enable telemetry there. Telemetry currently contains received number of data and telemetry packets, and 2 voltages, battery raw voltage and compensated voltage ( against voltage drop )
 
-For multimidule, you need to add telemetry ( as an option ) to the bayang protocol in the protocol table ( configuration file ). Note the telemetry protocol won't work with stock quads.
+For multimodule, you need to add telemetry ( as an option ) to the bayang protocol in the protocol table ( configuration file ). Note the telemetry protocol won't work with stock quads.
 
 *See also*
 http://sirdomsen.diskstation.me/dokuwiki/doku.php?id=telemetry
