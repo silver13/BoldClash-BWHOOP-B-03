@@ -1,10 +1,10 @@
 [![Build Status](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03.svg?branch=master)](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03)
 
-### BoldClash BWHOOP B-03
+## SilverWare - BoldClash BWHOOP B-03 version
 
-Currently does not account for centered throttle! ( no altitude hold ) It uses normal throttle, low = motors off.
+Currently does not account for centered throttle! ( no altitude hold ) It uses normal throttle, low = motors off. That means it should be used with Devo / multimodule or another tx.
 
-Programming connector is a Microjst 1.25 pitch connector. Don't wire positive to st-link as you may overcharge the battery if connected or damage st-link.
+Programming connector is a Microjst 1.25 pitch connector. Don't wire positive to st-link as you may overcharge the battery if connected or damage the st-link.
 
 Programming instructions ( uses St-link Utility program ):
 https://www.rcgroups.com/forums/showthread.php?2876797-Boldclash-bwhoop-B-03-opensource-firmware
