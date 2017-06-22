@@ -88,18 +88,16 @@ THE SOFTWARE.
 // If you want to have different image in SilverVISE assigned to your quadcopter, you can override default value that represents quadcopter model you flash.
 // Do it here by uncommenting and setting "#define MY_QUAD_MODEL".
 // If disabled, value is set by firmware itself (based on what quad model firmware is made for).
-// But in case you have, for example H8 blue board in Bayangtoys X9 frame, you can set your quad model here to X9 (value 0x12)
+// For this firmware, default image is for BWHOOP with blue canopy. But in case you have orange one, set value to 0x52
 // and get propper image in SilverVISE application.
-// For this firmware and H8 blue board, values are:
+// To resume, fo this firmware, values are:
 //
-//0x11 - H8 mini blue board - original quadcopter (default for H8 blue board)
-//0x12 - X9 frame with blue board
-//0x13 - Custom frame with blue board
+//0x51 - BWHOOP B-03 - blue canopy (default)
+//0x52 - BWHOOP B-03 - orange canopy
 //
-// Values 0x01, 0x02 and 0x03 are reserved for H8 green board. Other values are reserved for H101/H8S firmware.
 // Value 0x00 represents unknown quad (generic image)
 
-//#define MY_QUAD_MODEL 0x11
+//#define MY_QUAD_MODEL 0x52
 
 // *** THE FOLLOWING THREE SETTINGS USE ONLY IF YOU HAVE PROBLEMS WITH VERY OFTEN "TLM DISCONNECTING" ALARMS, ESPECIALLY ON FULL THROTTLE ***
 // If you do not experience these problems and have stable telemetry connection, do not enable and set TX_POWER_GENERAL, TX_POWER_ON_TLM nor USE_ALL_BLE_CHANNELS
@@ -735,7 +733,7 @@ buf[L++] =  0x2F; //PID+TLM datatype_and_packetID;  // xxxxyyyy -> yyyy = 1111 p
 #ifdef MY_QUAD_MODEL
 	buf[L++] =  MY_QUAD_MODEL;
 #else
-	buf[L++] =  0x11;  // quad model (00 - unknown, 11- H8 mini blue board, 20 - H101... check comments at start of this file for details)
+	buf[L++] =  0x51;  //quad model (00 - unknown, 51 - BWHOOP B-03 blue canopy, 52 - BWHOOP B-03 orange canopy... check comments at start of this file for details)
 #endif
 
 buf[L++] = random_seed; //already custom entry - need to be randomized
