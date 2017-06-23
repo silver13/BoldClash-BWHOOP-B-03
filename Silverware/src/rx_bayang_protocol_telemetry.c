@@ -49,8 +49,10 @@ THE SOFTWARE.
 #define PACKET_OFFSET 0
 
 #ifdef USE_STOCK_TX
+#undef PACKET_PERIOD
+#define PACKET_PERIOD 2000
 #undef PACKET_OFFSET
-#define PACKET_OFFSET -250
+#define PACKET_OFFSET 0
 #endif
 
 // how many times to hop ahead if no reception
