@@ -2,6 +2,8 @@
 
 ## SilverWare - BoldClash BWHOOP B-03 version
 
+_Also works with B03 Pro_
+
 Currently does not account for centered throttle! ( no altitude hold ) It uses normal throttle, low = motors off. That means it should be used with Devo / multimodule or another tx.
 
 Programming connector is a Microjst 1.25 pitch connector. Don't wire positive to st-link as you may overcharge the battery if connected or damage the st-link.
