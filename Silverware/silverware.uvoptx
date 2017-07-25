@@ -161,7 +161,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>.\src\control.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\bwhoop\src/control.c\188</Expression>
+          <Expression>\\\src/control.c\188</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
