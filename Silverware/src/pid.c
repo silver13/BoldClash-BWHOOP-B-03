@@ -55,8 +55,9 @@ float pidki[PIDNUMBER] = { 8.8e-1  , 8.8e-1 , 3e-1 };
 // Kd			          ROLL       PITCH     YAW
 float pidkd[PIDNUMBER] = { 5.5e-1 , 5.5e-1  , 0.0e-1 };	
 
-// "setpoint weighting" 0.0 - 1.0 where 0.0 = normal pid
-float b[3] = { 0.0 , 0.0 , 0.0};
+// "setpoint weighting" 0.0 - 1.0 where 1.0 = normal pid
+// #define ENABLE_SETPOINT_WEIGHTING
+float b[3] = { 1.0 , 1.0 , 1.0};
 
 
 
@@ -263,12 +264,16 @@ float pid(int x )
 				
 				limitf( &ierror[x] , integrallimit[x] );
 				
+				
+                #ifdef ENABLE_SETPOINT_WEIGHTING
 				// P term
-                pidoutput[x] = error[x] * ( 1 - b[x])* pidkp[x] ;
-				
+                pidoutput[x] = error[x] * ( b[x])* pidkp[x];				
 				// b
-                pidoutput[x] +=  - ( b[x])* pidkp[x] * gyro[x]  ;
-				
+                pidoutput[x] +=  - ( 1.0f - b[x])* pidkp[x] * gyro[x];
+				#else
+                // P term with b disabled
+                pidoutput[x] = error[x] * pidkp[x];
+                #endif
 				
 				// I term	
 				pidoutput[x] += ierror[x];

@@ -323,3 +323,10 @@
 #ifdef RX_BAYANG_PROTOCOL_BLE_BEACON
 #undef STOP_LOWBATTERY
 #endif
+
+#ifdef __GNUC__
+#ifdef FLASH_SAVE1
+#undef FLASH_SAVE1
+#warning Flashsave1 usually does not have enough space avail under gcc
+#endif
+#endif
