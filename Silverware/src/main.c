@@ -62,6 +62,7 @@ THE SOFTWARE.
 #ifdef FLASH_SAVE1_WARNING
 // duplicated in config.h
 #warning Flashsave1 usually does not have enough space avail under gcc
+#warning #define FLASH_SAVE1 disabled
 #endif
 #endif
 
