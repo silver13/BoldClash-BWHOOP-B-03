@@ -58,6 +58,20 @@ THE SOFTWARE.
 #include <inttypes.h>
 
 
+#ifdef __GNUC__
+#ifdef FLASH_SAVE1
+#undef FLASH_SAVE1
+#warning Flashsave1 usually does not have enough space avail under gcc
+#endif
+#endif
+
+
+#ifdef __GNUC__
+#ifndef SOFT_LPF_NONE
+#warning the soft lpf may not work correctly with gcc due to longer loop time
+#endif
+#endif
+
 
 #ifdef DEBUG
 #include "debug.h"
