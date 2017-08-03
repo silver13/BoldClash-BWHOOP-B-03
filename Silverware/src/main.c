@@ -59,8 +59,7 @@ THE SOFTWARE.
 
 
 #ifdef __GNUC__
-#ifdef FLASH_SAVE1
-//#undef FLASH_SAVE1
+#ifdef FLASH_SAVE1_WARNING
 // duplicated in config.h
 #warning Flashsave1 usually does not have enough space avail under gcc
 #endif

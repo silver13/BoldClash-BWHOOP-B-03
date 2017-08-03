@@ -46,8 +46,8 @@ extern float gyro[3];
 extern int failsafe;
 extern float pidoutput[PIDNUMBER];
 
-extern float angleerror[3];
-extern float attitude[3];
+extern float angleerror[];
+extern float attitude[];
 
 int onground = 1;
 int onground_long = 1;
