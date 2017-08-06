@@ -39,7 +39,7 @@ apt-get install git build-essential gcc-arm-none-eabi libnewlib-arm-none-eabi
 ```
 Clone the repository:
 ```
-git clone https://github.com/silver13/H8mini_blue_board
+git clone https://github.com/silver13/BoldClash-BWHOOP-B-03.git
 cd H8mini_blue_board
 ```
 Build the firmware:
