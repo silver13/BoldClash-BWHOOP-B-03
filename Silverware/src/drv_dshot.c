@@ -242,7 +242,7 @@ void pwm_set( uint8_t number, float pwm )
 
 
 
-static void make_packet( uint8_t number, uint16_t value )
+void make_packet( uint8_t number, uint16_t value )
 {
     
 	uint16_t packet = ( value << 1 ) | 0; // Here goes telemetry bit (false for now)
