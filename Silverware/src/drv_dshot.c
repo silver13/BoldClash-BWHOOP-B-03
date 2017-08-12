@@ -89,8 +89,8 @@ int pwmdir = 0;
 static unsigned long pwm_failsafe_time = 1;
 static int motor_data[ 48 ] = { 0 };
 
-void make_packet( uint8_t number, uint16_t value );
-
+typedef enum { false, true } bool;
+void make_packet( uint8_t number, uint16_t value, bool telemetry );
 
 //
 //
@@ -218,7 +218,7 @@ void pwm_set( uint8_t number, float pwm )
 		pwm_failsafe_time = 0;
 	}
 
-	make_packet( number, value );
+	make_packet( number, value, false );
 
 	if ( number == 3 ) {
 
@@ -240,12 +240,9 @@ void pwm_set( uint8_t number, float pwm )
     
 }
 
-
-
-void make_packet( uint8_t number, uint16_t value )
+void make_packet( uint8_t number, uint16_t value, bool telemetry )
 {
-    
-	uint16_t packet = ( value << 1 ) | 0; // Here goes telemetry bit (false for now)
+	uint16_t packet = ( value << 1 ) | ( telemetry ? 1 : 0 ); // Here goes telemetry bit
 	// compute checksum
 	uint16_t csum = 0;
 	uint16_t csum_data = packet;
@@ -428,8 +425,47 @@ void bitbang_data()
 
 #pragma pop
 
+#define DSHOT_CMD_BEEP1 1
+#define DSHOT_CMD_BEEP2 2
+#define DSHOT_CMD_BEEP3 3
+#define DSHOT_CMD_BEEP4 4
+#define DSHOT_CMD_BEEP5 5 // 5 currently uses the same tone as 4 in BLHeli_S.
+
+#ifndef MOTOR_BEEPS_TIMEOUT
+#define MOTOR_BEEPS_TIMEOUT 5e6
+#endif
+
 void motorbeep()
 {
+	static unsigned long motor_beep_time = 0;
+	if ( failsafe ) {
+		unsigned long time = gettime();
+		if ( motor_beep_time == 0 ) {
+			motor_beep_time = time;
+		}
+		const unsigned long delta_time = time - motor_beep_time;
+		if ( delta_time > MOTOR_BEEPS_TIMEOUT ) {
+			uint8_t beep_command = 0;
+			if ( delta_time % 2000000 < 250000 ) {
+				beep_command = DSHOT_CMD_BEEP1;
+			} else if ( delta_time % 2000000 < 500000 ) {
+				beep_command = DSHOT_CMD_BEEP3;
+			} else if ( delta_time % 2000000 < 750000 ) {
+				beep_command = DSHOT_CMD_BEEP2;
+			} else if ( delta_time % 2000000 < 1000000 ) {
+				beep_command = DSHOT_CMD_BEEP4;
+			}
+			if ( beep_command != 0 ) {
+				make_packet( 0, beep_command, true );
+				make_packet( 1, beep_command, true );
+				make_packet( 2, beep_command, true );
+				make_packet( 3, beep_command, true );
+				bitbang_data();
+			}
+		}
+	} else {
+		motor_beep_time = 0;
+	}
 }
 
 void pwm_dir( int dir )

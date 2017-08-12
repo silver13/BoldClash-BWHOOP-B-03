@@ -323,11 +323,9 @@ else throttle = (rx[3] - 0.1f)*1.11111111f;
 			#endif
 		}	
 		
-		#ifdef USE_PWM_DRIVER
 		#ifdef MOTOR_BEEPS
 		extern void motorbeep( void);
 		motorbeep();
-		#endif
 		#endif
 
 		#ifdef MIX_LOWER_THROTTLE
