@@ -324,12 +324,5 @@
 #undef STOP_LOWBATTERY
 #endif
 
-#ifdef __GNUC__
-#ifdef FLASH_SAVE1
-#undef FLASH_SAVE1
-#define FLASH_SAVE1_WARNING
-//displays warning in main.c
-#endif
-#endif
 
 // gcc warnings in main.c

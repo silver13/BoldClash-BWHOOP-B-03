@@ -58,14 +58,6 @@ THE SOFTWARE.
 #include <inttypes.h>
 
 
-#ifdef __GNUC__
-#ifdef FLASH_SAVE1_WARNING
-// duplicated in config.h
-#warning Flashsave1 usually does not have enough space avail under gcc
-#warning #define FLASH_SAVE1 disabled
-#endif
-#endif
-
 
 #ifdef __GNUC__
 #ifndef SOFT_LPF_NONE
