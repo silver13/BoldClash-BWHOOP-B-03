@@ -3,7 +3,8 @@
 #include "project.h"
 #include "drv_fmc.h"
 
-#define FLASH_ADDR 0x08003C00
+// address 32768 - 1024 = 31k - last flash block
+#define FLASH_ADDR 0x08007C00
 
 extern void failloop( int);
 
