@@ -164,8 +164,8 @@ void imu_calc(void)
         for (int axis = 0; axis < 3; axis++)
         {
             accel[axis] = accel[axis] * ( ACC_1G / accmag);
-        }
-        float filtcoeff = lpfcalc( looptime, FILTERTIME);
+        }       
+        float filtcoeff = lpfcalc_hz( looptime, 1.0f/(float)FILTERTIME);
         for (int x = 0; x < 3; x++)
           {
               lpf(&GEstG[x], accel[x], filtcoeff);

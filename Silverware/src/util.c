@@ -39,6 +39,17 @@ return ga;
 }
 
 
+// calculates the coefficient for lpf filter 
+float lpfcalc_hz(float sampleperiod, float filterhz) {
+float ga = 1.0f - sampleperiod * filterhz;
+if (ga > 1.0f)
+	ga = 1.0f;
+if (ga < 0.0f)
+	ga = 0.0f;
+return ga;
+}
+
+
 float mapf(float x, float in_min, float in_max, float out_min, float out_max)
 {
 
