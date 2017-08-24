@@ -3,6 +3,11 @@ The flashing procedure consists of the "unlocking" of the board,as it is read/wr
 
 Connections to the programming port require 3 wires, ground, swclk and swdat (swio). While flashing, the quad is powered from its battery.
 
+# Flashing over 16k
+The chip used can be flashed to 32k, but unfortunately some modifications to software need to be performed first.
+This is useful if some features make the binary over 16K.
+Read [this post](http://www.rcgroups.com/forums/showpost.php?p=38162521&postcount=11339) for more info
+
 # Windows
 
 See [RC Groups Thread First Post](http://www.rcgroups.com/forums/showthread.php?t=2634611) for now.
