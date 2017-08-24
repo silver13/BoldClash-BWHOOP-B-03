@@ -314,7 +314,7 @@ if ( liberror )
 
         static float vbattfilt_corr = 4.2;
         // li-ion battery model compensation time decay ( 3 sec )
-        lpf ( &vbattfilt_corr , vbattfilt , FILTERCALC( 1000 , 3000e3) );
+        lpf ( &vbattfilt_corr , vbattfilt , FILTERCALC( 1000 , 18000e3) );
 	
         lpf ( &vbattfilt , battadc , 0.9968f);
 
@@ -349,10 +349,10 @@ if( thrfilt > 0.1f )
 	//	y(n) = x(n) - x(n-1) + R * y(n-1) 
 	//  out = in - lastin + coeff*lastout
 		// hpf
-	 ans = vcomp[z] - lastin[z] + FILTERCALC( 1000*12 , 1000e3) *lastout[z];
+	 ans = vcomp[z] - lastin[z] + FILTERCALC( 1000*12 , 6000e3) *lastout[z];
 		lastin[z] = vcomp[z];
 		lastout[z] = ans;
-	 lpf ( &score[z] , ans*ans , FILTERCALC( 1000*12 , 10e6 ) );	
+	 lpf ( &score[z] , ans*ans , FILTERCALC( 1000*12 , 60e6 ) );	
 	z++;
     
 	if ( z >= 12 ) z = 0;
