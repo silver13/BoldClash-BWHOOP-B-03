@@ -41,9 +41,9 @@ The Android app "SilverVISE" by SilverAG (not me) is able to receive telemetry f
 http://sirdomsen.diskstation.me/dokuwiki/doku.php?id=silvervise
 
 ### Linux/gcc version
-The gcc version compiles close to 16k, and may need turning off features in order to make it fit. Read __install.md__ for additional information.
+The gcc version compiles close to 16k, and may need turning off features in order to make it fit. It's also possible to flash up to 32K with changes. Read __install.md__ for additional information. 
 
-The boldclash settings need changes to work with gcc well, turn off pid save as it uses the last K of flash, likely needed for program space. Turn off the software lpf filter, the loop time is longer, at 1400, which affects the frequency of that filter. You could set loop time to 1500 but it may not be needed.
+The boldclash settings may need changes to work with gcc well. Turn off the software lpf filters except the last 2, the loop time is longer, at 1400, which affects the frequency of other soft lpf filters. You could set loop time to 1500 but it may not be needed.
 
 ### Wiki
 http://sirdomsen.diskstation.me/dokuwiki/doku.php?id=start
