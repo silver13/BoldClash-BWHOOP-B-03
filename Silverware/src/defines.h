@@ -19,7 +19,7 @@
 #define YAW 2
 
 
-#define FILTERCALC( sampleperiod, filtertime) (1.0f - ((float)sampleperiod) / ((float)filtertime))
+#define FILTERCALC( sampleperiod, filtertime) (1.0f - ( 6.0f*(float)sampleperiod) / ( 3.0f *(float)sampleperiod + (float)filtertime))
 
 
 #define RXMODE_BIND 0

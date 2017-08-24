@@ -92,22 +92,7 @@ static int motor_data[ 48 ] = { 0 };
 typedef enum { false, true } bool;
 void make_packet( uint8_t number, uint16_t value, bool telemetry );
 
-//
-//
 
-
-//Motor 0 - BL Default
-//#define DSHOT_PIN_0 GPIO_Pin_9
-//#define DSHOT_PORT_0 GPIOA
-//Motor 1 - FL Default
-//#define DSHOT_PIN_1 GPIO_Pin_10
-//#define DSHOT_PORT_1 GPIOA
-//Motor 2 - BR Default
-//#define DSHOT_PIN_2 GPIO_Pin_11
-//#define DSHOT_PORT_2 GPIOA
-//Motor 3 - FR Default
-//#define DSHOT_PIN_3 GPIO_Pin_8
-//#define DSHOT_PORT_3 GPIOA
 
 
 #ifndef FORWARD
@@ -202,6 +187,8 @@ void pwm_set( uint8_t number, float pwm )
 			pwm_failsafe_time = gettime();
 		} else {
 			// 1s after failsafe we turn off the signal for safety 
+            // this means the escs won't rearm correctly after 2 secs of signal lost
+            // usually the quad should be gone by then
 			if ( gettime() - pwm_failsafe_time > 1000000 ) {
 				value = 0;
                 
