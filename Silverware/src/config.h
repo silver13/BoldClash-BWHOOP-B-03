@@ -19,10 +19,10 @@
 
 // use if your tx has no expo function
 // also comment out DISABLE_EXPO to use
-// -1 to 1 , 0 = no exp
+// 0.00 to 1.00 , 0 = no exp
 // positive = less sensitive near center 
 #define EXPO_XY 0.3
-#define EXPO_YAW 0.0
+#define EXPO_YAW 0.3
 
 
 
@@ -31,16 +31,9 @@
 // flashes 2 times repeatedly at startup
 //#define STOP_LOWBATTERY
 
-// under this voltage the software will not start 
-// if STOP_LOWBATTERY is defined above
-#define STOP_LOWBATTERY_TRESH 3.3
-
 // voltage to start warning
 // volts
 #define VBATTLOW 3.5
-
-// lvc starts flashing under this raw value regardless of throttle
-#define VBATTLOW_MIN 2.7
 
 // compensation for battery voltage vs throttle drop
 #define VDROP_FACTOR 0.7
@@ -97,14 +90,6 @@
 // CH_EXPERT , CH_INV (inv h101 tx)
 // CH_RLL_TRIM , CH_PIT_TRIM - trim buttons pitch, roll
 
-// cg023 protocol chanels
-// CH_CG023_FLIP , CH_CG023_VIDEO , CH_CG023_STILL , CH_CG023_LED
-
-// H7 channels
-// CH_H7_FLIP , CH_H7_VIDEO , CH_H7_FS
-
-// CX10
-// CH_CX10_CH0  (unknown) , CH_CX10_CH2 ( rates mid)
 
 // DEVO channels (bayang protocol)
 // DEVO_CHAN_5 - DEVO_CHAN_10
@@ -137,10 +122,6 @@
 
 // automatically remove center bias ( needs throttle off for 1 second )
 //#define STOCK_TX_AUTOCENTER
-
-// Gestures enable ( gestures 1 = acc only)
-//#define GESTURES1_ENABLE
-#define GESTURES2_ENABLE
 
 // enable motor filter
 // hanning 3 sample fir filter
@@ -182,6 +163,7 @@
 //#define MIX_LOWER_THROTTLE
 //#define MIX_INCREASE_THROTTLE
 
+
 // Radio protocol selection
 // select only one
 //#define RX_CG023_PROTOCOL
@@ -197,15 +179,15 @@
 
 
 // Flash saving features
-#define DISABLE_HEADLESS
 #define DISABLE_FLIP_SEQUENCER
+//#define DISABLE_GESTURES2
 
 // led brightness in-flight ( solid lights only)
 // 0- 15 range
 #define LED_BRIGHTNESS 15
 
 
-
+// external buzzer - pins in hardware.h
 //#define BUZZER_ENABLE
 
 
@@ -221,17 +203,15 @@
 //#define FLASH_SAVE2
 
 
+
+
+
+
+
+
 //##################################
 // debug / other things
 // this should not be usually changed
-
-
-
-// enable serial driver ( pin SWCLK after calibration) 
-// WILL DISABLE PROGRAMMING AFTER GYRO CALIBRATION - 2 - 3 seconds after powerup)
-//#define SERIAL_ENABLE
-// enable some serial info output
-//#define SERIAL_INFO
 
 
 // level mode "manual" trims ( in degrees)
@@ -280,9 +260,6 @@
 //#define MOTOR_MIN_ENABLE
 #define MOTOR_MIN_VALUE 0.05
 
-// limit max motor output to a value (0.0 - 1.0)
-//#define MOTOR_MAX_ENABLE
-#define MOTOR_MAX_VALUE 1.0
 
 
 
@@ -314,11 +291,6 @@
 #endif
 #endif
 
-
-//needed for rssi
-//#ifdef OSD_LTM_PROTOCOL
-//#define RXDEBUG
-//#endif
 
 
 // for the ble beacon to work after in-flight reset

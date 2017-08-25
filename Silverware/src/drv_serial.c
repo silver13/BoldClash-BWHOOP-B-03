@@ -5,6 +5,14 @@
 #include "drv_serial.h"
 #include "config.h"
 
+
+// enable serial driver ( pin SWCLK after calibration) 
+// WILL DISABLE PROGRAMMING AFTER GYRO CALIBRATION - 2 - 3 seconds after powerup)
+
+// this has to be in config.h
+//#define SERIAL_ENABLE
+
+
 #define SERIAL_BUFFER_SIZE 64
 
 #define SERIAL_BAUDRATE 115200

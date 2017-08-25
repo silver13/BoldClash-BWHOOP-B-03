@@ -141,39 +141,7 @@ float rate_multiplier = 1.0;
 	// check for accelerometer calibration command
 	if ( onground )
 	{
-		#ifdef GESTURES1_ENABLE
-		if ( rx[1] < -0.8  )
-		{
-			if ( !timecommand) timecommand = gettime();
-			if ( gettime() - timecommand > 3e6 )
-			{
-				// do command
-					
-			    gyro_cal();	// for flashing lights		
-			
-			    acc_cal();
-                               
-                #ifdef FLASH_SAVE1
-			    extern void flash_save( void);
-                extern void flash_load( void);
-                flash_save( );
-                flash_load( );
-                #endif
-                
-                extern float accelcal[3];	
-                #ifdef FLASH_SAVE2
-                flash2_fmc_write( accelcal[0] + 127 , accelcal[1] + 127);
-                #endif
-                
-			    // reset loop time so max loop time is not exceeding
-			    extern unsigned long lastlooptime;
-			    lastlooptime = gettime();
-                timecommand = 0;
-			}		
-		}
-		else timecommand = 0;	
-		#endif		
-		#ifdef GESTURES2_ENABLE
+		#ifndef DISABLE_GESTURES2
 		int command = gestures2();
 
 		if (command!=GESTURE_NONE)
@@ -248,27 +216,7 @@ float rate_multiplier = 1.0;
 	  }
 		#endif		
 	}
-#ifndef DISABLE_HEADLESS 
-// yaw angle for headless mode	
-	yawangle = yawangle + gyro[YAW]*looptime;
-	if ( auxchange[HEADLESSMODE] )
-	{
-		yawangle = 0;
-	}
-	
-	if ( aux[HEADLESSMODE] ) 
-	{
-		while (yawangle < -3.14159265f)
-            yawangle += 6.28318531f;
 
-        while (yawangle >  3.14159265f)
-            yawangle -= 6.28318531f;
-		
-		float temp = rxcopy[ROLL];
-		rxcopy[ROLL] = rxcopy[ROLL] * fastcos( yawangle) - rxcopy[PITCH] * fastsin(yawangle );
-		rxcopy[PITCH] = rxcopy[PITCH] * fastcos( yawangle) + temp * fastsin(yawangle ) ;
-	}
-#endif	
 
 pid_precalc();	
 
@@ -649,12 +597,6 @@ thrsum = 0;
 		}
 		#endif
 		
-		#ifdef MOTOR_MAX_ENABLE
-		if (mix[i] > (float) MOTOR_MAX_VALUE)
-		{
-			mix[i] = (float) MOTOR_MAX_VALUE;
-		}
-		#endif
 			
 		#ifndef NOMOTORS
 		#ifndef MOTORS_TO_THROTTLE

@@ -458,10 +458,7 @@ if ( time - timestart < CAL_TIME )
 	
 }
 
-	
-#ifdef SERIAL_INFO	
-printf("gyro calibration  %f %f %f \n "   , gyrocal[0] , gyrocal[1] , gyrocal[2]);
-#endif
+
 	
 }
 

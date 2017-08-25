@@ -153,15 +153,11 @@ clk_init();
 	
 	if ( sixaxis_check() ) 
 	{
-		#ifdef SERIAL_INFO	
-		printf( " MPU found \n" );
-		#endif
+		
 	}
 	else 
 	{
-		#ifdef SERIAL_INFO	
-		printf( "ERROR: MPU NOT FOUND \n" );	
-		#endif
+        //gyro not found   
 		failloop(4);
 	}
 	
@@ -194,7 +190,7 @@ while ( count < 64 )
 	
 #ifdef STOP_LOWBATTERY
 // infinite loop
-if ( vbattfilt < (float) STOP_LOWBATTERY_TRESH) failloop(2);
+if ( vbattfilt < (float) 3.3f) failloop(2);
 #endif
 
 
@@ -208,13 +204,6 @@ rgb_init();
 serial_init();
 #endif
 
-#ifdef SERIAL_INFO	
-		printf( "Vbatt %2.2f \n", vbattfilt );
-		#ifdef NOMOTORS
-    printf( "NO MOTORS\n" );
-		#warning "NO MOTORS"
-		#endif
-#endif
 
 
 	imu_init();
@@ -237,9 +226,6 @@ extern float accelcal[3];
 extern int liberror;
 if ( liberror ) 
 {
-	  #ifdef SERIAL_INFO	
-		printf( "ERROR: I2C \n" );	
-		#endif
 		failloop(7);
 }
 
@@ -383,7 +369,7 @@ if( thrfilt > 0.1f )
 		else hyst = 0.0f;
 
 		if (( tempvolt + (float) VDROP_FACTOR * thrfilt <(float) VBATTLOW + hyst )
-            || ( vbattfilt < ( float ) VBATTLOW_MIN ) )
+            || ( vbattfilt < ( float ) 2.7f ) )
             lowbatt = 1;
 		else lowbatt = 0;
 

@@ -266,10 +266,7 @@ void checkrx( void)
 					rxmode = RXMODE_NORMAL;				
 
 				  xn_writereg(0x25, (uint8_t)(rxdata[1] - 0x7D) ); // Set channel frequency	
-				
-					#ifdef SERIAL_INFO	
-					printf( " BIND \n");
-					#endif
+								
 				}
 			}
 			else
