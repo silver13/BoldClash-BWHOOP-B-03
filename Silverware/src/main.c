@@ -398,7 +398,7 @@ else
 				}
 			else 
 			{
-				#ifdef GESTURES2_ENABLE
+			
 				if (ledcommand)
 						  {
 							  if (!ledcommandtime)
@@ -410,6 +410,7 @@ else
 							    }
 							  ledflash(100000, 8);
 						  }
+               	#ifndef DISABLE_GESTURES2
 						else if (ledblink)
 						{
 							if (!ledcommandtime)
@@ -419,7 +420,7 @@ else
 								    ledblink--;
 								    ledcommandtime = 0;
 							    }
-							ledflash(500000, 1);
+							ledflash(500000, 3);
 						}
 						else
 					#endif // end gesture led flash
