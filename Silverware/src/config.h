@@ -99,7 +99,6 @@
 // CH_ON - on always ( all protocols)
 // CH_OFF - off always ( all protocols)
 
-#define HEADLESSMODE CH_OFF
 // rates / expert mode
 #define RATES CH_EXPERT
 
@@ -123,9 +122,11 @@
 // automatically remove center bias ( needs throttle off for 1 second )
 //#define STOCK_TX_AUTOCENTER
 
-// enable motor filter
-// hanning 3 sample fir filter
-#define MOTOR_FILTER
+// enable motor filter - use 1
+// motorfilter1: hanning 3 sample fir filter
+// motorfilter2: 1st lpf, 0.2 - 0.6 , 0.6 = less filtering
+//#define MOTOR_FILTER
+//#define MOTOR_FILTER2_ALPHA 0.3
 
 // clip feedforward attempts to resolve issues that occur near full throttle
 //#define CLIP_FF
