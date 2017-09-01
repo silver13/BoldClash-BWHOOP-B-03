@@ -48,6 +48,14 @@ The boldclash settings may need changes to work with gcc well. Turn off the soft
 ### Wiki
 http://sirdomsen.diskstation.me/dokuwiki/doku.php?id=start
 
+### 29.08.17
+* moved flash save to 31k
+* added 2 looptime independent soft lpf
+* added lowerthrottlemix3 from h8
+* added motor filter 2 replacing original,much better performance
+* pid save has own led flash now
+* cleanup of unused features: headless and some other
+
 
 ### xx.06.17
 * pid gestures - pids can be changed by gestures at the field
