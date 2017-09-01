@@ -122,7 +122,7 @@
 // automatically remove center bias ( needs throttle off for 1 second )
 //#define STOCK_TX_AUTOCENTER
 
-// enable motor filter - use 1
+// enable motor filter - select one
 // motorfilter1: hanning 3 sample fir filter
 // motorfilter2: 1st lpf, 0.2 - 0.6 , 0.6 = less filtering
 //#define MOTOR_FILTER
@@ -160,10 +160,13 @@
 //#define AUTO_THROTTLE
 
 // enable auto lower throttle near max throttle to keep control
+// mix3 works better with brushless
 // comment out to disable
 //#define MIX_LOWER_THROTTLE
 //#define MIX_INCREASE_THROTTLE
 
+//#define MIX_LOWER_THROTTLE_3
+//#define MIX_INCREASE_THROTTLE_3
 
 // Radio protocol selection
 // select only one
