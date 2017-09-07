@@ -1,5 +1,5 @@
 # Install and Flashing Instructions
-The flashing procedure consists of the "unlocking" of the board,as it is read/write protected originally, and flashing the actual firmware. A ST-LINK v2 is used, either clone, original, or Discovery/Nucleo board.
+The flashing procedure consists of the "unlocking" of the board, as it is read/write protected originally, and flashing the actual firmware. A ST-LINK v2 is used, either clone, original, or Discovery/Nucleo board.
 
 Connections to the programming port require 3 wires, ground, swclk and swdat (swio). While flashing, the quad is powered from its battery.
 
@@ -45,7 +45,7 @@ apt-get install git build-essential gcc-arm-none-eabi libnewlib-arm-none-eabi
 Clone the repository:
 ```
 git clone https://github.com/silver13/BoldClash-BWHOOP-B-03.git
-cd H8mini_blue_board
+cd BoldClash-BWHOOP-B-03
 ```
 Build the firmware:
 ```
@@ -64,7 +64,7 @@ The board needs a power cycle after unlocking.
 
 Once the board is unlocked, the firmware can be flashed using
 ```
-openocd -f /usr/share/openocd/scripts/interface/stlink-v2.cfg -f /usr/share/openocd/scripts/target/stm32f0x.cfg -c init -c "reset halt" -c "flash write_image erase h8blue 0x08000000" -c "verify_image h8blue 0x08000000" -c "reset run" -c shutdown
+openocd -f /usr/share/openocd/scripts/interface/stlink-v2.cfg -f /usr/share/openocd/scripts/target/stm32f0x.cfg -c init -c "reset halt" -c "flash write_image erase bwhoop 0x08000000" -c "verify_image bwhoop 0x08000000" -c "reset run" -c shutdown
 ```
 
 ## Troubleshooting
