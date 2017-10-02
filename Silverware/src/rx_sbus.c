@@ -307,7 +307,8 @@ if ( frame_received )
         
         channels[2]-= 173; 
         rx[3] = 0.000610128f * channels[2]; 
-
+        
+        if ( rx[3] > 1 ) rx[3] = 1;
         
         aux[CH_FLIP] = (channels[5] > 993) ? 1 : 0;
 		aux[CH_EXPERT] = (channels[6] > 993) ? 1 : 0;
