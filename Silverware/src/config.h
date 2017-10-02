@@ -177,6 +177,7 @@
 //#define RX_BAYANG_PROTOCOL_BLE_BEACON
 //#define RX_BAYANG_BLE_APP
 //#define RX_CX10BLUE_PROTOCOL
+//#define RX_SBUS
 
 // 0 - 7 - power for telemetry
 #define TX_POWER 7

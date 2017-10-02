@@ -64,6 +64,7 @@
 #include "hardware.h"
 #include "util.h"
 #include "drv_dshot.h"
+#include "config.h"
 
 #ifdef USE_DSHOT_DRIVER_BETA
 
@@ -81,6 +82,11 @@
 #error "Overclock timing not implemented"
 #endif
 
+#ifdef DSHOT150
+#ifdef RX_SBUS
+#warning "DSHOT150 may impair sbus performance"
+#endif
+#endif
 
 extern int failsafe;
 extern int onground;
@@ -210,14 +216,25 @@ void pwm_set( uint8_t number, float pwm )
 	if ( number == 3 ) {
 
         #ifdef DSHOT600
-
+        __disable_irq(); 
         bitbang_data1();
+        __enable_irq();
+        __ISB();
+        __disable_irq();         
         bitbang_data2();
+        __enable_irq();
+        __ISB();
+        __disable_irq();   
         bitbang_data3();
+        __enable_irq();
+        __ISB();
+        __disable_irq();  
         bitbang_data4();
-
-        #else         
+        __enable_irq();
+        #else  
+        __disable_irq();    
 		bitbang_data();
+        __enable_irq();
         #endif
        for ( uint8_t i = 0; i < 48; ++i ) 
        {		

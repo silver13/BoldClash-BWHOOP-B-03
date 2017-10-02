@@ -508,6 +508,11 @@
               <FilePath>.\src\rx_cx10blue_protocol.c</FilePath>
             </File>
             <File>
+              <FileName>rx_sbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\rx_sbus.c</FilePath>
+            </File>
+            <File>
               <FileName>led.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\led.c</FilePath>
