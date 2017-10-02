@@ -317,9 +317,12 @@ else throttle = (rx[3] - 0.1f)*1.11111111f;
 
 #ifdef 	THROTTLE_TRANSIENT_COMPENSATION
         
+#ifndef THROTTLE_TRANSIENT_COMPENSATION_FACTOR 
+ #define THROTTLE_TRANSIENT_COMPENSATION_FACTOR 7.0 
+#endif        
 extern float throttlehpf( float in );
         
-		  throttle += 7.0f * throttlehpf(throttle);
+		  throttle += (float) (THROTTLE_TRANSIENT_COMPENSATION_FACTOR) * throttlehpf(throttle);
 		  if (throttle < 0)
 			  throttle = 0;
 		  if (throttle > 1.0f)
