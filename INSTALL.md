@@ -4,13 +4,15 @@ The flashing procedure consists of the "unlocking" of the board, as it is read/w
 Connections to the programming port require 3 wires, ground, swclk and swdat (swio). While flashing, the quad is powered from its battery.
 
 # Flashing over 16k
-The chip used can be flashed to 32k, but unfortunately some modifications to software need to be performed first.
+The mcu chip used ( stm32f030k4 ) can be flashed to 32k, but unfortunately some modifications to openocd software need to be performed first.
 This is useful if some features make the binary over 16K.
 Read [this post](http://www.rcgroups.com/forums/showpost.php?p=38162521&postcount=11339) for more info
 
 # Windows
 
-See [RC Groups Thread First Post](http://www.rcgroups.com/forums/showthread.php?t=2634611) for now.
+See [RC Groups Boldclash Thread First Post](https://www.rcgroups.com/forums/showthread.php?2876797-Boldclash-bwhoop-B-03-opensource-firmware) for now.
+
+There is a bug involving flashing from Keil and this mcu, while workarounds are available, the current procedure avoids this by using the ST-Link Utility program instead for flashing.
 
 # Linux
 
