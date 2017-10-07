@@ -5,7 +5,7 @@
 #include <string.h>
 
 
-extern float rxcopy[];
+
 extern float GEstG[3];
 extern float Q_rsqrt( float number );
 
@@ -19,24 +19,24 @@ float stickvector[3] = { 0 , 0 , 1};
 
 
 
-void stick_vector( float maxangle)
+void stick_vector( float rx_input[] , float maxangle)
 {
 // only compute stick rotation if values changed
-if ( last_rx[0] == rxcopy[0] && last_rx[1] == rxcopy[1] )
+if ( last_rx[0] == rx_input[0] && last_rx[1] == rx_input[1] )
 {
      
 }
 else
 {
-    last_rx[0] = rxcopy[0];
-    last_rx[1] = rxcopy[1]; 
+    last_rx[0] = rx_input[0];
+    last_rx[1] = rx_input[1]; 
 	
 	
 float pitch, roll;
 
 	// rotate down vector to match stick position
-pitch = rxcopy[1] * MAX_ANGLE_HI * DEGTORAD + (float) TRIM_PITCH  * DEGTORAD;
-roll = rxcopy[0] * MAX_ANGLE_HI * DEGTORAD + (float) TRIM_ROLL  * DEGTORAD;
+pitch = rx_input[1] * MAX_ANGLE_HI * DEGTORAD + (float) TRIM_PITCH  * DEGTORAD;
+roll = rx_input[0] * MAX_ANGLE_HI * DEGTORAD + (float) TRIM_ROLL  * DEGTORAD;
 
 stickvector[0] = fastsin( roll );
 stickvector[1] = fastsin( pitch );

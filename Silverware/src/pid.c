@@ -73,25 +73,21 @@ const float integrallimit[PIDNUMBER] = { 0.8 , 0.8 , 0.5 };
 
 // non changable things below
 float * pids_array[3] = {pidkp, pidki, pidkd};
-
 int number_of_increments[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
 int current_pid_axis = 0;
 int current_pid_term = 0;
 float * current_pid_term_pointer = pidkp;
 
 float ierror[PIDNUMBER] = { 0 , 0 , 0};	
-
 float pidoutput[PIDNUMBER];
-
-extern float error[PIDNUMBER];
 static float lasterror[PIDNUMBER];
 
+extern float error[PIDNUMBER];
 extern float looptime;
 extern float gyro[3];
 extern int onground;
-
 extern float looptime;
-
+extern int ledcommand;
 
 #ifdef NORMAL_DTERM
 static float lastrate[PIDNUMBER];
@@ -111,12 +107,111 @@ static float lasterror2[PIDNUMBER];
 
 float timefactor;
 
-extern int ledcommand;
+// pid calculation for acro ( rate ) mode
+// input: error[x] = setpoint - gyro
+// output: pidoutput[x] = change required from motors
+float pid(int x )
+{ 
+    
+    if (onground) 
+    {
+    ierror[x] *= 0.98f;
+    }
 
+    int iwindup = 0;
+    if (( pidoutput[x] == outlimit[x] )&& ( error[x] > 0) )
+    {
+        iwindup = 1;		
+    }
+    
+    if (( pidoutput[x] == -outlimit[x])&& ( error[x] < 0) )
+    {
+        iwindup = 1;				
+    } 
+    
+    #ifdef ANTI_WINDUP_DISABLE
+    iwindup = 0;
+    #endif
+    
+    if ( !iwindup)
+    {
+        #ifdef MIDPOINT_RULE_INTEGRAL
+         // trapezoidal rule instead of rectangular
+        ierror[x] = ierror[x] + (error[x] + lasterror[x]) * 0.5f *  pidki[x] * looptime;
+        lasterror[x] = error[x];
+        #endif
+            
+        #ifdef RECTANGULAR_RULE_INTEGRAL
+        ierror[x] = ierror[x] + error[x] *  pidki[x] * looptime;
+        lasterror[x] = error[x];					
+        #endif
+            
+        #ifdef SIMPSON_RULE_INTEGRAL
+        // assuming similar time intervals
+        ierror[x] = ierror[x] + 0.166666f* (lasterror2[x] + 4*lasterror[x] + error[x]) *  pidki[x] * looptime;	
+        lasterror2[x] = lasterror[x];
+        lasterror[x] = error[x];
+        #endif					
+    }
+            
+    limitf( &ierror[x] , integrallimit[x] );
+    
+    
+    #ifdef ENABLE_SETPOINT_WEIGHTING
+    // P term
+    pidoutput[x] = error[x] * ( b[x])* pidkp[x];				
+    // b
+    pidoutput[x] +=  - ( 1.0f - b[x])* pidkp[x] * gyro[x];
+    #else
+    // P term with b disabled
+    pidoutput[x] = error[x] * pidkp[x];
+    #endif
+    
+    // I term	
+    pidoutput[x] += ierror[x];
+
+    // D term
+    // skip yaw D term if not set               
+    if ( pidkd[x] > 0 )
+    {
+        #ifdef NORMAL_DTERM
+        pidoutput[x] = pidoutput[x] - (gyro[x] - lastrate[x]) * pidkd[x] * timefactor  ;
+        lastrate[x] = gyro[x];
+        #endif
+
+        #ifdef NEW_DTERM
+        pidoutput[x] = pidoutput[x] - ( ( 0.5f) *gyro[x] 
+                    - (0.5f) * lastratexx[x][1] ) * pidkd[x] * timefactor  ;
+                        
+        lastratexx[x][1] = lastratexx[x][0];
+        lastratexx[x][0] = gyro[x];
+        #endif
+    
+        #ifdef MAX_FLAT_LPF_DIFF_DTERM 
+        pidoutput[x] = pidoutput[x] - ( + 0.125f *gyro[x] + 0.250f * lastratexx[x][0]
+                    - 0.250f * lastratexx[x][2] - ( 0.125f) * lastratexx[x][3]) * pidkd[x] * timefactor 						;
+
+        lastratexx[x][3] = lastratexx[x][2];
+        lastratexx[x][2] = lastratexx[x][1];
+        lastratexx[x][1] = lastratexx[x][0];
+        lastratexx[x][0] = gyro[x];
+        #endif            
+    }
+    
+    limitf(  &pidoutput[x] , outlimit[x]);
+
+return pidoutput[x];		 		
+}
+
+// calculate change from ideal loop time
+// 0.0032f is there for legacy purposes, should be 0.001f = looptime
+// this is called in advance as an optimization because it has division
 void pid_precalc()
 {
 	timefactor = 0.0032f / looptime;
 }
+
+// below are functions used with gestures for changing pids by a percentage
 
 // Cycle through P / I / D - The initial value is P
 // The return value is the currently selected TERM (after setting the next one)
@@ -181,22 +276,14 @@ int change_pid_value(int increase)
 	if (increase) {
 		multiplier = (float)PID_GESTURES_MULTI;
 		number_of_increments[current_pid_term][current_pid_axis]++;
-		#ifdef COMBINE_PITCH_ROLL_PID_TUNING
-		//if (current_pid_axis == 0) {
-		//	number_of_increments[current_pid_term][current_pid_axis+1]++;	
-		//}
-		#endif
 	}
 	else {
 		number_of_increments[current_pid_term][current_pid_axis]--;
-		#ifdef COMBINE_PITCH_ROLL_PID_TUNING
-		//if (current_pid_axis == 0) {
-		//	number_of_increments[current_pid_term][current_pid_axis+1]--;	
-		//}
-		#endif
 	}
+    
 	current_pid_term_pointer[current_pid_axis] = current_pid_term_pointer[current_pid_axis] * multiplier;
-	#ifdef COMBINE_PITCH_ROLL_PID_TUNING
+	
+    #ifdef COMBINE_PITCH_ROLL_PID_TUNING
 	if (current_pid_axis == 0) {
 		current_pid_term_pointer[current_pid_axis+1] = current_pid_term_pointer[current_pid_axis+1] * multiplier;
 	}
@@ -218,96 +305,6 @@ int increase_pid()
 int decrease_pid()
 {
 	return change_pid_value(0);
-}
-
-float pid(int x )
-{ 
-
-        if (onground) 
-				{
-                ierror[x] *= 0.98f;
-				}
-	
-				int iwindup = 0;
-				if (( pidoutput[x] == outlimit[x] )&& ( error[x] > 0) )
-				{
-					iwindup = 1;		
-				}
-				if (( pidoutput[x] == -outlimit[x])&& ( error[x] < 0) )
-				{
-					iwindup = 1;				
-				}              
-                #ifdef ANTI_WINDUP_DISABLE
-                iwindup = 0;
-                #endif
-        if ( !iwindup)
-				{
-				#ifdef MIDPOINT_RULE_INTEGRAL
-				 // trapezoidal rule instead of rectangular
-         ierror[x] = ierror[x] + (error[x] + lasterror[x]) * 0.5f *  pidki[x] * looptime;
-				 lasterror[x] = error[x];
-				#endif
-					
-				#ifdef RECTANGULAR_RULE_INTEGRAL
-				 ierror[x] = ierror[x] + error[x] *  pidki[x] * looptime;
-				 lasterror[x] = error[x];					
-				#endif
-					
-				#ifdef SIMPSON_RULE_INTEGRAL
-					// assuming similar time intervals
-				 ierror[x] = ierror[x] + 0.166666f* (lasterror2[x] + 4*lasterror[x] + error[x]) *  pidki[x] * looptime;	
-					lasterror2[x] = lasterror[x];
-					lasterror[x] = error[x];
-					#endif
-					
-				}
-				
-				limitf( &ierror[x] , integrallimit[x] );
-				
-				
-                #ifdef ENABLE_SETPOINT_WEIGHTING
-				// P term
-                pidoutput[x] = error[x] * ( b[x])* pidkp[x];				
-				// b
-                pidoutput[x] +=  - ( 1.0f - b[x])* pidkp[x] * gyro[x];
-				#else
-                // P term with b disabled
-                pidoutput[x] = error[x] * pidkp[x];
-                #endif
-				
-				// I term	
-				pidoutput[x] += ierror[x];
-			
-				// D term		  
-
-				#ifdef NORMAL_DTERM
-					pidoutput[x] = pidoutput[x] - (gyro[x] - lastrate[x]) * pidkd[x] * timefactor  ;
-					lastrate[x] = gyro[x];
-				#endif
-
-                #ifdef NEW_DTERM
-                    pidoutput[x] = pidoutput[x] - ( ( 0.5f) *gyro[x] 
-                                - (0.5f) * lastratexx[x][1] ) * pidkd[x] * timefactor  ;
-                                    
-                    lastratexx[x][1] = lastratexx[x][0];
-                    lastratexx[x][0] = gyro[x];
-               #endif
-			
-               #ifdef MAX_FLAT_LPF_DIFF_DTERM 
-					pidoutput[x] = pidoutput[x] - ( + 0.125f *gyro[x] + 0.250f * lastratexx[x][0]
-								- 0.250f * lastratexx[x][2] - ( 0.125f) * lastratexx[x][3]) * pidkd[x] * timefactor 						;
-				
-					lastratexx[x][3] = lastratexx[x][2];
-					lastratexx[x][2] = lastratexx[x][1];
-					lastratexx[x][1] = lastratexx[x][0];
-					lastratexx[x][0] = gyro[x];
-				#endif            
-
-				  limitf(  &pidoutput[x] , outlimit[x]);
-
-
-
-return pidoutput[x];		 		
 }
 
 
