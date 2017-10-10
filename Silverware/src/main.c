@@ -86,9 +86,11 @@ extern void flash_hard_coded_pid_identifier(void);
 float looptime;
 // filtered battery in volts
 float vbattfilt = 0.0;
-float vbatt = 4.2;
 float vbatt_comp = 4.2;
+// voltage reference for vcc compensation
 float vreffilt = 1.0;
+// average of all motors
+float thrfilt = 0;
 
 unsigned int lastlooptime;
 // signal for lowbattery
@@ -233,7 +235,6 @@ if ( liberror )
 
  lastlooptime = gettime();
 
- float thrfilt;
 
 //
 //
@@ -286,9 +287,7 @@ if ( liberror )
 #else
         float battadc = adc_read(0); 
 #endif        
-		vbatt = battadc;
 		
-		float hyst;
 
 		// average of all 4 motor thrusts
 		// should be proportional with battery current			
@@ -335,18 +334,16 @@ if( thrfilt > 0.1f )
 	//	y(n) = x(n) - x(n-1) + R * y(n-1) 
 	//  out = in - lastin + coeff*lastout
 		// hpf
-	 ans = vcomp[z] - lastin[z] + FILTERCALC( 1000*12 , 6000e3) *lastout[z];
-		lastin[z] = vcomp[z];
-		lastout[z] = ans;
-	 lpf ( &score[z] , ans*ans , FILTERCALC( 1000*12 , 60e6 ) );	
+	ans = vcomp[z] - lastin[z] + FILTERCALC( 1000*12 , 6000e3) *lastout[z];
+	lastin[z] = vcomp[z];
+	lastout[z] = ans;
+	lpf ( &score[z] , ans*ans , FILTERCALC( 1000*12 , 60e6 ) );	
 	z++;
-    
-	if ( z >= 12 ) z = 0;
-
-    float min = score[0]; 
-    
-    if (z == 11)
+       
+    if ( z >= 12 )
     {
+        z = 0;
+        float min = score[0]; 
         for ( int i = 0 ; i < 12; i++ )
         {
          if ( (score[i]) < min )  
@@ -364,20 +361,20 @@ if( thrfilt > 0.1f )
 #undef VDROP_FACTOR
 #define VDROP_FACTOR  minindex * 0.1f
 #endif
+    float hyst;
+    if ( lowbatt ) hyst = HYST;
+    else hyst = 0.0f;
 
-		if ( lowbatt ) hyst = HYST;
-		else hyst = 0.0f;
+    if (( tempvolt + (float) VDROP_FACTOR * thrfilt <(float) VBATTLOW + hyst )
+        || ( vbattfilt < ( float ) 2.7f ) )
+        lowbatt = 1;
+    else lowbatt = 0;
 
-		if (( tempvolt + (float) VDROP_FACTOR * thrfilt <(float) VBATTLOW + hyst )
-            || ( vbattfilt < ( float ) 2.7f ) )
-            lowbatt = 1;
-		else lowbatt = 0;
-
-        vbatt_comp = tempvolt + (float) VDROP_FACTOR * thrfilt; 	
+    vbatt_comp = tempvolt + (float) VDROP_FACTOR * thrfilt; 	
 
            
 #ifdef DEBUG
-		debug.vbatt_comp = vbatt_comp ;
+	debug.vbatt_comp = vbatt_comp ;
 #endif		
 	
 
@@ -469,9 +466,8 @@ rgb_led_lvc( );
 // receiver function
 checkrx();
 
-		
-// the delay is required or it becomes endless loop ( truncation in time routine)
-while ( (gettime() - time) < LOOPTIME ) delay(10); 		
+
+while ( (gettime() - time) < LOOPTIME );	
 
 		
 	}// end loop

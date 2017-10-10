@@ -33,45 +33,44 @@ static __INLINE uint32_t SysTick_Config2(uint32_t ticks)
 
 void time_init()
 {
-
-	  if (SysTick_Config2( SYS_CLOCK_FREQ_HZ /8 ))
+    if (SysTick_Config2( SYS_CLOCK_FREQ_HZ /8 ))
     {// not able to set divider
-			  failloop(5);
-        while (1);
+        failloop(5);
     }
 }
 
-// called at least once per second or time will overflow
-unsigned long time_update(void)
-{
-unsigned long maxticks = SysTick->LOAD;	
-unsigned long ticks = SysTick->VAL;	
-unsigned long elapsedticks;	
-
-	if (ticks < lastticks) elapsedticks = lastticks - ticks;	
-	else
-	{// overflow ( underflow really)
-	elapsedticks = lastticks + ( maxticks - ticks);			
-	}
-	
-lastticks = ticks;
-
-#ifdef ENABLE_OVERCLOCK
-globalticks = globalticks+ elapsedticks/8;
-#else
-globalticks = globalticks+ elapsedticks/6;
-#endif	
-	
-return globalticks;	
-}
-
-
 // return time in uS from start ( micros())
-unsigned long gettime()
+// called at least once per second or time will overflow
+unsigned long gettime(void)
 {
-unsigned long time = time_update();
-return time;		
+        
+    unsigned long maxticks = SysTick->LOAD;	
+    unsigned long ticks = SysTick->VAL;	
+    unsigned long elapsedticks;	
+        
+    static unsigned long remainder = 0; // carry forward the remainder ticks;
+    
+    if (ticks < lastticks) elapsedticks = lastticks - ticks;	
+    else
+    {// overflow ( underflow really)
+        elapsedticks = lastticks + ( maxticks - ticks);			
+    }
+        
+    lastticks = ticks;
+    elapsedticks += remainder;
+
+    #ifdef ENABLE_OVERCLOCK
+        const unsigned long quotient = elapsedticks / 8;
+        remainder = elapsedticks - quotient * 8;
+    #else
+        unsigned long quotient = elapsedticks / 6;
+        remainder = elapsedticks - quotient * 6;
+    #endif	
+    globalticks += quotient;	
+    return globalticks;	
 }
+
+
 
 #ifdef ENABLE_OVERCLOCK
 // delay in uS
