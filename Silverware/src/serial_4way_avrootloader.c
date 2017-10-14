@@ -22,19 +22,21 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "platform.h"
+//#include "platform.h"
+
+#include "serial_4way.h"
 
 #ifdef  USE_SERIAL_4WAY_BLHELI_INTERFACE
 
-#include "drivers/io.h"
-#include "drivers/serial.h"
-#include "drivers/time.h"
-#include "drivers/timer.h"
+//#include "drivers/io.h"
+//#include "drivers/serial.h"
+//#include "drivers/time.h"
+//#include "drivers/timer.h"
 
-#include "io/serial.h"
-#include "io/serial_4way.h"
-#include "io/serial_4way_impl.h"
-#include "io/serial_4way_avrootloader.h"
+#include "serial_4way.h"
+#include "serial_4way_impl.h"
+#include "serial_4way_avrootloader.h"
+#include "drv_time.h"
 
 #if defined(USE_SERIAL_4WAY_BLHELI_BOOTLOADER) && !defined(USE_FAKE_ESC)
 
@@ -68,8 +70,24 @@
 #define START_BIT_TIME      (BIT_TIME_3_4)
 //#define STOP_BIT_TIME     ((BIT_TIME * 9) + BIT_TIME_HALVE)
 
+#define micros gettime
+#define millis .001gettime
+
+#include "drv_softserial.h"
+extern SoftSerialData_t escSerial[4];
+
+#undef ESC_INPUT
+#undef ESC_OUTPUT
+#define ESC_INPUT softserial_set_input(&escSerial[selected_esc]);
+#define ESC_OUTPUT softserial_set_output(&escSerial[selected_esc]);
+
+
+
 static uint8_t suart_getc_(uint8_t *bt)
 {
+	return softserial_read_byte_ex(&escSerial[selected_esc], bt);
+}
+/*
     uint32_t btime;
     uint32_t start_time;
 
@@ -103,9 +121,13 @@ static uint8_t suart_getc_(uint8_t *bt)
     *bt = bitmask >> 1;
     return 1;
 }
+*/
 
 static void suart_putc_(uint8_t *tx_b)
 {
+	softserial_write_byte_ex(&escSerial[selected_esc], *tx_b);
+}
+/*
     // shift out stopbit first
     uint16_t bitmask = (*tx_b << 2) | 1 | (1 << 10);
     uint32_t btime = micros();
@@ -122,6 +144,7 @@ static void suart_putc_(uint8_t *tx_b)
         while (micros() < btime);
     }
 }
+*/
 
 static uint8_16_u CRC_16;
 static uint8_16_u LastCRC_16;
@@ -189,6 +212,7 @@ static void BL_SendBuf(uint8_t *pstring, uint8_t len)
 
 uint8_t BL_ConnectEx(uint8_32_u *pDeviceInfo)
 {
+    ESC_INPUT;
     #define BootMsgLen 4
     #define DevSignHi (BootMsgLen)
     #define DevSignLo (BootMsgLen+1)

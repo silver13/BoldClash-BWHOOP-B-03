@@ -17,11 +17,8 @@
 */
 #pragma once
 
-#include "drivers/io_types.h"
-
-typedef struct {
-    IO_t io;
-} escHardware_t;
+#include <stdint.h>
+#include <stdbool.h>
 
 extern uint8_t selected_esc;
 

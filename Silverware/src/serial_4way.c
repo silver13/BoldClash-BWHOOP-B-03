@@ -20,28 +20,33 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "platform.h"
+//#include "platform.h"
 
+
+#include "serial_4way.h"
+#include "drv_pwm.h"
 #ifdef  USE_SERIAL_4WAY_BLHELI_INTERFACE
 
-#include "drivers/buf_writer.h"
-#include "drivers/io.h"
-#include "drivers/serial.h"
-#include "drivers/timer.h"
-#include "drivers/pwm_output.h"
-#include "drivers/light_led.h"
+//#include "drivers/buf_writer.h"
+//#include "drivers/io.h"
+//#include "drivers/serial.h"
+//#include "drivers/timer.h"
+//#include "drivers/pwm_output.h"
+//#include "drivers/light_led.h"
 
-#include "flight/mixer.h"
+//#include "flight/mixer.h"
 
-#include "io/beeper.h"
-#include "io/serial_4way.h"
+//#include "io/beeper.h"
+#include "drv_softserial.h"
+#include "drv_dshot.h"
 
 #ifdef USE_SERIAL_4WAY_BLHELI_BOOTLOADER
-#include "io/serial_4way_avrootloader.h"
+#include "serial_4way_avrootloader.h"
 #endif
 #if defined(USE_SERIAL_4WAY_SK_BOOTLOADER)
-#include "io/serial_4way_stk500v2.h"
+#include "serial_4way_stk500v2.h"
 #endif
+
 
 #if defined(USE_HAL_DRIVER)
 #define Bit_RESET GPIO_PIN_RESET
@@ -50,17 +55,17 @@
 #define USE_TXRX_LED
 
 #ifdef  USE_TXRX_LED
-#define RX_LED_OFF LED0_OFF
-#define RX_LED_ON LED0_ON
+//#define RX_LED_OFF LED0_OFF
+//#define RX_LED_ON LED0_ON
 #ifdef  LED1
 #define TX_LED_OFF LED1_OFF
 #define TX_LED_ON LED1_ON
 #else
-#define TX_LED_OFF LED0_OFF
-#define TX_LED_ON LED0_ON
+//#define TX_LED_OFF LED0_OFF
+//#define TX_LED_ON LED0_ON
 #endif
 #else
-#define RX_LED_OFF
+//#define RX_LED_OFF
 #define RX_LED_ON
 #define TX_LED_OFF
 #define TX_LED_ON
@@ -86,7 +91,7 @@
 
 static uint8_t escCount;
 
-escHardware_t escHardware[MAX_SUPPORTED_MOTORS];
+SoftSerialData_t escSerial[4] = {0};
 
 uint8_t selected_esc;
 
@@ -101,61 +106,80 @@ inline bool isMcuConnected(void)
 
 inline bool isEscHi(uint8_t selEsc)
 {
-    return (IORead(escHardware[selEsc].io) != Bit_RESET);
+    //return (IORead(escHardware[selEsc].io) != Bit_RESET);
+	return true;
 }
 inline bool isEscLo(uint8_t selEsc)
 {
-    return (IORead(escHardware[selEsc].io) == Bit_RESET);
+	return false;
+    //return (IORead(escHardware[selEsc].io) == Bit_RESET);
 }
 
 inline void setEscHi(uint8_t selEsc)
 {
-    IOHi(escHardware[selEsc].io);
+    //IOHi(escHardware[selEsc].io);
 }
 
 inline void setEscLo(uint8_t selEsc)
 {
-    IOLo(escHardware[selEsc].io);
+    //IOLo(escHardware[selEsc].io);
 }
 
 inline void setEscInput(uint8_t selEsc)
 {
-    IOConfigGPIO(escHardware[selEsc].io, IOCFG_IPU);
+    //IOConfigGPIO(escHardware[selEsc].io, IOCFG_IPU);
 }
 
 inline void setEscOutput(uint8_t selEsc)
 {
-    IOConfigGPIO(escHardware[selEsc].io, IOCFG_OUT_PP);
+    //IOConfigGPIO(escHardware[selEsc].io, IOCFG_OUT_PP);
 }
+
 
 uint8_t esc4wayInit(void)
 {
-    // StopPwmAllMotors();
-    pwmDisableMotors();
-    escCount = 0;
-    memset(&escHardware, 0, sizeof(escHardware));
-    pwmOutputPort_t *pwmMotors = pwmGetMotors();
-    for (volatile uint8_t i = 0; i < MAX_SUPPORTED_MOTORS; i++) {
-        if (pwmMotors[i].enabled) {
-            if (pwmMotors[i].io != IO_NONE) {
-                escHardware[escCount].io = pwmMotors[i].io;
-                setEscInput(escCount);
-                setEscHi(escCount);
-                escCount++;
-            }
-        }
-    }
+	// StopPwmAllMotors();
+	//pwmDisableMotors();
+	escCount = 4;
+
+	pwm_set( MOTOR_BL , 0);
+	pwm_set( MOTOR_FL , 0);	 
+	pwm_set( MOTOR_FR , 0); 
+	pwm_set( MOTOR_BR , 0); 
+
+	// set up 1wire serial to each esc
+	// motor 0
+	escSerial[0] = softserial_init(DSHOT_PORT_0,DSHOT_PIN_0,DSHOT_PORT_0, DSHOT_PIN_0, 19200);
+	// motor 1
+	escSerial[1] = softserial_init(DSHOT_PORT_1,DSHOT_PIN_1,DSHOT_PORT_1, DSHOT_PIN_1, 19200);
+	// motor 2
+	escSerial[2] = softserial_init(DSHOT_PORT_2,DSHOT_PIN_2,DSHOT_PORT_2, DSHOT_PIN_2, 19200);
+	// motor 3
+	escSerial[3] = softserial_init(DSHOT_PORT_3,DSHOT_PIN_3,DSHOT_PORT_3, DSHOT_PIN_3, 19200);
+
+	// tx = dat (PA13), rx = clk (PA14)
+	softserial_init(GPIOA,GPIO_Pin_13,GPIOA, GPIO_Pin_14, 38400);
+
     return escCount;
 }
 
 void esc4wayRelease(void)
 {
+
+	pwm_init();
+	pwm_set( MOTOR_BL , 0);
+	pwm_set( MOTOR_FL , 0);	 
+	pwm_set( MOTOR_FR , 0); 
+	pwm_set( MOTOR_BR , 0); 
+
+	/*
     while (escCount > 0) {
         escCount--;
         IOConfigGPIO(escHardware[escCount].io, IOCFG_AF_PP);
         setEscLo(escCount);
     }
     pwmEnableMotors();
+	*/
 }
 
 
@@ -378,13 +402,16 @@ static uint8_t Connect(uint8_32_u *pDeviceInfo)
     return 0;
 }
 
-static serialPort_t *port;
+//static serialPort_t *port;
 
 static uint8_t ReadByte(void)
 {
     // need timeout?
-    while (!serialRxBytesWaiting(port));
-    return serialRead(port);
+    //while (!serialRxBytesWaiting(port));
+    //return serialRead(port);
+	uint8_t byte = 0;
+	softserial_read_byte(&byte);
+	return byte;
 }
 
 static uint8_16_u CRC_in;
@@ -397,7 +424,7 @@ static uint8_t ReadByteCrc(void)
 
 static void WriteByte(uint8_t b)
 {
-    serialWrite(port, b);
+	softserial_write_byte(b);
 }
 
 static uint8_16_u CRCout;
@@ -407,7 +434,14 @@ static void WriteByteCrc(uint8_t b)
     CRCout.word = _crc_xmodem_update(CRCout.word, b);
 }
 
-void esc4wayProcess(serialPort_t *mspPort)
+#define SET_LED1_ON LED1PORT->BSRR = LED1PIN
+#define SET_LED1_OFF LED1PORT->BRR = LED1PIN
+#define SET_LED2_ON LED2PORT->BSRR = LED2PIN
+#define SET_LED2_OFF LED2PORT->BRR = LED2PIN
+
+
+//void esc4wayProcess(serialPort_t *mspPort)
+void esc4wayProcess()
 {
 
     uint8_t ParamBuf[256];
@@ -422,7 +456,7 @@ void esc4wayProcess(serialPort_t *mspPort)
     uint8_t *InBuff;
     ioMem_t ioMem;
 
-    port = mspPort;
+    //port = mspPort;
 
     // Start here  with UART Main loop
     #ifdef BEEPER
@@ -431,15 +465,21 @@ void esc4wayProcess(serialPort_t *mspPort)
     beeperSilence();
     #endif
     bool isExitScheduled = false;
+	//SET_LED2_ON;
 
     while (1) {
         // restart looking for new sequence from host
+		SET_LED1_ON;
         do {
+
             CRC_in.word = 0;
             ESC = ReadByteCrc();
-        } while (ESC != cmd_Local_Escape);
 
-        RX_LED_ON;
+        } while (ESC != cmd_Local_Escape);
+		SET_LED1_OFF;
+
+
+        //RX_LED_ON;
 
         Dummy.word = 0;
         O_PARAM = &Dummy.bytes[0];
@@ -466,7 +506,7 @@ void esc4wayProcess(serialPort_t *mspPort)
             ACK_OUT = ACK_I_INVALID_CRC;
         }
 
-        TX_LED_ON;
+        //TX_LED_ON;
 
         if (ACK_OUT == ACK_OK)
         {
@@ -542,12 +582,13 @@ void esc4wayProcess(serialPort_t *mspPort)
                 case cmd_InterfaceSetMode:
                 {
 #if defined(USE_SERIAL_4WAY_BLHELI_BOOTLOADER) && defined(USE_SERIAL_4WAY_SK_BOOTLOADER)
-                    if ((ParamBuf[0] <= imARM_BLB) && (ParamBuf[0] >= imSIL_BLB)) {
+                    if ((ParamBuf[0] <= imARM_BLB) && (ParamBuf[0] >= imSIL_BLB))
 #elif defined(USE_SERIAL_4WAY_BLHELI_BOOTLOADER)
-                    if (((ParamBuf[0] <= imATM_BLB)||(ParamBuf[0] == imARM_BLB)) && (ParamBuf[0] >= imSIL_BLB)) {
+                    if (((ParamBuf[0] <= imATM_BLB)||(ParamBuf[0] == imARM_BLB)) && (ParamBuf[0] >= imSIL_BLB))
 #elif defined(USE_SERIAL_4WAY_SK_BOOTLOADER)
-                    if (ParamBuf[0] == imSK) {
+                    if (ParamBuf[0] == imSK)
 #endif
+					{
                         CurrentInterfaceMode = ParamBuf[0];
                     } else {
                         ACK_OUT = ACK_I_INVALID_PARAM;
@@ -859,9 +900,9 @@ void esc4wayProcess(serialPort_t *mspPort)
 
         CRCout.word = 0;
 
-        RX_LED_OFF;
+        //RX_LED_OFF;
 
-        serialBeginWrite(port);
+        //serialBeginWrite(port);
         WriteByteCrc(cmd_Remote_Escape);
         WriteByteCrc(CMD);
         WriteByteCrc(ioMem.D_FLASH_ADDR_H);
@@ -870,7 +911,7 @@ void esc4wayProcess(serialPort_t *mspPort)
 
         i=O_PARAM_LEN;
         do {
-            while (!serialTxBytesFree(port));
+            //while (!serialTxBytesFree(port));
 
             WriteByteCrc(*O_PARAM);
             O_PARAM++;
@@ -880,9 +921,9 @@ void esc4wayProcess(serialPort_t *mspPort)
         WriteByteCrc(ACK_OUT);
         WriteByte(CRCout.bytes[1]);
         WriteByte(CRCout.bytes[0]);
-        serialEndWrite(port);
+        //serialEndWrite(port);
 
-        TX_LED_OFF;
+        //TX_LED_OFF;
         if (isExitScheduled) {
             esc4wayRelease();
             return;
