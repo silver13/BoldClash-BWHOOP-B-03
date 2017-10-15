@@ -282,6 +282,7 @@ if ( liberror )
 // battery low logic
 
 #ifdef ADC_VREF_SCALE
+        // account for vcc changes
 		float battadc = adc_read(0)*vreffilt; 
         lpf ( &vreffilt , adc_read(1)  , 0.9968f);	
 #else
@@ -298,7 +299,7 @@ if ( liberror )
 		lpf ( &thrfilt , thrsum , 0.9968f);	// 0.5 sec at 1.6ms loop time	
 
         static float vbattfilt_corr = 4.2;
-        // li-ion battery model compensation time decay ( 3 sec )
+        // li-ion battery model compensation time decay ( 18 seconds )
         lpf ( &vbattfilt_corr , vbattfilt , FILTERCALC( 1000 , 18000e3) );
 	
         lpf ( &vbattfilt , battadc , 0.9968f);
@@ -361,6 +362,7 @@ if( thrfilt > 0.1f )
 #undef VDROP_FACTOR
 #define VDROP_FACTOR  minindex * 0.1f
 #endif
+
     float hyst;
     if ( lowbatt ) hyst = HYST;
     else hyst = 0.0f;
