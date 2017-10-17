@@ -17,15 +17,17 @@
 */
 #pragma once
 
+#include "config.h"
+
+
+#ifdef USE_SERIAL_4WAY_BLHELI_INTERFACE
+#define USE_SERIAL_4WAY_BLHELI_BOOTLOADER
+//#define USE_SERIAL_4WAY_SK_BOOTLOADER // not implemented in Silverware yet
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <inttypes.h>
 #include "serial_4way_impl.h"
-#include "config.h"
-
-
-#define USE_SERIAL_4WAY_BLHELI_BOOTLOADER
-#define USE_SERIAL_4WAY_SK_BOOTLOADER
 
 #define imC2 0
 #define imSIL_BLB 1
@@ -55,3 +57,5 @@ uint8_t esc4wayInit(void);
 struct serialPort_s;
 void esc4wayProcess();
 void esc4wayRelease(void);
+#endif
+

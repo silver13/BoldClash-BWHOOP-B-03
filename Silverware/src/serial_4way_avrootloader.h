@@ -19,10 +19,17 @@
 */
 
 #pragma once
+#include <config.h>
+#ifdef USE_SERIAL_4WAY_BLHELI_INTERFACE
+#include "serial_4way.h"
+#ifdef USE_SERIAL_4WAY_BLHELI_BOOTLOADER
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
-#include "serial_4way.h"
+
+
+
 #include "serial_4way_impl.h"
 // Bootloader result codes
 #define brSUCCESS           0x30
@@ -41,3 +48,7 @@ uint8_t BL_WriteFlash(ioMem_t *pMem);
 uint8_t BL_ReadFlash(uint8_t interface_mode, ioMem_t *pMem);
 uint8_t BL_VerifyFlash(ioMem_t *pMem);
 void BL_SendCMDRunRestartBootloader(uint8_32_u *pDeviceInfo);
+
+#endif
+#endif
+

@@ -18,13 +18,8 @@
  * http://www.mikrocontroller.net/topic/avr-bootloader-mit-verschluesselung
 */
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <string.h>
 
-//#include "platform.h"
-
-#include "serial_4way.h"
+#include "serial_4way_avrootloader.h"
 
 #ifdef  USE_SERIAL_4WAY_BLHELI_INTERFACE
 
@@ -35,7 +30,6 @@
 
 #include "serial_4way.h"
 #include "serial_4way_impl.h"
-#include "serial_4way_avrootloader.h"
 #include "drv_time.h"
 
 #if defined(USE_SERIAL_4WAY_BLHELI_BOOTLOADER) && !defined(USE_FAKE_ESC)

@@ -21,9 +21,11 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "platform.h"
-
+#include "config.h"
 #ifdef  USE_SERIAL_4WAY_BLHELI_INTERFACE
+#include "serial_4way.h"
+
+#ifdef USE_SERIAL_4WAY_SK_BOOTLOADER
 
 #include "drivers/io.h"
 #include "drivers/serial.h"
@@ -34,7 +36,6 @@
 #include "io/serial_4way_impl.h"
 #include "io/serial_4way_stk500v2.h"
 
-#ifdef USE_SERIAL_4WAY_SK_BOOTLOADER
 
 #define BIT_LO_US (32) //32uS
 #define BIT_HI_US (2*BIT_LO_US)
