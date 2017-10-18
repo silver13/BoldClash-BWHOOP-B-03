@@ -42,15 +42,12 @@ THE SOFTWARE.
 #include "led.h"
 #include "defines.h"
 
-// current pid tuning by SirDomsen
-// for boldclash BWHOOP B-03
-
 
 // Kp	                  ROLL       PITCH     YAW
 float pidkp[PIDNUMBER] = { 13.0e-2 , 13.0e-2  , 6e-1 }; 
 
 // Ki		              ROLL       PITCH     YAW
-float pidki[PIDNUMBER] = { 8.8e-1  , 8.8e-1 , 3e-1 };	
+float pidki[PIDNUMBER] = { 12.8e-1  , 12.8e-1 , 30e-1 };	
 
 // Kd			          ROLL       PITCH     YAW
 float pidkd[PIDNUMBER] = { 5.5e-1 , 5.5e-1  , 0.0e-1 };	

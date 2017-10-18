@@ -16,7 +16,7 @@
 float apidkp[APIDNUMBER] = { 7.00 };
 
 // Kd
-float apidkd[APIDNUMBER] = { 3.50 };
+float apidkd[APIDNUMBER] = { 0.0 };
 
 // code variables below
 
@@ -45,7 +45,7 @@ float apid(int x)
 
 extern float timefactor;
       
-    apidoutput[x] = apidoutput[x] - (angleerror[x] - lasterror[x]) * apidkd[0] * timefactor;
+    apidoutput[x] = apidoutput[x] + (angleerror[x] - lasterror[x]) * apidkd[0] * timefactor;
     lasterror[x] = angleerror[x];
 
 	limitf(&apidoutput[x], OUTLIMIT_FLOAT);
