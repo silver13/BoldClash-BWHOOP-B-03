@@ -583,7 +583,7 @@ void UsageFault_Handler(void)
 static void setup_4way_external_interrupt()
 {
 	SYSCFG->EXTICR[3] &= ~(0x000F) ; //clear bits 3:0 in the SYSCFG_EXTICR1 reg
-	EXTI->FTSR |= EXTI_RTSR_TR14;
+	EXTI->FTSR |= EXTI_FTSR_TR14;
 	EXTI->IMR |= EXTI_IMR_MR14;
 	NVIC_SetPriority(EXTI4_15_IRQn,2);
 }
