@@ -55,7 +55,7 @@ typedef union __attribute__ ((packed)) {
 bool isMcuConnected(void);
 uint8_t esc4wayInit(void);
 struct serialPort_s;
-void esc4wayProcess();
+void esc4wayProcess(void);
 void esc4wayRelease(void);
 #endif
 
