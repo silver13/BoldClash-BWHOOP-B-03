@@ -231,6 +231,10 @@
 // throttle direct to motors for thrust measure
 // #define MOTORS_TO_THROTTLE
 
+// throttle direct to motors for thrust measure as a flight mode
+//#define MOTORS_TO_THROTTLE_MODE MULTI_CHAN_8
+
+
 // loop time in uS
 // this affects soft gyro lpf frequency if used
 #define LOOPTIME 1000

@@ -663,11 +663,37 @@ thrsum = 0;
 		mix[i] = clip_ff(mix[i], i);
 		#endif
 
-		#ifdef MOTORS_TO_THROTTLE
-		mix[i] = throttle;
+		#if defined(MOTORS_TO_THROTTLE) || defined(MOTORS_TO_THROTTLE_MODE)
+		#if defined(MOTORS_TO_THROTTLE_MODE) && !defined(MOTORS_TO_THROTTLE)
+		if(aux[MOTORS_TO_THROTTLE_MODE])
+		{
+		#endif
+		switch(i)
+		{
+#define MAX(a,b) (a > b ? a : b)
+#define MIN(a,b) (a < b ? a : b)
+			case MOTOR_BL:
+				mix[i] = throttle*(1.f - (MAX(rx[ROLL], 0.f) + MAX(rx[PITCH],0.f))/2.f);
+				break;
+			case MOTOR_FL:
+				mix[i] = throttle*(1.f - (MAX(rx[ROLL], 0.f) - MIN(rx[PITCH],0.f))/2.f);
+				break;
+			case MOTOR_BR:
+				mix[i] = throttle*(1.f - (-MIN(rx[ROLL], 0.f) + MAX(rx[PITCH],0.f))/2.f);
+				break;
+			case MOTOR_FR:
+				mix[i] = throttle*(1.f - (-MIN(rx[ROLL], 0.f) - MIN(rx[PITCH],0.f))/2.f);
+				break;
+		}
+		#if defined(MOTORS_TO_THROTTLE_MODE) && !defined(MOTORS_TO_THROTTLE)
+		}
+		#endif
+
 		// flash leds in valid throttle range
+		#ifdef MOTORS_TO_THROTTLE
 		ledcommand = 1;
 		#warning "MOTORS TEST MODE"
+		#endif
 		#endif
 
 		#ifdef MOTOR_MIN_ENABLE
