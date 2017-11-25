@@ -668,23 +668,11 @@ thrsum = 0;
 		if(aux[MOTORS_TO_THROTTLE_MODE])
 		{
 		#endif
-		switch(i)
-		{
-#define MAX(a,b) (a > b ? a : b)
-#define MIN(a,b) (a < b ? a : b)
-			case MOTOR_BL:
-				mix[i] = throttle*(1.f - (MAX(rx[ROLL], 0.f) + MAX(rx[PITCH],0.f))/2.f);
-				break;
-			case MOTOR_FL:
-				mix[i] = throttle*(1.f - (MAX(rx[ROLL], 0.f) - MIN(rx[PITCH],0.f))/2.f);
-				break;
-			case MOTOR_BR:
-				mix[i] = throttle*(1.f - (-MIN(rx[ROLL], 0.f) + MAX(rx[PITCH],0.f))/2.f);
-				break;
-			case MOTOR_FR:
-				mix[i] = throttle*(1.f - (-MIN(rx[ROLL], 0.f) - MIN(rx[PITCH],0.f))/2.f);
-				break;
-		}
+		mix[i] = throttle;
+		if ( i == MOTOR_FL && ( rx[ROLL] > 0.5f || rx[PITCH] < -0.5f ) ) { mix[i] = 0; }
+		if ( i == MOTOR_BL && ( rx[ROLL] > 0.5f || rx[PITCH] > 0.5f ) ) { mix[i] = 0; }
+		if ( i == MOTOR_FR && ( rx[ROLL] < -0.5f || rx[PITCH] < -0.5f ) ) { mix[i] = 0; }
+		if ( i == MOTOR_BR && ( rx[ROLL] < -0.5f || rx[PITCH] > 0.5f ) ) { mix[i] = 0; }
 		#if defined(MOTORS_TO_THROTTLE_MODE) && !defined(MOTORS_TO_THROTTLE)
 		}
 		#endif
