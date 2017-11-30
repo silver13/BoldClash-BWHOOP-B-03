@@ -376,33 +376,39 @@ void softi2c_readdata(int device_address ,int register_address , int *data, int 
 void softi2c_init()
 {
 
-	GPIO_InitTypeDef  GPIO_InitStructure;
-	
-  GPIO_InitStructure.GPIO_Pin = SOFTI2C_SCLPIN;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(SOFTI2C_SCLPORT, &GPIO_InitStructure);
+    GPIO_InitTypeDef  GPIO_InitStructure;
 
- GPIO_InitStructure.GPIO_Pin = SOFTI2C_SDAPIN;
- GPIO_Init(SOFTI2C_SDAPORT, &GPIO_InitStructure);
+    GPIO_InitStructure.GPIO_Pin = SOFTI2C_SDAPIN;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(SOFTI2C_SCLPORT, &GPIO_InitStructure);
 
-	
-  sdainit.GPIO_Pin = SOFTI2C_SDAPIN;
-  sdainit.GPIO_Mode = GPIO_Mode_IN;
-  sdainit.GPIO_OType = GPIO_OType_OD;
-  sdainit.GPIO_PuPd = GPIO_PuPd_UP;
-  sdainit.GPIO_Speed = GPIO_Speed_50MHz;
-	
-sdaout = 1;
-sda = 0;
-scl = 0;
+    // some boards have no SCL pullup, we drive SCL pullup for better speed on those
+    // the factory firmware does this too, so it must be ok
+    #ifdef SOFTI2C_PUSHPULL_CLK
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    #endif
 
-	
-sdahigh();
-sclhigh();
-	
+    GPIO_InitStructure.GPIO_Pin = SOFTI2C_SCLPIN;
+    GPIO_Init(SOFTI2C_SDAPORT, &GPIO_InitStructure);
+
+
+    sdainit.GPIO_Pin = SOFTI2C_SDAPIN;
+    sdainit.GPIO_Mode = GPIO_Mode_IN;
+    sdainit.GPIO_OType = GPIO_OType_OD;
+    sdainit.GPIO_PuPd = GPIO_PuPd_UP;
+    sdainit.GPIO_Speed = GPIO_Speed_50MHz;
+
+    sdaout = 1;
+    sda = 0;
+    scl = 0;
+
+
+    sdahigh();
+    sclhigh();
+
 }
 
 
