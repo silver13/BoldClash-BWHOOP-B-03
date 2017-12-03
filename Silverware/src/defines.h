@@ -12,13 +12,13 @@
 #define DEGTORAD 0.017453292f
 #define RADTODEG 57.29577951f
 
-#define AUXNUMBER 12
+#define AUXNUMBER 16
 
 #define ROLL 0
 #define PITCH 1
 #define YAW 2
 
-
+// this should be precalculated by the compiler as it's a constant
 #define FILTERCALC( sampleperiod, filtertime) (1.0f - ( 6.0f*(float)sampleperiod) / ( 3.0f *(float)sampleperiod + (float)filtertime))
 
 
@@ -34,6 +34,7 @@
 #define CH_RTH 3
 */
 
+// defines for bayang protocol radio
 #define CH_ON (AUXNUMBER - 2)
 #define CH_OFF (AUXNUMBER - 1)
 #define CH_FLIP 0
@@ -42,16 +43,19 @@
 #define CH_RTH 3
 #define CH_AUX1 4
 #define CH_AUX2 5
-// trims numbers have to be sequential, atart at CH_PIT_TRIM
+#define CH_EMG 10
+#define CH_TO 11
+// trims numbers have to be sequential, start at CH_PIT_TRIM
 #define CH_PIT_TRIM 6
 #define CH_RLL_TRIM 7
 #define CH_THR_TRIM 8
 #define CH_YAW_TRIM 9
-
+// next 3 channels only when *not* using USE_STOCK_TX
 #define CH_INV 6
 #define CH_VID 7
 #define CH_PIC 8
 
+// defines for cg023 protocol
 #define CH_CG023_LED 3
 #define CH_CG023_FLIP 0
 #define CH_CG023_STILL 2
@@ -67,7 +71,8 @@
 #define CH_AUX3 CH_OFF
 #define CH_AUX4 CH_OFF
 
-
+// devo tx channel mapping
+// also for nr24multipro
 #define DEVO_CHAN_5 CH_INV
 #define DEVO_CHAN_6 CH_FLIP
 #define DEVO_CHAN_7 CH_PIC
@@ -75,7 +80,7 @@
 #define DEVO_CHAN_9 CH_HEADFREE
 #define DEVO_CHAN_10 CH_RTH
 
-
+// multimodule mapping ( taranis )
 #define MULTI_CHAN_5 CH_FLIP
 #define MULTI_CHAN_6 CH_RTH
 #define MULTI_CHAN_7 CH_PIC
