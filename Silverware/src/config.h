@@ -89,7 +89,7 @@
 // CH_FLIP - flip,  CH_HEADFREE - headfree, CH_RTH - headingreturn
 // CH_EXPERT , CH_INV (inv h101 tx)
 // CH_RLL_TRIM , CH_PIT_TRIM - trim buttons pitch, roll
-
+// CH_EMG , CH_TO - boldclash stock tx
 
 // DEVO channels (bayang protocol)
 // DEVO_CHAN_5 - DEVO_CHAN_10
