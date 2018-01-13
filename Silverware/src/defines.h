@@ -103,6 +103,16 @@
 #define uint16 uint_fast16_t
 #define uint8 uint_fast8_t
 
+// for h-bridge states
+#define FREE 2
+#define BRAKE 3
+#define DIR1 1
+#define DIR2 0
+
+// for inverted flight motor direction
+#define FORWARD DIR2
+#define REVERSE DIR1
+
 
 
 

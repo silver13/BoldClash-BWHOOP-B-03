@@ -88,6 +88,13 @@
 #endif
 #endif
 
+
+#ifdef INVERTED_ENABLE
+#ifndef BIDIRECTIONAL
+#error INVERTED_ENABLE is on but not BIDIRECTIONAL in dshot driver
+#endif
+#endif
+
 extern int failsafe;
 extern int onground;
 

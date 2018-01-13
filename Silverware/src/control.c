@@ -108,8 +108,14 @@ float rate_multiplier = 1.0;
 	}
 	// make local copy
 	
-
 	
+#ifdef INVERTED_ENABLE	
+    extern int pwmdir;
+	if ( aux[FN_INVERTED]  )		
+        pwmdir = REVERSE;
+    else
+        pwmdir = FORWARD;    
+#endif	
 	
 	for ( int i = 0 ; i < 3 ; i++)
 	{
@@ -447,12 +453,29 @@ throttle -= throttle_p + throttle_i;
 #ifdef INVERT_YAW_PID
 pidoutput[2] = -pidoutput[2];			
 #endif
+	
+#ifdef INVERTED_ENABLE
+if (pwmdir == REVERSE)
+		{
+			// inverted flight
 		
+		mix[MOTOR_FR] = throttle + pidoutput[ROLL] + pidoutput[PITCH] - pidoutput[YAW];		// FR
+		mix[MOTOR_FL] = throttle - pidoutput[ROLL] + pidoutput[PITCH] + pidoutput[YAW];		// FL	
+		mix[MOTOR_BR] = throttle + pidoutput[ROLL] - pidoutput[PITCH] + pidoutput[YAW];		// BR
+		mix[MOTOR_BL] = throttle - pidoutput[ROLL] - pidoutput[PITCH] - pidoutput[YAW];		// BL	
+		
+
+		}	
+else
+#endif    
+{
+    // normal mixer
 		mix[MOTOR_FR] = throttle - pidoutput[ROLL] - pidoutput[PITCH] + pidoutput[YAW];		// FR
 		mix[MOTOR_FL] = throttle + pidoutput[ROLL] - pidoutput[PITCH] - pidoutput[YAW];		// FL	
 		mix[MOTOR_BR] = throttle - pidoutput[ROLL] + pidoutput[PITCH] - pidoutput[YAW];		// BR
 		mix[MOTOR_BL] = throttle + pidoutput[ROLL] + pidoutput[PITCH] + pidoutput[YAW];		// BL	
-		
+}
+
 #ifdef INVERT_YAW_PID
 // we invert again cause it's used by the pid internally (for limit)
 pidoutput[2] = -pidoutput[2];			

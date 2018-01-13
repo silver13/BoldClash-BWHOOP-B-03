@@ -112,6 +112,11 @@
 // comment out to disable
 //#define FPV_ON CH_ON
 
+
+// enable inverted flight code ( brushless only )
+//#define INVERTED_ENABLE
+//#define FN_INVERTED CH_OFF //for brushless only
+
 // aux1 channel starts on if this is defined, otherwise off.
 #define AUX1_START_ON
 
