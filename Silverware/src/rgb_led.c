@@ -185,24 +185,7 @@ else
 				}
 			else 
 			{
-/*			
-				#ifdef GESTURES2_ENABLE
-				// flashing for gestures
-				if (ledcommand)
-						  {
-							  if (!ledcommandtime)
-								  ledcommandtime = gettime();
-							  if (gettime() - ledcommandtime > 500000)
-							    {
-								    ledcommand = 0;
-								    ledcommandtime = 0;
-							    }
-							  ledflash(100000, 8);
-						  }
-						else
-				
-					#endif // end gesture led flash
-*/
+
 				if ( aux[LEDS_ON] )
 			
 				rgb_led_set_all( RGB_VALUE_INFLIGHT_ON );
