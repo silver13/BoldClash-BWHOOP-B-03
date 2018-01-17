@@ -412,14 +412,21 @@ else
                	#ifndef DISABLE_GESTURES2
 						else if (ledblink)
 						{
+                            unsigned long time = gettime();
 							if (!ledcommandtime)
-								  ledcommandtime = gettime();
-							if (gettime() - ledcommandtime > 500000)
+                                {
+								  ledcommandtime = time;
+                                  ledoff( 255); 
+                                }
+							if ( time - ledcommandtime > 500000)
 							    {
 								    ledblink--;
 								    ledcommandtime = 0;
 							    }
-							ledflash(500000, 3);
+                             if ( time - ledcommandtime > 300000)
+							    {
+                                    ledon( 255);
+							    }
 						}
 						else
 					#endif // end gesture led flash

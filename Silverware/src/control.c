@@ -195,7 +195,6 @@ float rate_multiplier = 1.0;
             #ifdef PID_GESTURE_TUNING              
             if ( command >= GESTURE_UDR ) pid_gestures_used = 1;   
               
-           // int blink = 0;
             if (command == GESTURE_UDU)
               {
                         // Cycle to next pid term (P I D)
@@ -216,6 +215,9 @@ float rate_multiplier = 1.0;
                         // Descrease by 10%
                   ledblink = decrease_pid();
               }
+            // flash long on zero  
+            if ( pid_gestures_used && ledblink == 0) ledcommand = 1; 
+              
                 // U D U - Next PID term
                 // U D D - Next PID Axis
                 // U D R - Increase value
