@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_projx.xsd">
 
   <SchemaVersion>2.1</SchemaVersion>
@@ -10,7 +10,8 @@
       <TargetName>BWhoop</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
+      <pCCUsed>5060528::V5.06 update 5 (build 528)::ARMCC</pCCUsed>
+      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F030F4</Device>
@@ -447,11 +448,6 @@
             </GroupArmAds>
           </GroupOption>
           <Files>
-             <File>
-              <FileName>altitude.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\altitude.c</FilePath>
-            </File>
             <File>
               <FileName>control.c</FileName>
               <FileType>1</FileType>
@@ -501,11 +497,6 @@
               <FileName>rx_bayang_protocol_telemetry.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\rx_bayang_protocol_telemetry.c</FilePath>
-            </File>
-            <File>
-              <FileName>rx_nrf24_bayang_telemetry.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\rx_nrf24_bayang_telemetry.c</FilePath>
             </File>
             <File>
               <FileName>rx_cg023_protocol.c</FileName>
@@ -601,6 +592,11 @@
               <FileName>debug.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\src\debug.h</FilePath>
+            </File>
+            <File>
+              <FileName>altitude.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\altitude.c</FilePath>
             </File>
             <File>
               <FileName>barometer.c</FileName>

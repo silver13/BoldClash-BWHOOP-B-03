@@ -60,7 +60,7 @@ float alt_target = 0;
 void altitude_read(void)
 {
     read_pressure();
-    altitude = (1.0 - pow(press_fl/101325.0, 0.190295)) * 44330.0; // pressure to altitude @sea-level
+    altitude = (1.0f - pow(press_fl/101325.0f, 0.190295f)) * 44330.0f; // pressure to altitude @sea-level
 }
 
 void altitude_cal(void)
@@ -81,15 +81,18 @@ float altitude_hold(void)
     static float low_throttle_time = 0;
     static int grounded = 1;
 
-    static float last_alt_e, alt_i;     // PID loop memory
-    static float new_ah_throttle, ah_throttle = HOVER_THROTTLE_MIN;
-    static float last_dt, last_ah_time;
-
-    float new_alt_e, alt_e, new_alt_d, alt_d, alt_corr = 0;
-    float new_alt_corr, new_alt_target = 0;
+/*
+		static float last_alt_e, alt_i;     // PID loop memory
+    static float new_ah_throttle;
+    static float last_dt;
+    float new_alt_e, alt_e, new_alt_d, alt_d, alt_corr, new_alt_corr = 0;
+*/
+		static float ah_throttle = HOVER_THROTTLE_MIN;
+		static float last_ah_time;
+		static float new_alt_target = 0;
 
     float ah_time = gettime();
-    float dt = (ah_time - last_ah_time) * 1e-6; // dt in seconds
+    float dt = (ah_time - last_ah_time) * 1e-6f; // dt in seconds
 
     // Silverxxx AH controller
     float out = 0;
@@ -98,10 +101,10 @@ float altitude_hold(void)
     static float ierror = 0;
     static float lastspeed;
 
-    if (dt > 1.0/AH_REFRESH_FREQ) {
+    if (dt > 1.0f/AH_REFRESH_FREQ) {
 
         last_ah_time = ah_time;
-        last_dt = dt;
+        //last_dt = dt;
 
         float newrx = rx[3] - 0.5f;           // Zero center throttle
 
@@ -128,7 +131,7 @@ float altitude_hold(void)
         {
             if (newrx < -0.9f)
             {
-                if ((ah_time - low_throttle_time) * 1e-6 > LOW_THROTTLE_TIMEOUT) grounded = 1;
+                if ((ah_time - low_throttle_time) * 1e-6f > LOW_THROTTLE_TIMEOUT) grounded = 1;
 
             } else
             {
@@ -136,10 +139,11 @@ float altitude_hold(void)
             }
         }
 
-//         lpf(&alt_lpf, altitude, FILTERCALC(dt, 0.02f));
+        lpf(&alt_lpf, altitude, FILTERCALC(dt, 0.02f));
 
         if (!grounded)
         {
+/*
             // Altitude PID by MrVanes
             alt_e = alt_target - altitude;
             constrain(&alt_e, -1.0 * FULL_THROTTLE_ALT_TARGET, FULL_THROTTLE_ALT_TARGET);  // Apply FULL_THROTTLE_ALT_TARGET leash
@@ -156,8 +160,8 @@ float altitude_hold(void)
             constrain(&new_ah_throttle, HOVER_THROTTLE_MIN, HOVER_THROTTLE_MAX);
 
             ah_throttle = new_ah_throttle;
+*/
 
-/*
             // Velocity PI by Silverxxx
             float desired_speed = newrx * 0.005f;
             float speed = alt_lpf - last_altitude;
@@ -175,16 +179,15 @@ float altitude_hold(void)
 
             constrain(&out, 0, 1);
             lpf ( &ah_throttle, out, FILTERCALC(dt, 0.2f));
-*/
+
         } else
         {
             ah_throttle = 0;
         }
 
-//         last_altitude = alt_lpf;
+        last_altitude = alt_lpf;
     }
 
 
     return ah_throttle;
 }
-
