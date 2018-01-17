@@ -82,14 +82,14 @@ float altitude_hold(void)
     static int grounded = 1;
 
 /*
-		static float last_alt_e, alt_i;     // PID loop memory
+    static float last_alt_e, alt_i;     // PID loop memory
     static float new_ah_throttle;
     static float last_dt;
     float new_alt_e, alt_e, new_alt_d, alt_d, alt_corr, new_alt_corr = 0;
 */
-		static float ah_throttle = HOVER_THROTTLE_MIN;
-		static float last_ah_time;
-		static float new_alt_target = 0;
+    static float ah_throttle = HOVER_THROTTLE_MIN;
+    static float last_ah_time;
+    static float new_alt_target = 0;
 
     float ah_time = gettime();
     float dt = (ah_time - last_ah_time) * 1e-6f; // dt in seconds
@@ -115,7 +115,7 @@ float altitude_hold(void)
             newrx *= 2.222222f; // newrx [-1.0f, 1.0f]
             new_alt_target = altitude + newrx * FULL_THROTTLE_ALT_TARGET;     // Add +/- FULL_THROTTLE_ALT_TARGET meter to altitude for full throttle travel
             lpf(&alt_target, new_alt_target, lpfcalc(dt, 0.25f));             // Easy climbing and descending
-//             alt_target = new_alt_target;
+//            alt_target = new_alt_target;
         }
 
 
@@ -124,7 +124,7 @@ float altitude_hold(void)
         {
             if (newrx > 0.1f)
             {
-//                 alt_target = altitude;
+//                alt_target = altitude;
                 grounded = 0;
             }
         } else
