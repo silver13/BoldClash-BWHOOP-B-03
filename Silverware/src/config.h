@@ -20,7 +20,7 @@
 // use if your tx has no expo function
 // also comment out DISABLE_EXPO to use
 // 0.00 to 1.00 , 0 = no exp
-// positive = less sensitive near center 
+// positive = less sensitive near center
 #define EXPO_XY 0.3
 #define EXPO_YAW 0.3
 
@@ -76,9 +76,9 @@
 //#define SOFT_LPF_4TH_088HZ
 //#define SOFT_LPF_4TH_160HZ
 //#define SOFT_LPF_4TH_250HZ
-#define SOFT_LPF_1ST_HZ 100
+//#define SOFT_LPF_1ST_HZ 100
 //#define SOFT_LPF_2ST_HZ 100
-//#define SOFT_LPF_NONE
+#define SOFT_LPF_NONE
 
 
 
@@ -100,7 +100,7 @@
 // CH_OFF - off always ( all protocols)
 
 // rates / expert mode
-#define RATES CH_EXPERT
+#define RATES CH_OFF
 
 #define LEVELMODE CH_AUX1
 
@@ -122,10 +122,10 @@
 
 // improves reception and enables trims if used
 // trims are incompatible with DEVO TX when used
-//#define USE_STOCK_TX
+#define USE_STOCK_TX
 
 // automatically remove center bias ( needs throttle off for 1 second )
-//#define STOCK_TX_AUTOCENTER
+#define STOCK_TX_AUTOCENTER
 
 // enable motor filter - select one
 // motorfilter1: hanning 3 sample fir filter
@@ -152,15 +152,15 @@
 #define BOLDCLASH_716MM_24K
 
 // a filter which makes throttle feel faster
-//#define THROTTLE_TRANSIENT_COMPENSATION 
-#define THROTTLE_TRANSIENT_COMPENSATION_FACTOR 7.0 
+//#define THROTTLE_TRANSIENT_COMPENSATION
+#define THROTTLE_TRANSIENT_COMPENSATION_FACTOR 7.0
 
 // lost quad beeps using motors (30 sec timeout)
 //#define MOTOR_BEEPS
 
 // throttle angle compensation in level mode
 // comment out to disable
-//#define AUTO_THROTTLE
+#define AUTO_THROTTLE
 
 // enable auto lower throttle near max throttle to keep control
 // mix3 works better with brushless
@@ -174,7 +174,8 @@
 // Radio protocol selection
 // select only one
 
-#define RX_BAYANG_PROTOCOL_TELEMETRY
+//#define RX_BAYANG_PROTOCOL_TELEMETRY
+#define RX_BAYANG_PROTOCOL
 //#define RX_NRF24_BAYANG_TELEMETRY
 //#define RX_BAYANG_BLE_APP
 //#define RX_SBUS
@@ -195,11 +196,12 @@
 // external buzzer - pins in hardware.h
 //#define BUZZER_ENABLE
 
-
+// Use BARO sensor - type in hardware.h
+#define ENABLE_BARO
 
 // Comment out to disable pid tuning gestures
-#define PID_GESTURE_TUNING
-#define COMBINE_PITCH_ROLL_PID_TUNING
+//#define PID_GESTURE_TUNING
+//#define COMBINE_PITCH_ROLL_PID_TUNING
 
 // flash save method
 // flash_save 1: pids + accel calibration

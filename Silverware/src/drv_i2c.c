@@ -48,60 +48,59 @@ void i2c_init( void)
 	#ifdef USE_HARDWARE_I2C
 	hw_i2c_init();
 	#endif
-	
+
 	#ifdef USE_SOFTWARE_I2C
 	softi2c_init();
 	#endif
-	
+
 	#ifdef USE_DUMMY_I2C
 	#warning I2C FUNCTIONS DISABLED
 	#endif
-	
+
 }
 
 
-void i2c_writereg( int reg ,int data)
+void i2c_writereg(int address, int reg ,int data)
 {
 	#ifdef USE_HARDWARE_I2C
-	hw_i2c_writereg( reg , data);
+	hw_i2c_writereg(address, reg , data);
 	#endif
-	
+
 	#ifdef USE_SOFTWARE_I2C
-	softi2c_write( SOFTI2C_GYRO_ADDRESS , reg , data);
+	softi2c_write( address , reg , data);
 	#endif
-	
+
 	#ifdef USE_DUMMY_I2C
 
 	#endif
 }
 
 
-int i2c_readdata( int reg, int *data, int size )
+int i2c_readdata(int address, int reg, int *data, int size )
 {
 	#ifdef USE_HARDWARE_I2C
-	return hw_i2c_readdata( reg, data, size );
+	return hw_i2c_readdata(address, reg, data, size);
 	#endif
-	
+
 	#ifdef USE_SOFTWARE_I2C
-	softi2c_readdata( SOFTI2C_GYRO_ADDRESS , reg , data, size );
-	return 1;
+	return softi2c_readdata(address, reg, data, size );
 	#endif
-	
+
 	#ifdef USE_DUMMY_I2C
 	return 1;
 	#endif
 }
 
-int i2c_readreg( int reg )
+int i2c_readreg(int address, int reg )
 {
 	#ifdef USE_HARDWARE_I2C
-	return hw_i2c_readreg(reg);
+	return hw_i2c_readreg(address, reg);
 	#endif
-	
+
 	#ifdef USE_SOFTWARE_I2C
-	return softi2c_read( SOFTI2C_GYRO_ADDRESS , reg);
+	return softi2c_readreg(address, reg);
 	#endif
-	
+
 	#ifdef USE_DUMMY_I2C
 	return 255;
 	#endif

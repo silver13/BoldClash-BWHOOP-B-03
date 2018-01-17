@@ -29,45 +29,54 @@ THE SOFTWARE.
 
 
 // calculates the coefficient for lpf filter, times in the same units
-float lpfcalc(float sampleperiod, float filtertime) {
-float ga = 1.0f - sampleperiod / filtertime;
-if (ga > 1.0f)
-	ga = 1.0f;
-if (ga < 0.0f)
-	ga = 0.0f;
-return ga;
+float lpfcalc(float sampleperiod, float filtertime)
+{
+    float ga = 1.0f - sampleperiod / filtertime;
+    if (ga > 1.0f)
+        ga = 1.0f;
+    if (ga < 0.0f)
+        ga = 0.0f;
+    return ga;
 }
 
 
-// calculates the coefficient for lpf filter 
-float lpfcalc_hz(float sampleperiod, float filterhz) {
-float ga = 1.0f - sampleperiod * filterhz;
-if (ga > 1.0f)
-	ga = 1.0f;
-if (ga < 0.0f)
-	ga = 0.0f;
-return ga;
+// calculates the coefficient for lpf filter
+float lpfcalc_hz(float sampleperiod, float filterhz)
+{
+    float ga = 1.0f - sampleperiod * filterhz;
+    if (ga > 1.0f)
+        ga = 1.0f;
+    if (ga < 0.0f)
+        ga = 0.0f;
+    return ga;
 }
 
+void constrain(float *out, float min, float max)
+{
+    if (*out < min) *out = min;
+    else if (*out > max) *out = max;
+}
 
 float mapf(float x, float in_min, float in_max, float out_min, float out_max)
 {
-
-return ((x - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
-
+    return ((x - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
 }
 
 
 void lpf( float *out, float in , float coeff)
 {
-	*out = ( *out )* coeff + in * ( 1-coeff); 
+	*out = ( *out )* coeff + in * ( 1-coeff);
 }
 
+void hpf( float *out, float delta_in, float coeff)
+{
+    *out = ( *out + delta_in ) * coeff;
+}
 
 void limitf ( float *input , const float limit)
 {
 	if (*input > limit) *input = limit;
-	if (*input < - limit) *input = - limit;		
+	if (*input < - limit) *input = - limit;
 }
 
 float rcexpo ( float in , float exp )
@@ -87,12 +96,12 @@ unsigned long timeend;
 // timestart
 void TS( void)
 {
-	timestart = gettime(); 
+	timestart = gettime();
 }
 // timeend
 void TE( void)
 {
-	timeend =( gettime() - timestart );	
+	timeend =( gettime() - timestart );
 }
 
 
@@ -114,9 +123,9 @@ else
    sin1 = (1.27323954f - .405284735f * x) *x;
 
 
-return sin1; 
-    
-} 
+return sin1;
+
+}
 
 
 float fastcos( float x )
@@ -148,10 +157,10 @@ extern void buffer_add(int val );
 void print_int( int val )
 {
 // multiple of 4
-#define SP_INT_BUFFERSIZE 12	
+#define SP_INT_BUFFERSIZE 12
 char buffer2[SP_INT_BUFFERSIZE];
- 
-	if (val < 0) 
+
+	if (val < 0)
 	{
 		buffer_add( (char) '-' );
 		val = abs(val);
@@ -166,7 +175,7 @@ do
 	int remainder = val-quotient*10;
 	val = quotient;
 	buffer2[power] = remainder+'0';
-}	
+}
 while (( val ) && power >=0) ;
 
 
@@ -185,16 +194,16 @@ void print_float( float val )
 
 	if ( val < 0 && ival == 0 ) buffer_add( (char) '-' );
 
-	print_int( ival ); 
-	
+	print_int( ival );
+
 	buffer_add( (char) '.' );
-	
+
 	val = val - (int) val;
-	
+
 	int decimals = val * 100;
-	
+
 	decimals = abs(decimals);
-	
+
 	if (decimals < 10) buffer_add( (char) '0' );
 	print_int( decimals );
 
@@ -204,7 +213,7 @@ void print_str(const char *str)
 {
 	int count = 0;
 	// a 64 character limit so we don't print the entire flash by mistake
-	while (str[count]&&!(count>>6) ) 
+	while (str[count]&&!(count>>6) )
 	{
 	buffer_add( (char) str[count] );
 	count++;

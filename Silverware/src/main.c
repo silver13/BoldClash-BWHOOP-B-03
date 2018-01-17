@@ -51,6 +51,10 @@ THE SOFTWARE.
 #include "buzzer.h"
 #include "drv_fmc2.h"
 #include "gestures.h"
+#include "drv_dps310.h"
+#include "altitude.h"
+#include "barometer.h"
+
 #include "binary.h"
 
 #include <stdio.h>
@@ -92,7 +96,7 @@ float thrfilt = 0;
 
 unsigned int lastlooptime;
 // signal for lowbattery
-int lowbatt = 1;	
+int lowbatt = 1;
 
 //int minindex = 0;
 
@@ -124,53 +128,66 @@ int random_seed = 0;
 
 int main(void)
 {
-	
+
 	delay(1000);
 
 
 #ifdef ENABLE_OVERCLOCK
 clk_init();
 #endif
-	
-  gpio_init();	
-	
+
+  gpio_init();
+
 	spi_init();
-	
+
   time_init();
 
 	delay(100000);
-		
-	i2c_init();	
-	
+
+	i2c_init();
+
 	pwm_init();
 
 	pwm_set( MOTOR_BL , 0);
-	pwm_set( MOTOR_FL , 0);	 
-	pwm_set( MOTOR_FR , 0); 
-	pwm_set( MOTOR_BR , 0); 
+	pwm_set( MOTOR_FL , 0);
+	pwm_set( MOTOR_FR , 0);
+	pwm_set( MOTOR_BR , 0);
 
 
 	sixaxis_init();
-	
-	if ( sixaxis_check() ) 
+
+	if ( sixaxis_check() )
 	{
-		
+
 	}
-	else 
+	else
 	{
-        //gyro not found   
+        //gyro not found
 		failloop(4);
 	}
-	
+
+#ifdef ENABLE_BARO
+    barometer_init();
+
+    if (barometer_check())
+    {
+    }
+    else
+    {
+        //barometer not found
+        failloop(9);
+    }
+#endif
+
 	adc_init();
 //set always on channel to on
-aux[CH_ON] = 1;	
-	
+aux[CH_ON] = 1;
+
 #ifdef AUX1_START_ON
 aux[CH_AUX1] = 1;
 #endif
-    
-    
+
+
 #ifdef FLASH_SAVE1
 // read pid identifier for values in file pid.c
     flash_hard_coded_pid_identifier();
@@ -178,12 +195,12 @@ aux[CH_AUX1] = 1;
 // load flash saved variables
     flash_load( );
 #endif
-    
+
 	rx_init();
 
-	
+
 int count = 0;
-	
+
 while ( count < 64 )
 {
 	vbattfilt += adc_read(0);
@@ -191,14 +208,14 @@ while ( count < 64 )
 	count++;
 }
 #ifdef RX_BAYANG_BLE_APP
-   // for randomising MAC adddress of ble app - this will make the int = raw float value        
-    random_seed =  *(int *)&vbattfilt ; 
+   // for randomising MAC adddress of ble app - this will make the int = raw float value
+    random_seed =  *(int *)&vbattfilt ;
     random_seed = random_seed&0xff;
 #endif
- vbattfilt = vbattfilt/64;	
+ vbattfilt = vbattfilt/64;
 // startvref = startvref/64;
 
-	
+
 #ifdef STOP_LOWBATTERY
 // infinite loop
 if ( vbattfilt < (float) 3.3f) failloop(2);
@@ -207,6 +224,9 @@ if ( vbattfilt < (float) 3.3f) failloop(2);
 
 
 	gyro_cal();
+#ifdef ENABLE_BARO
+    altitude_cal();
+#endif
 
 extern void rgb_init( void);
 rgb_init();
@@ -228,7 +248,7 @@ extern float accelcal[3];
 
 
 extern int liberror;
-if ( liberror ) 
+if ( liberror )
 {
 		failloop(7);
 }
@@ -247,61 +267,65 @@ if ( liberror )
 
 	while(1)
 	{
-		// gettime() needs to be called at least once per second 
-		unsigned long time = gettime(); 
+		// gettime() needs to be called at least once per second
+		unsigned long time = gettime();
 		looptime = ((uint32_t)( time - lastlooptime));
 		if ( looptime <= 0 ) looptime = 1;
 		looptime = looptime * 1e-6f;
 		if ( looptime > 0.02f ) // max loop 20ms
 		{
-			failloop( 6);	
-			//endless loop			
+			failloop( 6);
+			//endless loop
 		}
-	
-		#ifdef DEBUG				
+
+		#ifdef DEBUG
 		debug.totaltime += looptime;
 		lpf ( &debug.timefilt , looptime, 0.998 );
 		#endif
 		lastlooptime = time;
-		
-		if ( liberror > 20) 
+
+		if ( liberror > 20)
 		{
 			failloop(8);
 			// endless loop
 		}
 
-        // read gyro and accelerometer data	
+        // read gyro and accelerometer data
 		sixaxis_read();
-		
-		
+
+#ifdef ENABLE_BARO
+        // read the altitude
+        altitude_read();
+#endif
+
         // all flight calculations and motors
 		control();
 
         // attitude calculations for level mode
- 		extern void imu_calc(void);		
-		imu_calc();       
-      
+ 		extern void imu_calc(void);
+		imu_calc();
+
 // battery low logic
 
         // read acd and scale based on processor voltage
-		float battadc = adc_read(0)*vreffilt; 
+		float battadc = adc_read(0)*vreffilt;
         // read and filter internal reference
-        lpf ( &vreffilt , adc_read(1)  , 0.9968f);	
-  
-		
+        lpf ( &vreffilt , adc_read(1)  , 0.9968f);
+
+
 
 		// average of all 4 motor thrusts
-		// should be proportional with battery current			
+		// should be proportional with battery current
 		extern float thrsum; // from control.c
-	
+
 		// filter motorpwm so it has the same delay as the filtered voltage
-		// ( or they can use a single filter)		
-		lpf ( &thrfilt , thrsum , 0.9968f);	// 0.5 sec at 1.6ms loop time	
+		// ( or they can use a single filter)
+		lpf ( &thrfilt , thrsum , 0.9968f);	// 0.5 sec at 1.6ms loop time
 
         static float vbattfilt_corr = 4.2;
         // li-ion battery model compensation time decay ( 18 seconds )
         lpf ( &vbattfilt_corr , vbattfilt , FILTERCALC( 1000 , 18000e3) );
-	
+
         lpf ( &vbattfilt , battadc , 0.9968f);
 
 
@@ -325,36 +349,36 @@ static int firstrun = 1;
 if( thrfilt > 0.1f )
 {
 	vcomp[z] = tempvolt + (float) z *0.1f * thrfilt;
-		
-	if ( firstrun ) 
+
+	if ( firstrun )
     {
         for (int y = 0 ; y < 12; y++) lastin[y] = vcomp[z];
         firstrun = 0;
     }
 	float ans;
-	//	y(n) = x(n) - x(n-1) + R * y(n-1) 
+	//	y(n) = x(n) - x(n-1) + R * y(n-1)
 	//  out = in - lastin + coeff*lastout
 		// hpf
 	ans = vcomp[z] - lastin[z] + FILTERCALC( 1000*12 , 6000e3) *lastout[z];
 	lastin[z] = vcomp[z];
 	lastout[z] = ans;
-	lpf ( &score[z] , ans*ans , FILTERCALC( 1000*12 , 60e6 ) );	
+	lpf ( &score[z] , ans*ans , FILTERCALC( 1000*12 , 60e6 ) );
 	z++;
-       
+
     if ( z >= 12 )
     {
         z = 0;
-        float min = score[0]; 
+        float min = score[0];
         for ( int i = 0 ; i < 12; i++ )
         {
-         if ( (score[i]) < min )  
+         if ( (score[i]) < min )
             {
                 min = (score[i]);
                 minindex = i;
                 // add an offset because it seems to be usually early
                 minindex++;
             }
-        }   
+        }
     }
 
 }
@@ -372,24 +396,24 @@ if( thrfilt > 0.1f )
         lowbatt = 1;
     else lowbatt = 0;
 
-    vbatt_comp = tempvolt + (float) VDROP_FACTOR * thrfilt; 	
+    vbatt_comp = tempvolt + (float) VDROP_FACTOR * thrfilt;
 
-           
+
 #ifdef DEBUG
 	debug.vbatt_comp = vbatt_comp ;
-#endif		
+#endif
 // check gestures
     if ( onground )
 	{
 	 gestures( );
 	}
 
-        
+
 
 
 if ( LED_NUMBER > 0)
 {
-// led flash logic	
+// led flash logic
     if ( lowbatt )
         ledflash ( 500000 , 8);
     else
@@ -399,11 +423,11 @@ if ( LED_NUMBER > 0)
             ledflash ( 100000, 12);
         }else
         {// non bind
-            if ( failsafe) 
+            if ( failsafe)
                 {
-                    ledflash ( 500000, 15);			
+                    ledflash ( 500000, 15);
                 }
-            else 
+            else
             {
                 int leds_on = aux[LEDS_ON];
                 if (ledcommand)
@@ -424,7 +448,7 @@ if ( LED_NUMBER > 0)
                     {
                         ledcommandtime = time;
                         if ( leds_on) ledoff(255);
-                        else ledon(255); 
+                        else ledon(255);
                     }
                     if ( time - ledcommandtime > 500000)
                     {
@@ -439,13 +463,13 @@ if ( LED_NUMBER > 0)
                 }
                 else if ( leds_on )
                 {
-                    if ( LED_BRIGHTNESS != 15)	
+                    if ( LED_BRIGHTNESS != 15)
                     led_pwm(LED_BRIGHTNESS);
                     else ledon(255);
                 }
                 else ledoff(255);
             }
-        } 		       
+        }
     }
 }
 
@@ -458,11 +482,11 @@ rgb_led_lvc( );
 #endif
 
 
-#ifdef BUZZER_ENABLE	
+#ifdef BUZZER_ENABLE
 	buzzer();
 #endif
 
-            
+
 #ifdef FPV_ON
 // fpv switch
     static int fpv_init = 0;
@@ -482,11 +506,11 @@ rgb_led_lvc( );
 checkrx();
 
 
-while ( (gettime() - time) < LOOPTIME );	
+while ( (gettime() - time) < LOOPTIME );
 
-		
+
 	}// end loop
-	
+
 
 }
 
@@ -494,29 +518,30 @@ while ( (gettime() - time) < LOOPTIME );
 
 // 4 - Gyro not found
 // 5 - clock , intterrupts , systick
-// 7 - i2c error 
+// 7 - i2c error
 // 8 - i2c error main loop
 // 6 - loop time issue
+// 9 - barometer issue
 
 void failloop( int val)
 {
 	for ( int i = 0 ; i <= 3 ; i++)
 	{
 		pwm_set( i ,0 );
-	}	
+	}
 
 	while(1)
 	{
 		for ( int i = 0 ; i < val; i++)
 		{
-		 ledon( 255);		
+		 ledon( 255);
 		 delay(200000);
-		 ledoff( 255);	
-		 delay(200000);			
+		 ledoff( 255);
+		 delay(200000);
 		}
 		delay(800000);
-	}	
-	
+	}
+
 }
 
 
@@ -524,15 +549,15 @@ void HardFault_Handler(void)
 {
 	failloop(5);
 }
-void MemManage_Handler(void) 
+void MemManage_Handler(void)
 {
 	failloop(5);
 }
-void BusFault_Handler(void) 
+void BusFault_Handler(void)
 {
 	failloop(5);
 }
-void UsageFault_Handler(void) 
+void UsageFault_Handler(void)
 {
 	failloop(5);
 }

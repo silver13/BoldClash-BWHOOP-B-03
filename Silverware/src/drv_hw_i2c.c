@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include "drv_time.h"
 #include "config.h"
 
-#define HW_I2C_ADDRESS SOFTI2C_GYRO_ADDRESS 
+#define HW_I2C_ADDRESS SOFTI2C_GYRO_ADDRESS
 
 // pins for hw i2c , select one only
 // select pins PB6 and PB7
@@ -45,7 +45,7 @@ THE SOFTWARE.
 // 100Khz (slow)
 //#define HW_I2C_TIMINGREG 0x10805e89
 
-// 200Khz	
+// 200Khz
 //#define HW_I2C_TIMINGREG 0x2060083e
 
 // 400khz (fast)
@@ -83,7 +83,7 @@ THE SOFTWARE.
 #endif
 
 #ifdef HW_I2C_SPEED_SLOW1
-// 200Khz	
+// 200Khz
 #define HW_I2C_TIMINGREG 0x2060083e
 #endif
 
@@ -121,12 +121,12 @@ gpioinitI2C1.GPIO_PuPd = GPIO_PuPd_UP;
 gpioinitI2C1.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7;
 GPIO_Init(GPIOB, &gpioinitI2C1);
 #endif
-	
+
 #ifdef HW_I2C_PINS_PA910
 gpioinitI2C1.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10;
 GPIO_Init(GPIOA, &gpioinitI2C1);
 #endif
-	
+
 
 
 #ifdef HW_I2C_PINS_PB67
@@ -169,8 +169,8 @@ initI2C1.I2C_Ack = I2C_Ack_Enable;
 initI2C1.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
 
 I2C_Init(I2C1, &initI2C1);
-I2C_Cmd(I2C1, ENABLE);  
-	
+I2C_Cmd(I2C1, ENABLE);
+
 }
 
 //#define I2C_TIMEOUT 50000
@@ -178,71 +178,71 @@ I2C_Cmd(I2C1, ENABLE);
 
 #define I2C_CONDITION ((i2c_timeout>>13))
 
-int hw_i2c_sendheader( int reg, int bytes)
+int hw_i2c_sendheader(int address, int reg, int bytes)
 {
 
 unsigned int i2c_timeout = 0;
-//check i2c ready	
+//check i2c ready
 while(I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY) == SET)
 	{
 		i2c_timeout++;
 		if(I2C_CONDITION)
-			{ 
-			liberror++;
-			return 0;
-			}
-	}
-		
-// start transfer	
-I2C_TransferHandling(I2C1, HW_I2C_ADDRESS<<1, bytes, I2C_SoftEnd_Mode, I2C_Generate_Start_Write);
-	
-//i2c_timeout = 0;
-// wait for address to be sent	
-while(I2C_GetFlagStatus(I2C1, I2C_FLAG_TXIS) == RESET)
-		{
-		i2c_timeout++;
-		if(I2C_CONDITION)
-			{ 
+			{
 			liberror++;
 			return 0;
 			}
 	}
 
-// send next byte (register location)	
+// start transfer
+I2C_TransferHandling(I2C1, address<<1, bytes, I2C_SoftEnd_Mode, I2C_Generate_Start_Write);
+
+//i2c_timeout = 0;
+// wait for address to be sent
+while(I2C_GetFlagStatus(I2C1, I2C_FLAG_TXIS) == RESET)
+		{
+		i2c_timeout++;
+		if(I2C_CONDITION)
+			{
+			liberror++;
+			return 0;
+			}
+	}
+
+// send next byte (register location)
 I2C_SendData(I2C1, (uint8_t)reg);
-	
+
 //i2c_timeout = 0;
 // wait until last data sent
 while(I2C_GetFlagStatus(I2C1, I2C_FLAG_TXE) == RESET)
 	{
 	i2c_timeout++;
 		if(I2C_CONDITION)
-		{ 
+		{
 		liberror++;
 		return 0;
 		}
 	}
-	
+
 return 1;
 }
 
 
 
-void hw_i2c_writereg( int reg ,int data)
+void hw_i2c_writereg(int address, int reg ,int data)
 {
 
 unsigned int i2c_timeout = 0;
 
 // send start + writeaddress + register location, common send+receive
-hw_i2c_sendheader( reg,2 );
+hw_i2c_sendheader(address, reg, 2 );
 // send register value
 I2C_SendData(I2C1, (uint8_t) data);
-// wait for finish	
+// wait for finish
 while(I2C_GetFlagStatus(I2C1, I2C_FLAG_TC) == RESET)
 	{
 	i2c_timeout++;
 		if(I2C_CONDITION)
-		{ 
+		{
 		liberror++;
 		return;
 		}
@@ -251,28 +251,28 @@ while(I2C_GetFlagStatus(I2C1, I2C_FLAG_TC) == RESET)
 // send stop - end transaction
 I2C_GenerateSTOP(I2C1, ENABLE);
 
-	
-return;	
+
+return;
 }
 
 
 
-int hw_i2c_readdata( int reg, int *data, int size )
+int hw_i2c_readdata(int address, int reg, int *data, int size )
 {
 
 static uint8_t i = 0;
 unsigned int i2c_timeout = 0;
 
 	// send start + writeaddress + register location, common send+receive
-hw_i2c_sendheader( reg, 1 );
+hw_i2c_sendheader(address, reg, 1 );
 
 	//send restart + readaddress
-I2C_TransferHandling(I2C1, HW_I2C_ADDRESS<<1 , size, I2C_AutoEnd_Mode, I2C_Generate_Start_Read);
+I2C_TransferHandling(I2C1, address<<1 , size, I2C_AutoEnd_Mode, I2C_Generate_Start_Read);
 
 //wait for data
 for(i = 0; i<size; i++)
 	{
-	i2c_timeout = 0;	
+	i2c_timeout = 0;
 	while(I2C_GetFlagStatus(I2C1, I2C_FLAG_RXNE) == RESET)
 		{
 		i2c_timeout++;
@@ -285,16 +285,16 @@ for(i = 0; i<size; i++)
 	data[i] = I2C_ReceiveData(I2C1);
 	}
 
-//data received	
+//data received
 return 1;
 }
 
 
 
-int hw_i2c_readreg( int reg )
+int hw_i2c_readreg(int address, int reg )
 {
 	int data;
-	hw_i2c_readdata( reg, &data, 1 );
+	hw_i2c_readdata(address, reg, &data, 1 );
 	return data;
 }
 

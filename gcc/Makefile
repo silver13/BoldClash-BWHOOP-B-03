@@ -24,7 +24,7 @@ INCLUDES = -I$(topdir)/Silverware/src/ \
 
 OPTIMIZE = -Os
 
-CFLAGS = $(MCFLAGS)  $(OPTIMIZE)  $(DEFS) -I. -I./ $(INCLUDES)  -Wl,-T,flash.ld,-Map,output.map,--gc-sections  -std=gnu99
+CFLAGS = $(MCFLAGS)  $(OPTIMIZE)  $(DEFS) -I. -I./ $(INCLUDES)  -Wl,-T,flash.ld,-Map,output.map,--gc-sections
 
 AFLAGS = $(MCFLAGS)
 
@@ -51,7 +51,7 @@ $(TARGET): $(EXECUTABLE)
 $(EXECUTABLE): $(SRC) $(STARTUP)
 	$(CC) $(CFLAGS) $^ -lm -o $@
 	arm-none-eabi-size $(EXECUTABLE)
-	
+
 
 clean:
 	rm -f Startup.lst $(TARGET) $(TARGET).lst $(OBJ) $(AUTOGEN) \

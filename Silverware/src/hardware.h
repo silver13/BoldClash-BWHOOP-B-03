@@ -20,7 +20,7 @@
 
 // the error codes indicate a failure that prevents normal operation
 // led flash codes - the quad will not fly / bind if flashing a code
-// 2 - low battery at powerup - if enabled by config.h "#define STOP_LOWBATTERY" 
+// 2 - low battery at powerup - if enabled by config.h "#define STOP_LOWBATTERY"
 // 3 - radio chip not found
 // 4 - Gyro not found - maybe i2c speed
 // 5 - clock , intterrupts , systick , gcc bad code , bad memory access (code issues like bad pointers)- this should not come up
@@ -54,14 +54,14 @@
 // i2c driver to use ( dummy - disables i2c )
 // hardware i2c used PB6 and 7 by default ( can also use PA9 and 10)
 
-//#define USE_HARDWARE_I2C
-#define USE_SOFTWARE_I2C
+#define USE_HARDWARE_I2C
+//#define USE_SOFTWARE_I2C
 //#define USE_DUMMY_I2C
 
 // for boards without a SCL pullup - E011 ( nonstandard i2c )
 //#define SOFTI2C_PUSHPULL_CLK
 
-// I2C speed: fast = no delays 
+// I2C speed: fast = no delays
 // slow1 = for i2c without pull-up resistors
 // slow2 = i2c failsafe speed
 #define SOFTI2C_SPEED_FAST
@@ -100,7 +100,7 @@
 
 // gyro orientation
 // the expected orientation is with the dot in the front-left corner
-// use this to rotate to the correct orientation 
+// use this to rotate to the correct orientation
 // rotations performed in order
 // note, the motors don't get rotated,
 // so they have to be referenced to the new gyro position
@@ -154,10 +154,16 @@
 //#define RADIO_XN297
 #define RADIO_XN297L
 
+// check for baro sensor, flash 9 times on fail
+//#define DISABLE_BARO_CHECK
 
+// baro type
+#define USE_BARO_DPS310
 
-// PWM PINS DEFINITIONS 
+// PWM PINS DEFINITIONS
 
+// baro I2C address
+#define DPS310_I2C_ADDRESS 0x76
 
 // pwm driver = brushed motors
 // esc driver = servo type signal for brushless esc
@@ -168,7 +174,7 @@
 #define USE_PWM_DRIVER
 //#define USE_ESC_DRIVER
 //#define USE_DSHOT_DRIVER_BETA
-		
+
 // pwm pins disable
 // disable all pwm pins / function
 //#define DISABLE_PWM_PINS
@@ -222,16 +228,16 @@
 #define RGB_PORT GPIOA
 
 // pin for fpv switch ( turns off at failsafe )
-// GPIO_Pin_13 // SWDAT - GPIO_Pin_14 // SWCLK  
+// GPIO_Pin_13 // SWDAT - GPIO_Pin_14 // SWCLK
 // if programming pin, will not flash after bind
 #define FPV_PIN GPIO_Pin_13
-#define FPV_PORT GPIOA 
+#define FPV_PORT GPIOA
 
 
 // BUZZER pin settings - buzzer active "high"
 // SWDAT and SWCLK pins OK here
-// GPIO_Pin_13 // SWDAT - GPIO_Pin_14 // SWCLK 
-#define BUZZER_PIN       GPIO_Pin_x 
+// GPIO_Pin_13 // SWDAT - GPIO_Pin_14 // SWCLK
+#define BUZZER_PIN       GPIO_Pin_x
 #define BUZZER_PIN_PORT  GPIOA
 // x (micro)seconds after loss of tx or low bat before buzzer starts
-#define BUZZER_DELAY     30e6 
+#define BUZZER_DELAY     30e6
