@@ -200,7 +200,7 @@ float	throttle;
 #else
     float spring_throttle;
     spring_throttle = rx[3] - 0.5f;       // centre stick
-    if (spring_throttle < 0.05f)  throttle = 0   // apply deadband and don't use negative throttle travel
+    if (spring_throttle < 0.05f)  throttle = 0;   // apply deadband and don't use negative throttle travel
     else throttle = mapf(spring_throttle, 0.05f, 1.0f, 0, 1.0f);
 #endif
 #endif

@@ -124,6 +124,9 @@
 // trims are incompatible with DEVO TX when used
 #define USE_STOCK_TX
 
+// Springloaded centre is zero throttle
+#define USE_STOCK_SPRINGLOADED_TX
+
 // automatically remove center bias ( needs throttle off for 1 second )
 #define STOCK_TX_AUTOCENTER
 
