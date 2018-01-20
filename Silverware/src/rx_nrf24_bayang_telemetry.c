@@ -366,9 +366,11 @@ void send_telemetry()
     xn_writereg(0, XN_TO_TX);
 
     nrf24_write_xn297_payload( txdata , 15);
-      
-    send_time = gettime();
-
+    xn_writereg(0, 0);
+    send_time = gettime(); 
+    xn_writereg(0, XN_TO_TX); 
+ 
+     
     return;
 }
 
