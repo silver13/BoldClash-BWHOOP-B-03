@@ -40,11 +40,11 @@ THE SOFTWARE.
 // radio settings
 
 // packet period in uS
-#define PACKET_PERIOD 3000
+#define PACKET_PERIOD 2000
 #define PACKET_PERIOD_TELEMETRY 5000
 
 // was 250 ( uS )
-#define PACKET_OFFSET +500
+#define PACKET_OFFSET 000
 
 #ifdef USE_STOCK_TX
 #undef PACKET_PERIOD
@@ -380,10 +380,10 @@ static char checkpacket()
 
     if (status & (1 << MASK_RX_DR))
       {                         // rx clear bit
-          //this is not working well
-          xn_writereg( STATUS , (1<<MASK_RX_DR) );
+
+         // xn_writereg( STATUS , (1<<MASK_RX_DR) );
           //RX packet received
-          return 1;
+         // return 1;
       }
     if ((status & B00001110) != B00001110)
       {
