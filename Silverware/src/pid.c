@@ -31,6 +31,7 @@ THE SOFTWARE.
 //#define NORMAL_DTERM
 #define NEW_DTERM
 //#define MAX_FLAT_LPF_DIFF_DTERM
+//#define DTERM_LPF_1ST_HZ 100
 
 //#define ANTI_WINDUP_DISABLE
 
@@ -192,7 +193,21 @@ float pid(int x )
         lastratexx[x][2] = lastratexx[x][1];
         lastratexx[x][1] = lastratexx[x][0];
         lastratexx[x][0] = gyro[x];
-        #endif            
+        #endif 
+
+
+        #ifdef DTERM_LPF_1ST_HZ
+        float dterm;
+        static float lastrate[3];
+        static float dlpf[3] = {0};
+
+        dterm = - (gyro[x] - lastrate[x]) * pidkd[x] * timefactor;
+        lastrate[x] = gyro[x];
+
+        lpf( &dlpf[x], dterm, FILTERCALC( 0.001 , 1.0f/DTERM_LPF_1ST_HZ ) );
+
+        pidoutput[x] += dlpf[x];                   
+        #endif
     }
     
     limitf(  &pidoutput[x] , outlimit[x]);
