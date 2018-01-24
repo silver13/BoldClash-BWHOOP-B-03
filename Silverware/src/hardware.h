@@ -125,7 +125,6 @@
 // change this factor to get a correct battery voltage
 #define ADC_SCALEFACTOR 0.001364
 
-#define ADC_VREF_SCALE
 
 // SPI PINS DEFINITONS ( for radio ic )
 // MOSI , CLK , SS - outputs , MISO input

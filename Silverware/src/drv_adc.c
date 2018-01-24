@@ -10,11 +10,6 @@ extern debug_type debug;
 
 #ifndef DISABLE_LVC
 
-#ifndef ADC_BATT_VOLTAGE 
-#define ADC_BATT_VOLTAGE 3.77
-#undef ADC_READOUT
-#define ADC_READOUT 2727
-#endif
 
 typedef struct {
 __IO uint16_t word1;

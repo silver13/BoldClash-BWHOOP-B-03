@@ -282,13 +282,11 @@ if ( liberror )
       
 // battery low logic
 
-#ifdef ADC_VREF_SCALE
-        // account for vcc changes
+        // read acd and scale based on processor voltage
 		float battadc = adc_read(0)*vreffilt; 
+        // read and filter internal reference
         lpf ( &vreffilt , adc_read(1)  , 0.9968f);	
-#else
-        float battadc = adc_read(0); 
-#endif        
+  
 		
 
 		// average of all 4 motor thrusts
