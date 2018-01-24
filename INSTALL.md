@@ -14,6 +14,11 @@ See [RC Groups Boldclash Thread First Post](https://www.rcgroups.com/forums/show
 
 There is a bug involving flashing from Keil and this mcu, while workarounds are available, the current procedure avoids this by using the ST-Link Utility program instead for flashing.
 
+# Mac
+Install gcc-arm-none-eabi compiler from it's [webpage](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads). Install openocd using [these](https://gnu-mcu-eclipse.github.io/openocd/install/#macos) instructions.
+
+For actual flashing, use the openocd linux lines, but you may have to adjust the paths to suit. [Example](https://www.rcgroups.com/forums/showpost.php?p=39031377&postcount=12778)
+
 # Linux
 
 For flashing on Linux, the [OpenOCD](http://openocd.org/) toolchain is used. The install instructions have been tested to work with OpenOCD 0.9.0 on Debian-based systems (Ubuntu 14.04).
