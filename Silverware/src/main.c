@@ -50,7 +50,7 @@ THE SOFTWARE.
 #include "drv_serial.h"
 #include "buzzer.h"
 #include "drv_fmc2.h"
-
+#include "gestures.h"
 #include "binary.h"
 
 #include <stdio.h>
@@ -113,6 +113,7 @@ extern int rxmode;
 // failsafe on / off
 extern int failsafe;
 extern float hardcoded_pid_identifier;
+extern int onground;
 
 // for led flash on gestures
 int ledcommand = 0;
@@ -208,7 +209,7 @@ serial_init();
 
 
 
-	imu_init();
+    imu_init();
 
 #ifdef FLASH_SAVE2
 // read accelerometer calibration values from option bytes ( 2* 8bit)
@@ -378,71 +379,78 @@ if( thrfilt > 0.1f )
 #ifdef DEBUG
 	debug.vbatt_comp = vbatt_comp ;
 #endif		
-	
-
-#if ( LED_NUMBER > 0)
-// led flash logic	
-if ( lowbatt )
-	ledflash ( 500000 , 8);
-else
-{
-		if ( rxmode == RXMODE_BIND)
-		{// bind mode
-		ledflash ( 100000, 12);
-		}else
-		{// non bind
-			if ( failsafe) 
-				{
-					ledflash ( 500000, 15);			
-				}
-			else 
-			{
-			
-				if (ledcommand)
-						  {
-							  if (!ledcommandtime)
-								  ledcommandtime = gettime();
-							  if (gettime() - ledcommandtime > 500000)
-							    {
-								    ledcommand = 0;
-								    ledcommandtime = 0;
-							    }
-							  ledflash(100000, 8);
-						  }
-               	#ifndef DISABLE_GESTURES2
-						else if (ledblink)
-						{
-                            unsigned long time = gettime();
-							if (!ledcommandtime)
-                                {
-								  ledcommandtime = time;
-                                  ledoff( 255); 
-                                }
-							if ( time - ledcommandtime > 500000)
-							    {
-								    ledblink--;
-								    ledcommandtime = 0;
-							    }
-                             if ( time - ledcommandtime > 300000)
-							    {
-                                    ledon( 255);
-							    }
-						}
-						else
-					#endif // end gesture led flash
-				if ( aux[LEDS_ON] )
-				#if( LED_BRIGHTNESS != 15)	
-				led_pwm(LED_BRIGHTNESS);
-				#else
-				ledon( 255);
-				#endif
-				else 
-				ledoff( 255);
-			}
-		} 		
-		
+// check gestures
+    if ( onground )
+	{
+	 gestures( );
 	}
-#endif
+
+        
+
+if ( LED_NUMBER > 0)
+{
+// led flash logic	
+    if ( lowbatt )
+        ledflash ( 500000 , 8);
+    else
+    {
+            if ( rxmode == RXMODE_BIND)
+            {// bind mode
+            ledflash ( 100000, 12);
+            }else
+            {// non bind
+                if ( failsafe) 
+                    {
+                        ledflash ( 500000, 15);			
+                    }
+                else 
+                {
+                
+                    if (ledcommand)
+                              {
+                                  if (!ledcommandtime)
+                                      ledcommandtime = gettime();
+                                  if (gettime() - ledcommandtime > 500000)
+                                    {
+                                        ledcommand = 0;
+                                        ledcommandtime = 0;
+                                    }
+                                  ledflash(100000, 8);
+                              }
+                    #ifndef DISABLE_GESTURES2
+                            else if (ledblink)
+                            {
+                                unsigned long time = gettime();
+                                if (!ledcommandtime)
+                                    {
+                                      ledcommandtime = time;
+                                      ledoff( 255); 
+                                    }
+                                if ( time - ledcommandtime > 500000)
+                                    {
+                                        ledblink--;
+                                        ledcommandtime = 0;
+                                    }
+                                 if ( time - ledcommandtime > 300000)
+                                    {
+                                        ledon( 255);
+                                    }
+                            }
+                            else
+                        #endif // end gesture led flash
+                    if ( aux[LEDS_ON] )
+                    #if( LED_BRIGHTNESS != 15)	
+                    led_pwm(LED_BRIGHTNESS);
+                    #else
+                    ledon( 255);
+                    #endif
+                    else 
+                    ledoff( 255);
+                }
+            } 		
+            
+        }
+}
 
 
 #if ( RGB_LED_NUMBER > 0)
