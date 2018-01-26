@@ -32,6 +32,7 @@ THE SOFTWARE.
 #define NEW_DTERM
 //#define MAX_FLAT_LPF_DIFF_DTERM
 //#define DTERM_LPF_1ST_HZ 100
+//#define  DTERM_LPF_2ND_HZ 120
 
 //#define ANTI_WINDUP_DISABLE
 
@@ -208,6 +209,19 @@ float pid(int x )
 
         pidoutput[x] += dlpf[x];                   
         #endif
+        
+        #ifdef DTERM_LPF_2ND_HZ
+        float dterm;
+        static float lastrate[3];       
+        float lpf2( float in, int num);
+        if ( pidkd[x] > 0)
+        {
+            dterm = - (gyro[x] - lastrate[x]) * pidkd[x] * timefactor;
+            lastrate[x] = gyro[x];
+            dterm = lpf2(  dterm, x );
+            pidoutput[x] += dterm;
+        }                       
+        #endif
     }
     
     limitf(  &pidoutput[x] , outlimit[x]);
@@ -222,6 +236,30 @@ void pid_precalc()
 {
 	timefactor = 0.0032f / looptime;
 }
+
+
+#ifndef DTERM_LPF_2ND_HZ 
+#define DTERM_LPF_2ND_HZ 99
+#endif
+
+//the compiler calculates these
+static float two_one_minus_alpha = 2*FILTERCALC( 0.001 , (1.0f/DTERM_LPF_2ND_HZ) );
+static float one_minus_alpha_sqr = (FILTERCALC( 0.001 , (1.0f/DTERM_LPF_2ND_HZ) ) )*(FILTERCALC( 0.001 , (1.0f/DTERM_LPF_2ND_HZ) ));
+static float alpha_sqr = (1 - FILTERCALC( 0.001 , (1.0f/DTERM_LPF_2ND_HZ) ))*(1 - FILTERCALC( 0.001 , (1.0f/DTERM_LPF_2ND_HZ) ));
+
+static float last_out[3], last_out2[3];
+
+float lpf2( float in, int num)
+ {
+
+  float ans = in * alpha_sqr + two_one_minus_alpha * last_out[num]
+      - one_minus_alpha_sqr * last_out2[num];   
+
+  last_out2[num] = last_out[num];
+  last_out[num] = ans;
+  
+  return ans;
+ }
 
 // below are functions used with gestures for changing pids by a percentage
 
