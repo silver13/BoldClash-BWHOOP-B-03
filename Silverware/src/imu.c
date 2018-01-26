@@ -110,7 +110,6 @@ void vectorcopy(float *vector1, float *vector2)
 
 extern float looptime;
 
-float accelz = 0;
 
 void imu_calc(void)
 {
@@ -127,10 +126,7 @@ void imu_calc(void)
 	  {
 		  accel[i] *= ( 1/ 2048.0f);
 	  }
-      
-#ifdef THROTTLE_SMOOTH	
-    accelz = accel[2];  
-#endif
+  
       
 	float deltaGyroAngle[3];
 

@@ -154,9 +154,6 @@
 // a filter which makes throttle feel faster
 //#define THROTTLE_TRANSIENT_COMPENSATION 
 
-//throttle feedback from accelerometer
-//#define THROTTLE_SMOOTH
-
 // lost quad beeps using motors (30 sec timeout)
 //#define MOTOR_BEEPS
 
