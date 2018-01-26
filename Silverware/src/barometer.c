@@ -26,10 +26,12 @@ THE SOFTWARE.
 #include "barometer.h"
 #include "drv_dps310.h"
 
+/*
 #ifdef ENABLE_BARO
 #undefine THROTTLE_SMOOTH
 #undefine AUTO_THROTTLE
 #endif
+*/
 
 void barometer_init(void)
 {
