@@ -385,6 +385,7 @@ if( thrfilt > 0.1f )
 
         
 
+
 if ( LED_NUMBER > 0)
 {
 // led flash logic	
@@ -392,63 +393,61 @@ if ( LED_NUMBER > 0)
         ledflash ( 500000 , 8);
     else
     {
-            if ( rxmode == RXMODE_BIND)
-            {// bind mode
+        if ( rxmode == RXMODE_BIND)
+        {// bind mode
             ledflash ( 100000, 12);
-            }else
-            {// non bind
-                if ( failsafe) 
-                    {
-                        ledflash ( 500000, 15);			
-                    }
-                else 
+        }else
+        {// non bind
+            if ( failsafe) 
                 {
-                
-                    if (ledcommand)
-                              {
-                                  if (!ledcommandtime)
-                                      ledcommandtime = gettime();
-                                  if (gettime() - ledcommandtime > 500000)
-                                    {
-                                        ledcommand = 0;
-                                        ledcommandtime = 0;
-                                    }
-                                  ledflash(100000, 8);
-                              }
-                    #ifndef DISABLE_GESTURES2
-                            else if (ledblink)
-                            {
-                                unsigned long time = gettime();
-                                if (!ledcommandtime)
-                                    {
-                                      ledcommandtime = time;
-                                      ledoff( 255); 
-                                    }
-                                if ( time - ledcommandtime > 500000)
-                                    {
-                                        ledblink--;
-                                        ledcommandtime = 0;
-                                    }
-                                 if ( time - ledcommandtime > 300000)
-                                    {
-                                        ledon( 255);
-                                    }
-                            }
-                            else
-                        #endif // end gesture led flash
-                    if ( aux[LEDS_ON] )
-                    #if( LED_BRIGHTNESS != 15)	
-                    led_pwm(LED_BRIGHTNESS);
-                    #else
-                    ledon( 255);
-                    #endif
-                    else 
-                    ledoff( 255);
+                    ledflash ( 500000, 15);			
                 }
-            } 		
-            
-        }
+            else 
+            {
+                int leds_on = aux[LEDS_ON];
+                if (ledcommand)
+                {
+                    if (!ledcommandtime)
+                      ledcommandtime = gettime();
+                    if (gettime() - ledcommandtime > 500000)
+                    {
+                        ledcommand = 0;
+                        ledcommandtime = 0;
+                    }
+                    ledflash(100000, 8);
+                }
+                else if (ledblink)
+                {
+                    unsigned long time = gettime();
+                    if (!ledcommandtime)
+                    {
+                        ledcommandtime = time;
+                        if ( leds_on) ledoff(255);
+                        else ledon(255); 
+                    }
+                    if ( time - ledcommandtime > 500000)
+                    {
+                        ledblink--;
+                        ledcommandtime = 0;
+                    }
+                     if ( time - ledcommandtime > 300000)
+                    {
+                        if ( leds_on) ledon(255);
+                        else  ledoff(255);
+                    }
+                }
+                else if ( leds_on )
+                {
+                    if ( LED_BRIGHTNESS != 15)	
+                    led_pwm(LED_BRIGHTNESS);
+                    else ledon(255);
+                }
+                else ledoff(255);
+            }
+        } 		       
+    }
 }
+
 
 
 #if ( RGB_LED_NUMBER > 0)
