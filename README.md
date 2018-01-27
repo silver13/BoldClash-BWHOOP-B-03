@@ -48,6 +48,13 @@ The boldclash settings may need changes to work with gcc well. Turn off the soft
 ### Wiki
 http://sirdomsen.diskstation.me/dokuwiki/doku.php?id=start
 
+### 01.18
+* 2 new D term filters, 1st and 2nd order with custom frequency
+* improved led flash timing
+* the throttle smooth feature is gone 
+* nrf24 support added, bayang protocol + telemetry
+* softi2c support for 1 pullup only ( e011 )
+
 ### 29.08.17
 * moved flash save to 31k
 * added 2 looptime independent soft lpf
