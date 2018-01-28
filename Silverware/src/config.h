@@ -1,52 +1,98 @@
-
 #include "defines.h"
 #include "hardware.h"
 
-// pids in pid.c
+// adjust pids in pid.c file
 
-// rate in deg/sec
-// for acro mode
-#define MAX_RATE 360.0
-#define MAX_RATEYAW 360.0
+//**********************************************************************************************************************
+//***********************************************RECEIVER SETTINGS******************************************************
 
-// max angle for level mode
+// *************rate in deg/sec
+// *************for acro mode
+#define MAX_RATE 860.0
+#define MAX_RATEYAW 500.0
+
+// *************max angle for level mode
 #define MAX_ANGLE_HI 70.0f
 
 #define LOW_RATES_MULTI 0.5f
 
-// disable inbuilt expo functions
-#define DISABLE_EXPO
+// *************0.00 to 1.00 , 0 = no exp
+// *************positive = less sensitive near center 
+#define EXPO_XY 0.8
+#define EXPO_YAW 0.6
+// *************disable inbuilt expo functions
+//#define DISABLE_EXPO
 
-// use if your tx has no expo function
-// also comment out DISABLE_EXPO to use
-// 0.00 to 1.00 , 0 = no exp
-// positive = less sensitive near center 
-#define EXPO_XY 0.3
-#define EXPO_YAW 0.3
+// *************transmitter stick adjustable deadband for roll/pitch/yaw
+// *************.01f = 1% of stick range - comment out to disable
+#define STICKS_DEADBAND .01f
+
+// *************Radio protocol selection
+// *************select only one
+//#define RX_CG023_PROTOCOL
+//#define RX_H7_PROTOCOL
+//#define RX_BAYANG_PROTOCOL
+#define RX_BAYANG_PROTOCOL_TELEMETRY
+//#define RX_BAYANG_PROTOCOL_BLE_BEACON
+//#define RX_BAYANG_BLE_APP
+//#define RX_CX10BLUE_PROTOCOL
+//#define RX_SBUS
+
+// *************Transmitter Type Selection
+//#define USE_STOCK_TX
+#define USE_DEVO
+//#define USE_MULTI
+
+// *******************************SWITCH SELECTION*****************************
+// *************CH_ON - on always ( all protocols)
+// *************CH_OFF - off always ( all protocols)
+// *************Aux channels are selectable as CHAN_5 through CHAN_10
+
+//*************Idle up-Arm switch
+// *************comment out to disable
+#define IDLE_UP CHAN_5
+#define IDLE_THR 0.05f
+
+#define LEVELMODE CHAN_6
+#define RACEMODE  CHAN_7                                    
+#define LEDS_ON CHAN_8
+#define STARTFLIP CH_OFF
+#define RATES CH_ON
 
 
 
-// battery saver
-// do not start software if battery is too low
-// flashes 2 times repeatedly at startup
+// *************switch for fpv / other, requires fet
+// *************comment out to disable
+//#define FPV_ON CH_ON
+
+// *************start in level mode for toy tx.
+//#define AUX1_START_ON
+
+// *************automatically remove center bias in toy tx ( needs throttle off for 1 second )
+//#define STOCK_TX_AUTOCENTER
+
+
+
+//**********************************************************************************************************************
+//***********************************************VOLTAGE SETTINGS*******************************************************
+
+// *************battery saver
+// *************do not start software if battery is too low
+// *************flashes 2 times repeatedly at startup
 //#define STOP_LOWBATTERY
 
-// voltage to start warning
-// volts
+// *************voltage to start warning
 #define VBATTLOW 3.5
 
-// compensation for battery voltage vs throttle drop
+// *************compensation for battery voltage vs throttle drop
 #define VDROP_FACTOR 0.7
-// calculate above factor automatically
+// *************calculate above factor automatically
 #define AUTO_VDROP_FACTOR
 
-// voltage hysteresys
-// in volts
+// *************voltage hysteresys in volts
 #define HYST 0.10
 
-
-
-// lower throttle when battery below treshold
+// *************lower throttle when battery below treshold - forced landing low voltage cutoff
 //#define LVC_LOWER_THROTTLE
 #define LVC_LOWER_THROTTLE_VOLTAGE 3.30
 #define LVC_LOWER_THROTTLE_VOLTAGE_RAW 2.70
@@ -54,161 +100,104 @@
 
 
 
-// Gyro LPF filter frequency
-// gyro filter 0 = 250hz delay 0.97mS
-// gyro filter 1 = 184hz delay 2.9mS
-// gyro filter 2 = 92hz delay 3.9mS
-// gyro filter 3 = 41hz delay 5.9mS (Default)
-// gyro filter 4 = 20hz
-// gyro filter 5 = 10hz
-// gyro filter 6 = 5hz
-// gyro filter 7 = 3600hz delay 0.17mS
-#define GYRO_LOW_PASS_FILTER 3
+
+//**********************************************************************************************************************
+//***********************************************FILTER SETTINGS********************************************************
+
+// *************gyro low pass filter ( iir )
+// *************set only one below - kalman, 1st order, or second order - and adjust frequency
+//**************ABOVE 100 ADJUST IN INCRIMENTS OF 20, BELOW 100 ADJUST IN INCRIMENTS OF 10
+#define SOFT_KALMAN_GYRO KAL1_HZ_90
+//#define SOFT_LPF_1ST_HZ 80
+//#define SOFT_LPF_2ST_HZ 80
 
 
-// software gyro lpf ( iir )
-// set only one below
-//#define SOFT_LPF_1ST_023HZ
-//#define SOFT_LPF_1ST_043HZ
-//#define SOFT_LPF_1ST_100HZ
-//#define SOFT_LPF_2ND_043HZ
-//#define SOFT_LPF_2ND_088HZ
-//#define SOFT_LPF_4TH_088HZ
-//#define SOFT_LPF_4TH_160HZ
-//#define SOFT_LPF_4TH_250HZ
-#define SOFT_LPF_1ST_HZ 100
-//#define SOFT_LPF_2ST_HZ 100
-//#define SOFT_LPF_NONE
+// *************D term low pass filter type
+// *************1st order adjustable, second order adjustable, or 3rd order fixed - and adjust frequency
+//#define DTERM_LPF_1ST_HZ 100
+#define  DTERM_LPF_2ND_HZ 100
+//#define DTERM_LPF3_88
+
+//**********************************************************************************************************************
+//***********************************************MOTOR OUTPUT SETTINGS**************************************************
+
+// *************enable motor output filter - select one
+#define MOTOR_FILTER2_ALPHA MFILT1_HZ_90
+//#define MOTOR_KAL KAL1_HZ_260
+//#define MOTOR_KAL KAL1_HZ_50
+
+// *************pwm frequency for motor control
+// *************a higher frequency makes the motors more linear
+// *************in Hz
+#define PWMFREQ 32000
+
+// *************motor curve to use - select one
+// *************the pwm frequency has to be set independently
+#define MOTOR_CURVE_NONE
+//#define MOTOR_CURVE_6MM_490HZ
+//#define MOTOR_CURVE_85MM_8KHZ
+//#define MOTOR_CURVE_85MM_32KHZ
+//#define BOLDCLASH_716MM_8K
+//#define BOLDCLASH_716MM_24K
+
+// *************clip feedforward attempts to resolve issues that occur near full throttle
+//#define CLIP_FF
+
+// *************makes throttle feel more poppy - can intensify small throttle imbalances visible in FPV
+//#define THROTTLE_TRANSIENT_COMPENSATION 
+
+// *************throttle angle compensation in level mode
+//#define AUTO_THROTTLE
+
+// *************mix lower throttle reduces thrust imbalances by reducing throttle proportionally to the adjustable reduction percent
+// *************mix increase throttle increases the authority of the pid controller at lowest throttle values like airmode when combined with idle up
+// *************mix3 has a stronger effect and works better with brushless
+#define MIX_LOWER_THROTTLE
+#define MIX_THROTTLE_REDUCTION_PERCENT 10
+//#define MIX_INCREASE_THROTTLE
+
+//#define MIX_LOWER_THROTTLE_3
+#define MIX_INCREASE_THROTTLE_3
+
+// invert yaw pid for "PROPS OUT" configuration
+//#define INVERT_YAW_PID
 
 
 
+//**********************************************************************************************************************
+//***********************************************ADDITIONAL FEATURES****************************************************
 
-// switch function selection
+// *************lost quad beeps using motors (30 sec timeout)
+//#define MOTOR_BEEPS
 
-// H8 protocol channels
-// CH_FLIP - flip,  CH_HEADFREE - headfree, CH_RTH - headingreturn
-// CH_EXPERT , CH_INV (inv h101 tx)
-// CH_RLL_TRIM , CH_PIT_TRIM - trim buttons pitch, roll
-// CH_EMG , CH_TO - boldclash stock tx
+// *************0 - 7 - power for telemetry
+#define TX_POWER 7
 
-// DEVO channels (bayang protocol)
-// DEVO_CHAN_5 - DEVO_CHAN_10
+// *************Flash saving features
+#define DISABLE_FLIP_SEQUENCER
+//#define DISABLE_GESTURES2
 
-// Multiprotocol can use MULTI_CHAN_5 - MULTI_CHAN_10  (bayang protocol)
+// *************led brightness in-flight ( solid lights only)
+// *************0- 15 range
+#define LED_BRIGHTNESS 15
 
-// CH_ON - on always ( all protocols)
-// CH_OFF - off always ( all protocols)
+// *************external buzzer - pins in hardware.h
+//#define BUZZER_ENABLE
 
-// rates / expert mode
-#define RATES CH_EXPERT
+// *************Comment out to disable pid tuning gestures
+#define PID_GESTURE_TUNING
+#define COMBINE_PITCH_ROLL_PID_TUNING
 
-#define LEVELMODE CH_AUX1
-
-#define STARTFLIP CH_OFF
-
-#define LEDS_ON CH_ON
-
-// switch for fpv / other, requires fet
-// comment out to disable
-//#define FPV_ON CH_ON
+// *************flash save method
+// *************flash_save 1: pids + accel calibration
+// *************flash_save 2: accel calibration to option bytes
+#define FLASH_SAVE1
+//#define FLASH_SAVE2
 
 
 // enable inverted flight code ( brushless only )
 //#define INVERTED_ENABLE
 //#define FN_INVERTED CH_OFF //for brushless only
-
-// aux1 channel starts on if this is defined, otherwise off.
-#define AUX1_START_ON
-
-// improves reception and enables trims if used
-// trims are incompatible with DEVO TX when used
-//#define USE_STOCK_TX
-
-// automatically remove center bias ( needs throttle off for 1 second )
-//#define STOCK_TX_AUTOCENTER
-
-// enable motor filter - select one
-// motorfilter1: hanning 3 sample fir filter
-// motorfilter2: 1st lpf, 0.2 - 0.6 , 0.6 = less filtering
-//#define MOTOR_FILTER
-#define MOTOR_FILTER2_ALPHA 0.3
-
-// clip feedforward attempts to resolve issues that occur near full throttle
-//#define CLIP_FF
-
-// pwm frequency for motor control
-// a higher frequency makes the motors more linear
-// in Hz
-#define PWMFREQ 24000
-
-// motor curve to use
-// the pwm frequency has to be set independently
-// 720motors - use 8khz and curve none.
-//#define MOTOR_CURVE_NONE
-//#define MOTOR_CURVE_6MM_490HZ
-//#define MOTOR_CURVE_85MM_8KHZ
-//#define MOTOR_CURVE_85MM_32KHZ
-//#define BOLDCLASH_716MM_8K
-#define BOLDCLASH_716MM_24K
-
-// a filter which makes throttle feel faster
-//#define THROTTLE_TRANSIENT_COMPENSATION 
-
-// lost quad beeps using motors (30 sec timeout)
-//#define MOTOR_BEEPS
-
-// throttle angle compensation in level mode
-// comment out to disable
-//#define AUTO_THROTTLE
-
-// enable auto lower throttle near max throttle to keep control
-// mix3 works better with brushless
-// comment out to disable
-//#define MIX_LOWER_THROTTLE
-//#define MIX_INCREASE_THROTTLE
-
-//#define MIX_LOWER_THROTTLE_3
-//#define MIX_INCREASE_THROTTLE_3
-
-// Radio protocol selection
-// select only one
-//#define RX_CG023_PROTOCOL
-//#define RX_H7_PROTOCOL
-//#define RX_BAYANG_PROTOCOL
-#define RX_BAYANG_PROTOCOL_TELEMETRY
-//#define RX_BAYANG_PROTOCOL_BLE_BEACON
-//#define RX_NRF24_BAYANG_TELEMETRY
-//#define RX_BAYANG_BLE_APP
-//#define RX_CX10BLUE_PROTOCOL
-//#define RX_SBUS
-
-// 0 - 7 - power for telemetry
-#define TX_POWER 7
-
-
-// Flash saving features
-#define DISABLE_FLIP_SEQUENCER
-//#define DISABLE_GESTURES2
-
-// led brightness in-flight ( solid lights only)
-// 0- 15 range
-#define LED_BRIGHTNESS 15
-
-
-// external buzzer - pins in hardware.h
-//#define BUZZER_ENABLE
-
-
-
-// Comment out to disable pid tuning gestures
-#define PID_GESTURE_TUNING
-#define COMBINE_PITCH_ROLL_PID_TUNING
-
-// flash save method
-// flash_save 1: pids + accel calibration
-// flash_save 2: accel calibration to option bytes
-#define FLASH_SAVE1
-//#define FLASH_SAVE2
 
 
 
@@ -221,6 +210,16 @@
 // debug / other things
 // this should not be usually changed
 
+// Gyro LPF filter frequency
+// gyro filter 0 = 250hz delay 0.97mS
+// gyro filter 1 = 184hz delay 2.9mS
+// gyro filter 2 = 92hz delay 3.9mS
+// gyro filter 3 = 41hz delay 5.9mS (Default)
+// gyro filter 4 = 20hz
+// gyro filter 5 = 10hz
+// gyro filter 6 = 5hz
+// gyro filter 7 = 3600hz delay 0.17mS
+#define GYRO_LOW_PASS_FILTER 0
 
 // level mode "manual" trims ( in degrees)
 // pitch positive forward
@@ -247,9 +246,6 @@
 
 // max rate used by level pid ( limit )
 #define LEVEL_MAX_RATE 360
-
-// invert yaw pid for hubsan motors
-//#define INVERT_YAW_PID
 
 // debug things ( debug struct and other)
 //#define DEBUG
