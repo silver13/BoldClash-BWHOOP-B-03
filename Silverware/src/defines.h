@@ -71,22 +71,35 @@
 #define CH_AUX3 CH_OFF
 #define CH_AUX4 CH_OFF
 
+#ifdef USE_DEVO
 // devo tx channel mapping
 // also for nr24multipro
-#define DEVO_CHAN_5 CH_INV
-#define DEVO_CHAN_6 CH_FLIP
-#define DEVO_CHAN_7 CH_PIC
-#define DEVO_CHAN_8 CH_VID
-#define DEVO_CHAN_9 CH_HEADFREE
-#define DEVO_CHAN_10 CH_RTH
+#define CHAN_5 CH_INV
+#define CHAN_6 CH_FLIP
+#define CHAN_7 CH_PIC
+#define CHAN_8 CH_VID
+#define CHAN_9 CH_HEADFREE
+#define CHAN_10 CH_RTH
+#endif
 
+#ifdef USE_MULTI
 // multimodule mapping ( taranis )
-#define MULTI_CHAN_5 CH_FLIP
-#define MULTI_CHAN_6 CH_RTH
-#define MULTI_CHAN_7 CH_PIC
-#define MULTI_CHAN_8 CH_VID
-#define MULTI_CHAN_9 CH_HEADFREE
-#define MULTI_CHAN_10 CH_INV
+#define CHAN_5 CH_FLIP
+#define CHAN_6 CH_RTH
+#define CHAN_7 CH_PIC
+#define CHAN_8 CH_VID
+#define CHAN_9 CH_HEADFREE
+#define CHAN_10 CH_INV
+#endif
+
+#ifdef USE_STOCK_TX
+#define CHAN_5 CH_RTH
+#define CHAN_6 CH_AUX1
+#define CHAN_7 CH_FLIP
+#define CHAN_8 CH_INV
+#define CHAN_9 CH_EXPERT
+#define CHAN_10 CH_VID
+#endif
 
 // used for the pwm driver
 #define CH1 0
@@ -112,6 +125,73 @@
 // for inverted flight motor direction
 #define FORWARD DIR2
 #define REVERSE DIR1
+
+// kalman Q/R ratio for Q = 0.02
+// loop time 1000Hz
+#define	KAL1_HZ_10	0.004078
+#define	KAL1_HZ_20	0.015952
+#define	KAL1_HZ_30	0.035546
+#define	KAL1_HZ_40	0.062984
+#define	KAL1_HZ_50	0.097857
+#define	KAL1_HZ_60	0.139957
+#define	KAL1_HZ_70	0.190992
+#define	KAL1_HZ_80	0.249072
+#define	KAL1_HZ_90	0.308894
+#define	KAL1_HZ_100	0.397188
+#define	KAL1_HZ_120	0.542488
+#define	KAL1_HZ_140	0.719026
+#define	KAL1_HZ_160	0.928746
+#define	KAL1_HZ_180	1.144837
+#define	KAL1_HZ_200	1.354386
+#define	KAL1_HZ_220	1.611742
+#define	KAL1_HZ_240	1.87532
+#define	KAL1_HZ_260	2.123421
+#define	KAL1_HZ_280	2.377006
+#define	KAL1_HZ_300	2.595641
+#define	KAL1_HZ_320	2.864404
+#define	KAL1_HZ_340	3.052077
+#define	KAL1_HZ_360	3.272997
+#define	KAL1_HZ_380	3.44942
+#define	KAL1_HZ_400	3.679173
+#define	KAL1_HZ_420	3.721861
+#define	KAL1_HZ_440	3.880844
+#define	KAL1_HZ_460	3.908564
+#define	KAL1_HZ_480	3.984022
+#define	KAL1_HZ_500	4.100000
+
+// 1st order lpf alpha
+// for 1000Hz loop frequency
+#define	MFILT1_HZ_10	0.056677
+#define	MFILT1_HZ_20	0.109243
+#define	MFILT1_HZ_30	0.15976
+#define	MFILT1_HZ_40	0.207311
+#define	MFILT1_HZ_50	0.250878
+#define	MFILT1_HZ_60	0.292612
+#define	MFILT1_HZ_70	0.331242
+#define	MFILT1_HZ_80	0.366444
+#define	MFILT1_HZ_90	0.406108
+#define	MFILT1_HZ_100	0.434536
+#define	MFILT1_HZ_120	0.49997
+#define	MFILT1_HZ_140	0.543307
+#define	MFILT1_HZ_160	0.582436
+#define	MFILT1_HZ_180	0.631047
+#define	MFILT1_HZ_200	0.67169
+#define	MFILT1_HZ_220	0.697849
+#define	MFILT1_HZ_240	0.714375
+#define	MFILT1_HZ_260	0.725199
+#define	MFILT1_HZ_280	0.740312
+#define	MFILT1_HZ_300	0.758612
+#define	MFILT1_HZ_320	0.773861
+#define	MFILT1_HZ_340	0.79364
+#define	MFILT1_HZ_360	0.803003
+#define	MFILT1_HZ_380	0.809752
+#define	MFILT1_HZ_400	0.817944
+#define	MFILT1_HZ_420	0.81943
+#define	MFILT1_HZ_440	0.824737
+#define	MFILT1_HZ_460	0.825618
+#define	MFILT1_HZ_480	0.827956
+#define	MFILT1_HZ_500	0.836544
+
 
 
 
