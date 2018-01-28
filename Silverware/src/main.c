@@ -59,10 +59,8 @@ THE SOFTWARE.
 
 
 
-#ifdef __GNUC__
-#ifndef SOFT_LPF_NONE
+#if defined (__GNUC__)&& !( defined (SOFT_LPF_NONE) || defined (SOFT_LPF_1ST_HZ) || defined (SOFT_LPF_2ST_HZ) )
 #warning the soft lpf may not work correctly with gcc due to longer loop time
-#endif
 #endif
 
 
