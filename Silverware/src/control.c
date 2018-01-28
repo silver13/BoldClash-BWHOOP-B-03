@@ -123,6 +123,15 @@ float rate_multiplier = 1.0;
 		#else
 		rxcopy[i] = rx[i] * rate_multiplier;
 		#endif
+		#ifdef STICKS_DEADBAND
+		if ( fabsf( rxcopy[ i ] ) <= STICKS_DEADBAND ) {
+			rxcopy[ i ] = 0.0f;
+		} else {
+			if ( rxcopy[ i ] >= 0 ) {
+				rxcopy[ i ] = mapf( rxcopy[ i ], STICKS_DEADBAND, 1, 0, 1 );
+			} else {
+				rxcopy[ i ] = mapf( rxcopy[ i ], -STICKS_DEADBAND, -1, 0, -1 );
+			}
 	}
 
 
@@ -173,9 +182,15 @@ pid_precalc();
 
 float	throttle;
 
+#ifndef IDLE_UP
 // map throttle so under 10% it is zero	
 if ( rx[3] < 0.1f ) throttle = 0;
 else throttle = (rx[3] - 0.1f)*1.11111111f;
+#else
+// check if IDLE_UP switch is on
+if (!aux[IDLE_UP]) throttle = 0;
+else throttle =  (float) IDLE_THR + rx[3] * (1.0f - (float) IDLE_THR);
+#endif
 
 
 // turn motors off if throttle is off and pitch / roll sticks are centered
@@ -601,26 +616,38 @@ thrsum = 0;
 	}// end motors on
 
    
-    if (aux[LEVELMODE]&&!acro_override)
-    {
-        // level mode calculations done after to reduce latency
-        // the 1ms extra latency should not affect cascaded pids significantly
-        
-      	extern void stick_vector( float rx_input[] , float maxangle);
-		extern float errorvect[]; // level mode angle error calculated by stick_vector.c					
-        extern float GEstG[3]; // gravity vector for yaw feedforward
-        float yawerror[3] = {0}; // yaw rotation vector
+if (aux[LEVELMODE]&&!acro_override)
+{
+// level mode calculations done after to reduce latency
+// the 1ms extra latency should not affect cascaded pids significantly
 
-        // calculate roll / pitch error
-		stick_vector( rxcopy , 0 ); 
-           
-        float yawrate = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD;            
-        // apply yaw from the top of the quad            
-        yawerror[0] = GEstG[1] * yawrate;
-        yawerror[1] = - GEstG[0] * yawrate;
-        yawerror[2] = GEstG[2] * yawrate;
+extern void stick_vector( float rx_input[] , float maxangle);
+extern float errorvect[]; // level mode angle error calculated by stick_vector.c	
+extern float GEstG[3]; // gravity vector for yaw feedforward
+float yawerror[3] = {0}; // yaw rotation vector
 
-        // pitch and roll
+// calculate roll / pitch error
+stick_vector( rxcopy , 0 ); 
+
+float yawrate = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD; 
+// apply yaw from the top of the quad 
+yawerror[0] = GEstG[1] * yawrate;
+yawerror[1] = - GEstG[0] * yawrate;
+yawerror[2] = GEstG[2] * yawrate;
+ if (aux[RACEMODE])
+ {
+		// pitch 
+		int i = 0 ;
+
+		angleerror[i] = errorvect[i] ; 
+		error[i] = apid(i) + yawerror[i] - gyro[i];
+
+		// roll 
+		error[1] = rxcopy[1] * (float) MAX_RATE * DEGTORAD - gyro[1];
+		// yaw
+		error[2] = yawerror[2] - gyro[2]; }
+ else{
+	        // pitch and roll
 		for ( int i = 0 ; i <=1; i++)
 			{
             angleerror[i] = errorvect[i] ;    
@@ -628,7 +655,8 @@ thrsum = 0;
 			}
         // yaw
 		error[2] = yawerror[2]  - gyro[2];  
-    }
+ }
+		}
     
 	
 }
