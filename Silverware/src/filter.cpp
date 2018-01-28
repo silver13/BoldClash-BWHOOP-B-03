@@ -344,6 +344,45 @@ filter_lpf2 filter[3];
 #endif
 
 
+#ifdef SOFT_KALMAN_GYRO
+class  filter_kalman
+{
+    private:
+        float x_est_last ;
+        float P_last ; 
+        float Q;
+        float R;
+    public:
+        filter_kalman()
+        {
+            Q = 0.02; 
+            R = 0.1;
+
+            #ifdef SOFT_KALMAN_GYRO
+            R = Q/(float)SOFT_KALMAN_GYRO;
+            #endif
+        }
+        float  step( float in )   
+        {    
+
+            //do a prediction 
+            float x_temp_est = x_est_last; 
+            float P_temp = P_last + Q; 
+
+            float K = P_temp * (1.0f/(P_temp + R));
+            float x_est = x_temp_est + K * (in - x_temp_est);  
+            float P = (1- K) * P_temp; 
+           
+            //update our last's 
+            P_last= P; 
+            x_est_last = x_est; 
+
+            return x_est;
+        }
+};       
+filter_kalman filter[3];       
+#endif
+
 
 extern "C" float lpffilter( float in,int num )
 {
