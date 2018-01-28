@@ -132,8 +132,9 @@ float rate_multiplier = 1.0;
 			} else {
 				rxcopy[ i ] = mapf( rxcopy[ i ], -STICKS_DEADBAND, -1, 0, -1 );
 			}
-	}
-
+		}
+		#endif
+	 }
 
 #ifndef DISABLE_FLIP_SEQUENCER	
   flip_sequencer();
@@ -366,7 +367,7 @@ pidoutput[2] = -pidoutput[2];
 		
        		#ifdef MOTOR_FILTER2_ALPHA	
        		 float motorlpf( float in , int x) ;           
-		ix[i] = motorlpf(  mix[i] , i);
+		mix[i] = motorlpf(  mix[i] , i);
 		#endif
 			
 		#ifdef MOTOR_KAL
