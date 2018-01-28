@@ -185,6 +185,7 @@ float	throttle;
         if (rx_good)
         {
             throttle = altitude_hold();
+            throttle_smooth(&throttle);
         }
         else
         {
