@@ -22,20 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
-//#define RECTANGULAR_RULE_INTEGRAL
-//#define MIDPOINT_RULE_INTEGRAL
-#define SIMPSON_RULE_INTEGRAL
-
-
-//#define NORMAL_DTERM
-#define NEW_DTERM
-//#define MAX_FLAT_LPF_DIFF_DTERM
-//#define DTERM_LPF_1ST_HZ 100
-//#define  DTERM_LPF_2ND_HZ 120
-
-//#define ANTI_WINDUP_DISABLE
-
 #include <stdbool.h>
 #include <stdlib.h>
 #include "pid.h"
@@ -45,30 +31,55 @@ THE SOFTWARE.
 #include "defines.h"
 
 
-// Kp	                  ROLL       PITCH     YAW
-float pidkp[PIDNUMBER] = { 13.0e-2 , 13.0e-2  , 6e-1 }; 
+//************************************PIDS****************************************
 
-// Ki		              ROLL       PITCH     YAW
-float pidki[PIDNUMBER] = { 12.8e-1  , 12.8e-1 , 3e-1 };	
+//7mm Whoop  kalman at 90hz, D 2nd at 100
+//                         ROLL       PITCH     YAW
+float pidkp[PIDNUMBER] = { 27.0e-2 , 27.0e-2  , 11.5e-1 }; 
+float pidki[PIDNUMBER] = { 20.5e-1  , 20.5e-1 , 16e-1 };	
+float pidkd[PIDNUMBER] = { 11.4e-1 , 11.4e-1  , 4.9e-1 };	
 
-// Kd			          ROLL       PITCH     YAW
-float pidkd[PIDNUMBER] = { 5.5e-1 , 5.5e-1  , 0.0e-1 };	
 
+//6mm Whoop   (untested old pids - will update soon)
+//                         ROLL       PITCH     YAW
+//float pidkp[PIDNUMBER] = {19.5e-2 , 19.5e-2  , 7.5e-1 }; 
+//float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 13e-1 };	
+//float pidkd[PIDNUMBER] = { 6.9e-1 , 6.9e-1  , 5.5e-1 };
+
+
+//8mm kingkong 66mm props  kalman at 90hz, D 2nd at 100
+//                         ROLL       PITCH     YAW
+//float pidkp[PIDNUMBER] = { 26.7e-2 , 26.7e-2  , 9.5e-1 }; 
+//float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 8e-1 };	
+//float pidkd[PIDNUMBER] = {16.2e-1 , 16.2e-1  , 7e-1 };	
+
+//8.5mm kingkong 66mm props  kalman at 80hz, D 2nd at 90
+//                         ROLL       PITCH     YAW
+//float pidkp[PIDNUMBER] = { 29.5e-2 , 29.5e-2  , 11.5e-1 }; 
+//float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 12.0e-1 };	
+//float pidkd[PIDNUMBER] = {17.5e-1 , 17.5e-1  , 7e-1 };
+
+
+//************************************Setpoint Weight****************************************
 // "setpoint weighting" 0.0 - 1.0 where 1.0 = normal pid
-// #define ENABLE_SETPOINT_WEIGHTING
-float b[3] = { 1.0 , 1.0 , 1.0};
+#define ENABLE_SETPOINT_WEIGHTING
+//            Roll   Pitch   Yaw
+float b[3] = { 0.93 , 0.95 , 0.9};
 
 
 
 
-// output limit			
-const float outlimit[PIDNUMBER] = { 0.8 , 0.8 , 0.5 };
+/// output limit			
+const float outlimit[PIDNUMBER] = { 1.7 , 1.7 , 0.5 };
 
 // limit of integral term (abs)
-const float integrallimit[PIDNUMBER] = { 0.8 , 0.8 , 0.5 };
+const float integrallimit[PIDNUMBER] = { 1.7 , 1.7 , 0.5 };
 
+//#define RECTANGULAR_RULE_INTEGRAL
+//#define MIDPOINT_RULE_INTEGRAL
+#define SIMPSON_RULE_INTEGRAL
 
-
+//#define ANTI_WINDUP_DISABLE
 
 // non changable things below
 float * pids_array[3] = {pidkp, pidki, pidkd};
