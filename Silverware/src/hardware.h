@@ -59,7 +59,7 @@
 //#define USE_DUMMY_I2C
 
 // for boards without a SCL pullup - E011 ( nonstandard i2c )
-//#define SOFTI2C_PUSHPULL_CLK
+// MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
 
 // I2C speed: fast = no delays 
 // slow1 = for i2c without pull-up resistors
@@ -128,19 +128,7 @@
 
 // SPI PINS DEFINITONS ( for radio ic )
 // MOSI , CLK , SS - outputs , MISO input
-
-
-#define SPI_MOSI_PIN GPIO_Pin_0
-#define SPI_MOSI_PORT GPIOA
-
-//#define SPI_MISO_PIN GPIO_Pin_15
-//#define SPI_MISO_PORT GPIOA
-
-#define SPI_CLK_PIN GPIO_Pin_1
-#define SPI_CLK_PORT GPIOF
-
-#define SPI_SS_PIN GPIO_Pin_0
-#define SPI_SS_PORT GPIOF
+// MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
 
 //spi type
 #define SOFTSPI_3WIRE
@@ -194,18 +182,7 @@
 // Assingment of pin to motor
 // Assign one pin to one motor
 // pins PA0 - PA11 , PB0 , PB1
-
-// back-left motor ( motor 0 )
-#define MOTOR0_PIN_PB1
-
-// front-left motor ( motor 1 )
-#define MOTOR1_PIN_PA4
-
-// back-right motor ( motor 2 )
-#define MOTOR2_PIN_PA6
-
-// front-right motor ( motor 3 )
-#define MOTOR3_PIN_PA7
+// MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
 
 
 
