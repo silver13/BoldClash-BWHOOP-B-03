@@ -4,6 +4,17 @@
 // adjust pids in pid.c file
 
 //**********************************************************************************************************************
+//***********************************************HARDWARE SELECTION*****************************************************
+
+// *************DEFINE FLIGHT CONTROLLER HARDWARE
+// *************SELECT ONLY ONE 
+// *************uncomment BWHOOP define for bwhoop, bwhoop pro, E011C Santa Edition, and Beta FPV Lite Flight Controllers
+// *************uncomment E011 define for E011 flight Controller
+//#define BWHOOP
+#define E011
+
+
+//**********************************************************************************************************************
 //***********************************************RECEIVER SETTINGS******************************************************
 
 // *************rate in deg/sec
@@ -14,14 +25,13 @@
 // *************max angle for level mode
 #define MAX_ANGLE_HI 70.0f
 
+// ************* low rates multiplier if rates are assigned to a channel
 #define LOW_RATES_MULTI 0.5f
 
-// *************0.00 to 1.00 , 0 = no exp
+// *************EXPO from 0.00 to 1.00 , 0 = no exp
 // *************positive = less sensitive near center 
 #define EXPO_XY 0.8
 #define EXPO_YAW 0.6
-// *************disable inbuilt expo functions
-//#define DISABLE_EXPO
 
 // *************transmitter stick adjustable deadband for roll/pitch/yaw
 // *************.01f = 1% of stick range - comment out to disable
@@ -49,17 +59,15 @@
 // *************Aux channels are selectable as CHAN_5 through CHAN_10
 
 //*************Idle up-Arm switch
-// *************comment out to disable
+//*************comment out to disable
 #define IDLE_UP CHAN_5
 #define IDLE_THR 0.05f
 
+//*************Assign feature to auxiliary channel
 #define LEVELMODE CHAN_6
 #define RACEMODE  CHAN_7                                    
 #define LEDS_ON CHAN_8
-#define STARTFLIP CH_OFF
 #define RATES CH_ON
-
-
 
 // *************switch for fpv / other, requires fet
 // *************comment out to disable
@@ -143,9 +151,10 @@
 // *************clip feedforward attempts to resolve issues that occur near full throttle
 //#define CLIP_FF
 
-// *************makes throttle feel more poppy - can intensify small throttle imbalances visible in FPV
+// *************makes throttle feel more poppy - can intensify small throttle imbalances visible in FPV if factor is set too high
 //#define THROTTLE_TRANSIENT_COMPENSATION 
-
+#define THROTTLE_TRANSIENT_COMPENSATION_FACTOR 4.0 
+ 
 // *************throttle angle compensation in level mode
 //#define AUTO_THROTTLE
 
@@ -159,7 +168,7 @@
 //#define MIX_LOWER_THROTTLE_3
 #define MIX_INCREASE_THROTTLE_3
 
-// invert yaw pid for "PROPS OUT" configuration
+// *************invert yaw pid for "PROPS OUT" configuration
 //#define INVERT_YAW_PID
 
 
@@ -174,7 +183,6 @@
 #define TX_POWER 7
 
 // *************Flash saving features
-#define DISABLE_FLIP_SEQUENCER
 //#define DISABLE_GESTURES2
 
 // *************led brightness in-flight ( solid lights only)
@@ -205,10 +213,12 @@
 
 
 
-
-//##################################
+//#############################################################################################################################
+//#############################################################################################################################
 // debug / other things
 // this should not be usually changed
+//#############################################################################################################################
+//#############################################################################################################################
 
 // Gyro LPF filter frequency
 // gyro filter 0 = 250hz delay 0.97mS
@@ -220,6 +230,12 @@
 // gyro filter 6 = 5hz
 // gyro filter 7 = 3600hz delay 0.17mS
 #define GYRO_LOW_PASS_FILTER 0
+
+// disable inbuilt expo functions
+//#define DISABLE_EXPO
+
+#define DISABLE_FLIP_SEQUENCER
+#define STARTFLIP CH_OFF
 
 // level mode "manual" trims ( in degrees)
 // pitch positive forward
@@ -308,3 +324,54 @@
 
 
 // gcc warnings in main.c
+
+
+
+//Hardware defines moved from hardware.h so that board selection of bwhoop or e011 can be performed in config.h file
+
+#ifdef BWHOOP
+// SPI PINS DEFINITONS ( for radio ic )
+#define SPI_MOSI_PIN GPIO_Pin_0
+#define SPI_MOSI_PORT GPIOA
+//#define SPI_MISO_PIN GPIO_Pin_15
+//#define SPI_MISO_PORT GPIOA
+#define SPI_CLK_PIN GPIO_Pin_1
+#define SPI_CLK_PORT GPIOF
+#define SPI_SS_PIN GPIO_Pin_0
+#define SPI_SS_PORT GPIOF
+
+// Assingment of pin to motor
+// back-left motor ( motor 0 )
+#define MOTOR0_PIN_PB1
+// front-left motor ( motor 1 )
+#define MOTOR1_PIN_PA4
+// back-right motor ( motor 2 )
+#define MOTOR2_PIN_PA6
+// front-right motor ( motor 3 )
+#define MOTOR3_PIN_PA7
+
+#endif
+
+#ifdef E011
+#define SOFTI2C_PUSHPULL_CLK
+// SPI PINS DEFINITONS ( for radio ic )
+#define SPI_MOSI_PIN GPIO_Pin_0
+#define SPI_MOSI_PORT GPIOF
+//#define SPI_MISO_PIN GPIO_Pin_15
+//#define SPI_MISO_PORT GPIOA
+#define SPI_CLK_PIN GPIO_Pin_1
+#define SPI_CLK_PORT GPIOF
+#define SPI_SS_PIN GPIO_Pin_0
+#define SPI_SS_PORT GPIOA
+
+// Assingment of pin to motor
+// back-left motor ( motor 0 )
+#define MOTOR0_PIN_PA6
+// front-left motor ( motor 1 )
+#define MOTOR1_PIN_PA4
+// back-right motor ( motor 2 )
+#define MOTOR2_PIN_PB1
+// front-right motor ( motor 3 )
+#define MOTOR3_PIN_PA7
+#endif
+
