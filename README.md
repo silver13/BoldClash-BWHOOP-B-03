@@ -1,5 +1,43 @@
 [![Build Status](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03.svg?branch=master)](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03)
 
+## NotFastEnuf Notes - Bwhoop B03 Silverware modified to work on BWHOOP or E011.
+
+Testing a new layout for config.h  - feel free to let me know what you think.  Your feedback is appreciated. 
+
+There are two main steps to prep this file for flash.  The first will be in config.h and the second will be in pid.c file.
+
+STEP 1:  Open config.h with keil and make edits to set your selections in 6 categories.
+
+         _Hardware Selection_ - select bwhoop or e011 based hardware
+         
+         _Receiver Settings_ - set rates, expo, radio protocol, transmitter type and assign features to auxiliary channel switches
+                              
+         _Voltage Settings_ - low voltage cutoff and other voltage related settings
+         
+         _Filter Settings_ -set gyro filter and D term filter frequencies and orders
+         
+         _Motor Output Settings_ - set pwm rate, motor curves, inverted yaw for props out, and features related to motor output
+                                 
+         _Additional Features_ - remaining special features 
+         
+STEP 2:  Open pid.c with keil and either edit pids to your preferred values or select a set of pids that I have prepared.   I plan to keep all my tunes in pid.c and will have them labeled and noted with the associated filter settings for each type of build.  All you have to do to use one of my tunes is uncomment the pid group you want to use and make sure the others are commented out.  I will keep whatever pids I'm using updated here if I change them and the default set will always be for a 7mm whoop with fpv gear installed.  Setpoint weight values are also just below pids - if you want a sharper stick feel on one of my tunes then change these values closer to 1.0
+
+## Current Experimental Features 
+
+ - E011 or Bwhoop Selection:  define your board type and hardware settings are automatically selected for E011, Bwhoop, bwhoop pro, E011c,  and beta fpv lite
+ - Radio Type Selection:  Renamed aux channels as chan_5 through chan_10 and proper mapping is now controlled by defining your transmitter type.  Simply select devo, multi (for taranis or other multimodule), or stock (for toy tx) and assign the features you want to chan_#
+ - Racemode:  flight mode with leveling on roll, acro on pitch, and yaw axis rotates about gravity vector.  Can be activated on an aux channel when in level mode.
+ - Kalman Gyro Filter:  adjustable gyro filter that's very similar to a 1st order filter but to me feels a little faster and a little weaker.  You decide...
+ - Kalman Motor Filter:  adjustable motor output filter.  Same evaluation as the gyro version.
+ - Idle up/Arming on aux channel:  idle speed is also adjustable.  Paired with mix increase throttle feature it behaves like airmode
+ - Sticks Deadband:  adjustable deadband for transmitter inputs to compensate for gimbals that don't perfectly center
+ - Motor Filter Frequencies:  motor filters are adjustable by a frequency instead of a decimal value.
+
+
+_Easiest way to find me for feedback & discussion is here https://community.micro-motor-warehouse.com/t/notfastenuf-e011-bwhoop-silverware-fork/5501?u=notfastenuf_
+
+_end NFE notes_
+
 ## SilverWare - BoldClash BWHOOP B-03 version
 
 _Also works with B03 Pro_
