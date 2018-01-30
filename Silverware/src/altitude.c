@@ -49,8 +49,8 @@ THE SOFTWARE.
 #define ALT_I 0.1f
 #define ALT_D 0.06f
 
-#define THROTTLE_SMOOTH_FACTOR 0.002 // feedback amount
-#define THROTTLE_SMOOTH_CENTER_ONLY  // active around center only
+#define THROTTLE_SMOOTH_FACTOR 0.01 // feedback amount
+//#define THROTTLE_SMOOTH_CENTER_ONLY  // active around center only
 
 extern float looptime;
 extern float press_fl;
@@ -93,48 +93,53 @@ void throttle_smooth(float *throttle) {
     extern float accel[3];
     extern int onground;
 
-    // THROTTLE_SMOOTH
-    // calculate integral of z axis accel
-    // some filters added to prevent runaway
+    if (*throttle > 0) {
+        // calculate integral of z axis accel
+        // some filters added to prevent runaway
 
-    //excess acceleration in z axis
-    float g2 = accelz - GEstG[2];
+        //excess acceleration in z axis
+        float g2 = accelz - GEstG[2];
 
-    // remove bias from accelerometer imperfections
-    float accelz_adj = ( g2 - g2_filt);
+        // remove bias from accelerometer imperfections
+        float accelz_adj = ( g2 - g2_filt);
 
-    // an lpf to remove more biases
-    lpf( &accelz_lpf , accelz_adj , 0.99998);
+        // an lpf to remove more biases
+        lpf( &accelz_lpf , accelz_adj , 0.99998);
 
-    // bias calibration if on ground
-    if (onground)  lpf( &g2_filt , g2 , 0.998);
+        // bias calibration if on ground
+        if (onground)  lpf( &g2_filt , g2 , 0.998);
 
-    if (g2_filt < -0.10f ) g2_filt = -0.10f;
-    if (g2_filt > 0.10f ) g2_filt = 0.10f;
+        if (g2_filt < -0.10f ) g2_filt = -0.10f;
+        if (g2_filt > 0.10f ) g2_filt = 0.10f;
 
-    // remove the lpf component to make a hpf
-    accelz_adj -= accelz_lpf;
+        // remove the lpf component to make a hpf
+        accelz_adj -= accelz_lpf;
 
-    // actual integration of filtered accel
-    accel_integral -= accelz_adj*looptime*1000.0f;
+        // actual integration of filtered accel
+        accel_integral -= accelz_adj*looptime*1000.0f;
 
-    // why not filter the integral too?
-    lpf(&accel_integral_bias,accel_integral , 0.998);
-    accel_integral_filt = accel_integral - accel_integral_bias;
+        // why not filter the integral too?
+        lpf(&accel_integral_bias,accel_integral , 0.998);
+        accel_integral_filt = accel_integral - accel_integral_bias;
 
-    // a limit just in case something goes really wrong, so we still have some throttle
-    limitf( &accel_integral_filt , 0.3f/(float) THROTTLE_SMOOTH_FACTOR );
+        // a limit just in case something goes really wrong, so we still have some throttle
+        limitf( &accel_integral_filt , 0.3f/(float) THROTTLE_SMOOTH_FACTOR );
 
-    #ifdef THROTTLE_SMOOTH_CENTER_ONLY
-    //100% at center - 0% at max/min
-    float thr_gain = (1.0f - 2.0f*fabs(*throttle - 0.5f));
-    #else
-    //100% full range
-    const float thr_gain = 1.0;
-    #endif
+        #ifdef THROTTLE_SMOOTH_CENTER_ONLY
+        //100% at center - 0% at max/min
+        float thr_gain = (1.0f - 2.0f*fabs(*throttle - 0.5f));
+        #else
+        //100% full range
+        const float thr_gain = 1.0;
+        #endif
 
-    // add accel integral ( which is vertical speed) to throttle
-    *throttle += (float) THROTTLE_SMOOTH_FACTOR * thr_gain * accel_integral_filt;
+        // add accel integral ( which is vertical speed) to throttle
+        *throttle += (float) THROTTLE_SMOOTH_FACTOR * thr_gain * accel_integral_filt;
+    }
+    else
+    {
+        *throttle = 0;
+    }
 }
 
 float altitude_hold(void)
@@ -177,7 +182,7 @@ float altitude_hold(void)
             else newrx += 0.05f;
             newrx *= 2.222222f; // newrx [-1.0f, 1.0f]
             new_alt_target = altitude + newrx * FULL_THROTTLE_ALT_TARGET;     // Add +/- FULL_THROTTLE_ALT_TARGET meter to altitude for full throttle travel
-            lpf(&alt_target, new_alt_target, lpfcalc(dt, 0.25f));             // Easy climbing and descending
+            lpf(&alt_target, new_alt_target, lpfcalc(dt, 5.0f));             // Easy climbing and descending
 //            alt_target = new_alt_target;
         }
 

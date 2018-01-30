@@ -52,17 +52,17 @@ THE SOFTWARE.
 // Select Temperature sensor oversampling rate
 // #define TEMP_FACTOR  524288.0
 // #define TEMP_FACTOR 1572864.0
-#define TEMP_FACTOR 3670016.0
+// #define TEMP_FACTOR 3670016.0
 // #define TEMP_FACTOR 7864320.0
-// #define TEMP_FACTOR  253952.0
+#define TEMP_FACTOR  253952.0
 // #define TEMP_FACTOR  516096.0
 // #define TEMP_FACTOR 1040384.0
 // #define TEMP_FACTOR 2088960.0
 
 
 // Select Temperature sensor LPF rate
-// #define TEMP_LPF     0.75
-#define TEMP_LPF    0.875
+#define TEMP_LPF     0.75
+// #define TEMP_LPF    0.875
 // #define TEMP_LPF   0.9375
 // #define TEMP_LPF  0.96875
 // #define TEMP_LPF 0.984375
@@ -70,16 +70,16 @@ THE SOFTWARE.
 // Select Pressure sensor oversampling rate
 // #define PRESS_FACTOR  524288.0
 // #define PRESS_FACTOR 1572864.0
-#define PRESS_FACTOR 3670016.0
+// #define PRESS_FACTOR 3670016.0
 // #define PRESS_FACTOR 7864320.0
-// #define PRESS_FACTOR 253952.0
+#define PRESS_FACTOR 253952.0
 // #define PRESS_FACTOR  516096.0
 // #define PRESS_FACTOR 1040384.0
 // #define PRESS_FACTOR 2088960.0
 
 // Select Pressure sensor LPF rate
-// #define PRESS_LPF     0.75
-#define PRESS_LPF    0.875
+#define PRESS_LPF     0.75
+// #define PRESS_LPF    0.875
 // #define PRESS_LPF   0.9375
 // #define PRESS_LPF  0.96875
 // #define PRESS_LPF 0.984375
@@ -114,14 +114,14 @@ void dps310_init(void)
     int temp_sensor_type = i2c_readreg(DPS310_I2C_ADDRESS, DPS310_COEF_SRCE)&B10000000;
 
     // temp config
-    i2c_writereg(DPS310_I2C_ADDRESS, DPS310_TMP_CFG, B00000010|temp_sensor_type); // 0 meas/sec / 4x oversampling
+    i2c_writereg(DPS310_I2C_ADDRESS, DPS310_TMP_CFG, B00000100|temp_sensor_type); // 0 meas/sec / 16x oversampling
 
     // pressure config
-    i2c_writereg(DPS310_I2C_ADDRESS, DPS310_PSR_CFG, B00000010); // 0 meas/sec | 4x oversampling
+    i2c_writereg(DPS310_I2C_ADDRESS, DPS310_PSR_CFG, B00000100); // 0 meas/sec | 16x oversampling
 
     // set CFG_REG
-    i2c_writereg(DPS310_I2C_ADDRESS, DPS310_CFG_REG, B00000000); // Disable T_SHIFT, P_SHIFT (1,2,4,8)
-//     i2c_writereg(DPS310_I2C_ADDRESS, DPS310_CFG_REG, B00001100); // Ensable T_SHIFT, P_SHIFT (16,32,64,128)
+//     i2c_writereg(DPS310_I2C_ADDRESS, DPS310_CFG_REG, B00000000); // Disable T_SHIFT, P_SHIFT (1,2,4,8)
+    i2c_writereg(DPS310_I2C_ADDRESS, DPS310_CFG_REG, B00001100); // Ensable T_SHIFT, P_SHIFT (16,32,64,128)
 
     // Prime LPF with valid P&T values
     dps310_prime();
