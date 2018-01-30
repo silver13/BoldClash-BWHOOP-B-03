@@ -102,7 +102,7 @@ extern float looptime;
 extern float gyro[3];
 extern int onground;
 extern float looptime;
-extern int ledcommand;
+
 
 #ifdef NORMAL_DTERM
 static float lastrate[PIDNUMBER];
