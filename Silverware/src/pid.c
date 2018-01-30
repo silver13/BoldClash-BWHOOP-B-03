@@ -33,27 +33,32 @@ THE SOFTWARE.
 
 //************************************PIDS****************************************
 
-//7mm Whoop  kalman at 90hz, D 2nd at 100
+//7mm Whoop  -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz
 //                         ROLL       PITCH     YAW
 float pidkp[PIDNUMBER] = { 27.0e-2 , 27.0e-2  , 11.5e-1 }; 
 float pidki[PIDNUMBER] = { 20.5e-1  , 20.5e-1 , 16e-1 };	
 float pidkd[PIDNUMBER] = { 11.4e-1 , 11.4e-1  , 4.9e-1 };	
 
 
-//6mm Whoop   (untested old pids - will update soon)
+//6mm Whoop   (untested old pids - will update soon with necessary filter values)
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = {19.5e-2 , 19.5e-2  , 7.5e-1 }; 
 //float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 13e-1 };	
 //float pidkd[PIDNUMBER] = { 6.9e-1 , 6.9e-1  , 5.5e-1 };
 
+//BOSS 6 & 7 - 615 and 716 motors, hm830 46mm props  -1st gyro at 70hz, D 2nd at 80hz, motor filter at 70hz
+//                         ROLL       PITCH     YAW
+//float pidkp[PIDNUMBER] = { 24.5e-2 , 24.5e-2  , 9.5e-1 }; 
+//float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 8e-1 };	
+//float pidkd[PIDNUMBER] = {14.1e-1 , 14.1e-1  , 7e-1
 
-//8mm kingkong 66mm props  kalman at 90hz, D 2nd at 100
+//BOSS 8.0 - 816 motors, kingkong 66mm props  -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = { 26.7e-2 , 26.7e-2  , 9.5e-1 }; 
 //float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 8e-1 };	
 //float pidkd[PIDNUMBER] = {16.2e-1 , 16.2e-1  , 7e-1 };	
 
-//8.5mm kingkong 66mm props  kalman at 80hz, D 2nd at 90
+//BOSS 8.5 - 820 motors, kingkong 66mm props  -kalman at 80hz, D 2nd at 90hz, motor filter at 90hz
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = { 29.5e-2 , 29.5e-2  , 11.5e-1 }; 
 //float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 12.0e-1 };	
