@@ -52,6 +52,12 @@ float pidkd[PIDNUMBER] = { 11.4e-1 , 11.4e-1  , 4.9e-1 };
 //float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 8e-1 };	
 //float pidkd[PIDNUMBER] = {14.1e-1 , 14.1e-1  , 7e-1
 
+//(EXPERIMENTAL) BOSS 7 with TORQUE_BOOST at 2.0 - same gyro & d filters as regular boss 7 tune
+//                         ROLL       PITCH     YAW
+//float pidkp[PIDNUMBER] = { 22.7e-2 , 22.7e-2  , 9.5e-1 }; 
+//float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 8e-1 };	
+//float pidkd[PIDNUMBER] = {8.7e-1 , 8.7e-1  , 0e-1 };	
+
 //BOSS 8.0 - 816 motors, kingkong 66mm props  -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = { 26.7e-2 , 26.7e-2  , 9.5e-1 }; 
