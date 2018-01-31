@@ -373,7 +373,12 @@ pidoutput[2] = -pidoutput[2];
 		#ifdef MOTOR_KAL
       		float motor_kalman( float in , int x);
        		mix[i] = motor_kalman(  mix[i] , i);  
-       		#endif  	
+       		#endif 
+			
+		#ifdef TORQUE_BOOST
+       		float motord( float in , int x);           
+		mix[i] = motord(  mix[i] , i);
+		#endif
        		}
 
 
@@ -766,4 +771,23 @@ float clip_ff(float motorin, int number)
 	return motorin;
 }
 
+#ifndef TORQUE_BOOST
+    #define TORQUE_BOOST   0.0
+#endif
+
+ float motord( float in , int x)
+ {
+   float factor = TORQUE_BOOST;
+   static float lastratexx[4][4];
+     
+        float out  =  ( + 0.125f *in + 0.250f * lastratexx[x][0]
+                    - 0.250f * lastratexx[x][2] - ( 0.125f) * lastratexx[x][3]) * factor; 						;
+
+        lastratexx[x][3] = lastratexx[x][2];
+        lastratexx[x][2] = lastratexx[x][1];
+        lastratexx[x][1] = lastratexx[x][0];
+        lastratexx[x][0] = in;
+        
+    return in + out;
+ }
 
