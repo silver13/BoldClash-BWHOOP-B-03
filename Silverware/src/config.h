@@ -151,6 +151,14 @@
 // *************clip feedforward attempts to resolve issues that occur near full throttle
 //#define CLIP_FF
 
+// *************torque boost is a highly eperimental feature.  it is a lpf D term on motor outputs that will accelerate the response
+// *************of the motors when the command to the motors is changing by increasing or decreasing the voltage thats sent.  It differs
+// *************from throttle transient compensation in that it acts on all motor commands - not just throttle changes.  this feature
+// *************is very noise sensative so D term specifically has to be lowered and gyro/d filtering may need to be increased.
+// *************reccomendation right now is to leave boost at or below 2, drop your p gains a few points, then cut your D in half and 
+// *************retune it back up to where it feels good.  I'm finding about 60 to 65% of my previous D value seems to work.
+//#define TORQUE_BOOST 2.0
+
 // *************makes throttle feel more poppy - can intensify small throttle imbalances visible in FPV if factor is set too high
 //#define THROTTLE_TRANSIENT_COMPENSATION 
 #define THROTTLE_TRANSIENT_COMPENSATION_FACTOR 4.0 
