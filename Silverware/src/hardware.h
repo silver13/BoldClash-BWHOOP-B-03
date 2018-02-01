@@ -32,10 +32,11 @@
 
 
 
-#define LED_NUMBER 2
+//LED_NUMBER MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
 
-#define LED1PIN GPIO_Pin_2
-#define LED1PORT GPIOA
+
+//LED1PIN GPIO MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
+//LED1PORT GPIO MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
 
 #define LED2PIN GPIO_Pin_3
 #define LED2PORT GPIOA
@@ -44,8 +45,7 @@
 
 
 // invert - leds turn on when high
-#define LED1_INVERT
-#define LED2_INVERT
+// MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
 
 
 // softi2c pins definitons:
@@ -93,7 +93,7 @@
 
 // gyro ids for the gyro check
 #define GYRO_ID_1 0x68
-#define GYRO_ID_2 0x98 // new id
+// GYRO_ID_2 MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
 #define GYRO_ID_3 0x7D
 #define GYRO_ID_4 0x72
 
@@ -104,12 +104,7 @@
 // rotations performed in order
 // note, the motors don't get rotated,
 // so they have to be referenced to the new gyro position
-//#define SENSOR_ROTATE_45_CCW
-//#define SENSOR_ROTATE_45_CW
-#define SENSOR_ROTATE_90_CW
-//#define SENSOR_ROTATE_90_CCW
-//#define SENSOR_ROTATE_180
-//#define SENSOR_FLIP_180
+//MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
 
 
 // disable lvc functions
