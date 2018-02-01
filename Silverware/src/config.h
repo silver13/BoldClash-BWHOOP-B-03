@@ -10,8 +10,10 @@
 // *************SELECT ONLY ONE 
 // *************uncomment BWHOOP define for bwhoop, bwhoop pro, E011C Santa Edition, and Beta FPV Lite Flight Controllers
 // *************uncomment E011 define for E011 flight Controller
+// *************uncomment H8mini_blue_board for the H8 mini flight controller with blue circuit board
 //#define BWHOOP
 #define E011
+//#define H8mini_blue_board
 
 
 //**********************************************************************************************************************
@@ -337,6 +339,13 @@
 //Hardware defines moved from hardware.h so that board selection of bwhoop or e011 can be performed in config.h file
 
 #ifdef BWHOOP
+#define LED_NUMBER 2
+#define LED1PIN GPIO_Pin_2
+#define LED1PORT GPIOA
+#define LED1_INVERT
+#define LED2_INVERT
+#define GYRO_ID_2 0x98 // new id
+#define SENSOR_ROTATE_90_CW
 // SPI PINS DEFINITONS ( for radio ic )
 #define SPI_MOSI_PIN GPIO_Pin_0
 #define SPI_MOSI_PORT GPIOA
@@ -356,10 +365,16 @@
 #define MOTOR2_PIN_PA6
 // front-right motor ( motor 3 )
 #define MOTOR3_PIN_PA7
-
 #endif
 
 #ifdef E011
+#define LED_NUMBER 2
+#define LED1PIN GPIO_Pin_2
+#define LED1PORT GPIOA
+#define LED1_INVERT
+#define LED2_INVERT
+#define GYRO_ID_2 0x98 // new id
+#define SENSOR_ROTATE_90_CW
 #define SOFTI2C_PUSHPULL_CLK
 // SPI PINS DEFINITONS ( for radio ic )
 #define SPI_MOSI_PIN GPIO_Pin_0
@@ -382,3 +397,21 @@
 #define MOTOR3_PIN_PA7
 #endif
 
+#ifdef H8mini_blue_board
+#define LED_NUMBER 1
+#define LED1PIN GPIO_Pin_1
+#define LED1PORT GPIOF
+#define SOFTI2C_PUSHPULL_CLK
+#define GYRO_ID_2 0x78 // common h8 gyro
+#define SENSOR_ROTATE_180
+#define SPI_MOSI_PIN GPIO_Pin_1
+#define SPI_MOSI_PORT GPIOA
+#define SPI_CLK_PIN GPIO_Pin_2
+#define SPI_CLK_PORT GPIOA
+#define SPI_SS_PIN GPIO_Pin_3
+#define SPI_SS_PORT GPIOA
+#define MOTOR0_PIN_PA6
+#define MOTOR1_PIN_PA4
+#define MOTOR2_PIN_PB1
+#define MOTOR3_PIN_PA7
+#endif
