@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03.svg?branch=master)](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03)
 
-## NotFastEnuf Notes - Bwhoop B03 Silverware modified to work on BWHOOP or E011.
+## NotFastEnuf Notes - Bwhoop B03 Silverware modified to work on BWHOOP, E011, or H8mini_blue_board.
 
 Testing a new layout for config.h  - feel free to let me know what you think.  Your feedback is appreciated. 
 
@@ -8,7 +8,7 @@ There are two main steps to prep this file for flash.  The first will be in con
 
 STEP 1:  Open config.h with keil and make edits to set your selections in 6 categories.
 
-         _Hardware Selection_ - select bwhoop or e011 based hardware
+         _Hardware Selection_ - select bwhoop, e011, or H8mini_blue_board based hardware
          
          _Receiver Settings_ - set rates, expo, radio protocol, transmitter type and assign features to auxiliary channel switches
                               
