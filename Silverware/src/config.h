@@ -117,11 +117,11 @@
 //**************ABOVE 100 ADJUST IN INCRIMENTS OF 20, BELOW 100 ADJUST IN INCRIMENTS OF 10
 #define SOFT_KALMAN_GYRO KAL1_HZ_90
 //#define SOFT_LPF_1ST_HZ 80
-//#define SOFT_LPF_2ST_HZ 80
+//#define SOFT_LPF_2ND_HZ 80
 
 
-// *************D term low pass filter type
-// *************1st order adjustable, second order adjustable, or 3rd order fixed - and adjust frequency
+// *************D term low pass filter type - set only one below and adjust frequency if adjustable filter is used
+// *************1st order adjustable, second order adjustable, or 3rd order fixed (non adjustable)
 //#define DTERM_LPF_1ST_HZ 100
 #define  DTERM_LPF_2ND_HZ 100
 //#define DTERM_LPF3_88
@@ -129,10 +129,9 @@
 //**********************************************************************************************************************
 //***********************************************MOTOR OUTPUT SETTINGS**************************************************
 
-// *************enable motor output filter - select one
+// *************enable motor output filter - select and adjust frequency
 #define MOTOR_FILTER2_ALPHA MFILT1_HZ_90
-//#define MOTOR_KAL KAL1_HZ_260
-//#define MOTOR_KAL KAL1_HZ_50
+//#define MOTOR_KAL KAL1_HZ_70
 
 // *************pwm frequency for motor control
 // *************a higher frequency makes the motors more linear
