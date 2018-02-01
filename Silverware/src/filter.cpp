@@ -285,7 +285,7 @@ filter_lpf1 filter[3];
 
 
 
-#ifdef SOFT_LPF_2ST_HZ
+#ifdef SOFT_LPF_2ND_HZ
 
 extern "C" float lpfcalc( float sampleperiod , float filtertime);
 extern "C" float lpfcalc_hz(float sampleperiod, float filterhz);
@@ -329,7 +329,7 @@ void  lpf_coeff_2nd()
  
   lpf ( &looptime_filt , looptime , 0.96);
   
-   float one_minus_alpha = FILTERCALC( looptime_filt , (1.0f/SOFT_LPF_2ST_HZ) );  
+   float one_minus_alpha = FILTERCALC( looptime_filt , (1.0f/SOFT_LPF_2ND_HZ) );  
     
    one_minus_alpha_sqr = one_minus_alpha * one_minus_alpha;
    
@@ -394,7 +394,7 @@ extern "C" float lpffilter( float in,int num )
     if ( num == 0 ) lpf_coeff();
     #endif
     
-    #ifdef SOFT_LPF_2ST_HZ
+    #ifdef SOFT_LPF_2ND_HZ
     if ( num == 0 ) lpf_coeff_2nd();
     #endif
     
