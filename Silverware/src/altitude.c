@@ -32,7 +32,7 @@ THE SOFTWARE.
 
 #define AH_REFRESH_FREQ      1000.0f
 
-#define HOVER_THROTTLE_MIN      0.2f
+#define HOVER_THROTTLE_MIN      0.0f
 #define HOVER_THROTTLE_MAX      1.0f
 
 // Define maximum target distance for full throttle in m
@@ -80,7 +80,7 @@ void altitude_cal(void)
 }
 
 void throttle_smooth(float *throttle) {
-    // THROTTLE_SMOOTH
+    // THROTTLE_SMOOTH (deprecated in acro/level)
     static float accelz_lpf;
     static float accel_integral;
 
@@ -89,7 +89,6 @@ void throttle_smooth(float *throttle) {
     static float g2_filt = 0.0;
 
     extern float GEstG[3];
-    extern float accelz;
     extern float accel[3];
     extern int onground;
 
@@ -98,10 +97,10 @@ void throttle_smooth(float *throttle) {
         // some filters added to prevent runaway
 
         //excess acceleration in z axis
-        float g2 = accelz - GEstG[2];
+        float g2 = GEstG[2];
 
         // remove bias from accelerometer imperfections
-        float accelz_adj = ( g2 - g2_filt);
+        float accelz_adj = g2_filt - g2;
 
         // an lpf to remove more biases
         lpf( &accelz_lpf , accelz_adj , 0.99998);
@@ -231,7 +230,7 @@ float altitude_hold(void)
 */
 
             // Velocity PI by Silverxxx
-            float desired_speed = newrx * 0.005f;
+            float desired_speed = newrx * 0.003f;
             float speed = alt_lpf - last_altitude;
             float error = desired_speed - speed;
 
