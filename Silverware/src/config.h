@@ -58,7 +58,8 @@
 // *******************************SWITCH SELECTION*****************************
 // *************CH_ON - on always ( all protocols)
 // *************CH_OFF - off always ( all protocols)
-// *************Aux channels are selectable as CHAN_5 through CHAN_10
+// *************Aux channels are selectable as CHAN_5 through CHAN_10 for DEVO and MULTIMODULE users
+// *************Toy transmitters have only CHAN_5 (rates button), CHAN_6 (stick gestures RRD/LLD), and CHAN_7 (headfree button)
 
 //*************Idle up-Arm switch
 //*************comment out to disable
@@ -68,12 +69,12 @@
 //*************Assign feature to auxiliary channel
 #define LEVELMODE CHAN_6
 #define RACEMODE  CHAN_7                                    
-#define LEDS_ON CHAN_8
-#define RATES CH_ON
+#define LEDS_ON CHAN_ON
+#define RATES CHAN_ON
 
 // *************switch for fpv / other, requires fet
 // *************comment out to disable
-//#define FPV_ON CH_ON
+//#define FPV_ON CHAN_ON
 
 // *************start in level mode for toy tx.
 //#define AUX1_START_ON
@@ -244,7 +245,7 @@
 //#define DISABLE_EXPO
 
 #define DISABLE_FLIP_SEQUENCER
-#define STARTFLIP CH_OFF
+#define STARTFLIP CHAN_OFF
 
 // level mode "manual" trims ( in degrees)
 // pitch positive forward
