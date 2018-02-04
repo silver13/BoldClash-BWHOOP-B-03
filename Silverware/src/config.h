@@ -56,8 +56,8 @@
 //#define USE_MULTI
 
 // *******************************SWITCH SELECTION*****************************
-// *************CH_ON - on always ( all protocols)
-// *************CH_OFF - off always ( all protocols)
+// *************CHAN_ON - on always ( all protocols)
+// *************CHAN_OFF - off always ( all protocols)
 // *************Aux channels are selectable as CHAN_5 through CHAN_10 for DEVO and MULTIMODULE users
 // *************Toy transmitters have only CHAN_5 (rates button), CHAN_6 (stick gestures RRD/LLD), and CHAN_7 (headfree button)
 
