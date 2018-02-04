@@ -80,6 +80,8 @@
 #define CHAN_8 CH_VID
 #define CHAN_9 CH_HEADFREE
 #define CHAN_10 CH_RTH
+#define CHAN_ON CH_ON
+#define CHAN_OFF CH_OFF
 #endif
 
 #ifdef USE_MULTI
@@ -90,15 +92,19 @@
 #define CHAN_8 CH_VID
 #define CHAN_9 CH_HEADFREE
 #define CHAN_10 CH_INV
+#define CHAN_ON CH_ON
+#define CHAN_OFF CH_OFF
 #endif
 
 #ifdef USE_STOCK_TX
-#define CHAN_5 CH_RTH
+#define CHAN_5 CH_EXPERT
 #define CHAN_6 CH_AUX1
-#define CHAN_7 CH_FLIP
-#define CHAN_8 CH_INV
-#define CHAN_9 CH_EXPERT
-#define CHAN_10 CH_VID
+#define CHAN_7 CH_HEADFREE
+#define CHAN_8 CH_OFF
+#define CHAN_9 CH_OFF
+#define CHAN_10 CH_OFF
+#define CHAN_ON CH_ON
+#define CHAN_OFF CH_OFF
 #endif
 
 // used for the pwm driver
