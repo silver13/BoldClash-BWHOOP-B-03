@@ -40,13 +40,13 @@
 // calculate above factor automatically
 #define AUTO_VDROP_FACTOR
 
-// voltage hysteresys
+// voltage hysteresis
 // in volts
 #define HYST 0.10
 
 
 
-// lower throttle when battery below treshold
+// lower throttle when battery below threshold
 //#define LVC_LOWER_THROTTLE
 #define LVC_LOWER_THROTTLE_VOLTAGE 3.30
 #define LVC_LOWER_THROTTLE_VOLTAGE_RAW 2.70
