@@ -50,7 +50,7 @@ float pidkd[PIDNUMBER] = { 11.4e-1 , 11.4e-1  , 4.9e-1 };
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = { 24.5e-2 , 24.5e-2  , 9.5e-1 }; 
 //float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 8e-1 };	
-//float pidkd[PIDNUMBER] = {14.1e-1 , 14.1e-1  , 7e-1
+//float pidkd[PIDNUMBER] = {14.1e-1 , 14.1e-1  , 7e-1 };
 
 //(EXPERIMENTAL) BOSS 7 with TORQUE_BOOST at 2.0 - same gyro & d filters as regular boss 7 tune
 //                         ROLL       PITCH     YAW
