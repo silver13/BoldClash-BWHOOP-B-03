@@ -100,8 +100,8 @@
 #define CHAN_5 CH_EXPERT
 #define CHAN_6 CH_AUX1
 #define CHAN_7 CH_HEADFREE
-#define CHAN_8 CH_OFF
-#define CHAN_9 CH_OFF
+#define CHAN_8 CH_RLL_TRIM
+#define CHAN_9 CH_PIT_TRIM
 #define CHAN_10 CH_OFF
 #define CHAN_ON CH_ON
 #define CHAN_OFF CH_OFF
