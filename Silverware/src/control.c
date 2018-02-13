@@ -627,48 +627,64 @@ thrsum = 0;
 	}// end motors on
 
    
-if (aux[LEVELMODE]&&!acro_override)
-{
-// level mode calculations done after to reduce latency
-// the 1ms extra latency should not affect cascaded pids significantly
-
-extern void stick_vector( float rx_input[] , float maxangle);
-extern float errorvect[]; // level mode angle error calculated by stick_vector.c	
-extern float GEstG[3]; // gravity vector for yaw feedforward
-float yawerror[3] = {0}; // yaw rotation vector
-
-// calculate roll / pitch error
-stick_vector( rxcopy , 0 ); 
-
-float yawrate = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD; 
-// apply yaw from the top of the quad 
-yawerror[0] = GEstG[1] * yawrate;
-yawerror[1] = - GEstG[0] * yawrate;
-yawerror[2] = GEstG[2] * yawrate;
- if (aux[RACEMODE])
- {
-		// pitch 
+if (aux[LEVELMODE]&&!acro_override){
+	// level mode calculations done after to reduce latency
+	// the 1ms extra latency should not affect cascaded pids significantly
+	extern void stick_vector( float rx_input[] , float maxangle);
+	extern float errorvect[]; // level mode angle error calculated by stick_vector.c	
+	extern float GEstG[3]; // gravity vector for yaw feedforward
+	float yawerror[3] = {0}; // yaw rotation vector
+	// calculate roll / pitch error
+	stick_vector( rxcopy , 0 ); 
+	float yawrate = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD; 
+	// apply yaw from the top of the quad 
+	yawerror[0] = GEstG[1] * yawrate;
+	yawerror[1] = - GEstG[0] * yawrate;
+	yawerror[2] = GEstG[2] * yawrate;
+	
+	if (aux[RACEMODE]){ //racemode overrites standard level behavior
+		// roll is leveled and mixed with error from yaw gravity vector
 		int i = 0 ;
-
 		angleerror[i] = errorvect[i] ; 
 		error[i] = apid(i) + yawerror[i] - gyro[i];
-
-		// roll 
+		// pitch is acro - ***need to test mixing with yaw gravity vector error
 		error[1] = rxcopy[1] * (float) MAX_RATE * DEGTORAD - gyro[1];
 		// yaw
-		error[2] = yawerror[2] - gyro[2]; }
- else{
-	        // pitch and roll
-		for ( int i = 0 ; i <=1; i++)
-			{
-            angleerror[i] = errorvect[i] ;    
-			error[i] = apid(i) + yawerror[i] - gyro[i];
+		error[2] = yawerror[2] - gyro[2];
+	}else{ //standard leveling behavior is either horizon or level
+		if  (aux[HORIZON]){//horizon mode				
+			//pitch and roll
+			for ( int i = 0 ; i <=1; i++){
+					float deflection = fabsf(rxcopy[i]);
+					float acroFade;
+					// constrains acroFade variable between 0 and 1
+					if (deflection <= HORIZON_TRANSITION){
+						acroFade = deflection/HORIZON_TRANSITION;
+					}else{
+						acroFade = 1;
+					}
+					// apply acro to roll and pitch sticks for inverted behavior
+					if (GEstG[2] < 0 ){
+						error[i] = rxcopy[i] * (float) MAX_RATE * DEGTORAD - gyro[i];
+					}else{ // apply a transitioning mix of acro and level behavior inside of stick HORIZON_TRANSITION point and full acro beyond stick HORIZON_TRANSITION point					
+						angleerror[i] = errorvect[i] ;
+						//  angle strength fades out as sticks approach HORIZON_TRANSITION while acro stength fades in according to value of acroFade factor
+						error[i] = ((apid(i) + yawerror[i] - gyro[i]) * (1-acroFade)) + (acroFade * (rxcopy[i] * (float) MAX_RATE * DEGTORAD - gyro[i]));
+					}
 			}
-        // yaw
-		error[2] = yawerror[2]  - gyro[2];  
- }
+			// yaw
+			error[2] = yawerror[2]  - gyro[2];  				
+		}else{ //standard level mode
+	    // pitch and roll
+			for ( int i = 0 ; i <=1; i++){
+					angleerror[i] = errorvect[i] ;    
+					error[i] = apid(i) + yawerror[i] - gyro[i];
+			}
+      // yaw
+			error[2] = yawerror[2]  - gyro[2];
 		}
-    
+	}
+}    
 	
 }
 
