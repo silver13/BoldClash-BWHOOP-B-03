@@ -70,8 +70,8 @@
 //*************be active.  With LEVELMODE active - MCU checks for racemode first, horizon second, and will be standard auto leveling
 //*************if neither racemode or horizon are switched on.
 #define LEVELMODE CHAN_6
-	#define RACEMODE  CHAN_OFF
-		#define HORIZON   CHAN_ON
+	#define RACEMODE  CHAN_7
+		#define HORIZON   CHAN_8
 		#define HORIZON_TRANSITION 0.7f
   //horizon transition is the point of stick deflection where controls transition to full acro.
 #define LEDS_ON CHAN_ON
