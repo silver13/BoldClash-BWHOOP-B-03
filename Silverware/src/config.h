@@ -66,9 +66,14 @@
 #define IDLE_UP CHAN_5
 #define IDLE_THR 0.05f
 
-//*************Assign feature to auxiliary channel
+//*************Assign feature to auxiliary channel.  NOTE - Switching on LEVELMODE is required for any leveling modes to 
+//*************be active.  With LEVELMODE active - MCU checks for racemode first, horizon second, and will be standard auto leveling
+//*************if neither racemode or horizon are switched on.
 #define LEVELMODE CHAN_6
-#define RACEMODE  CHAN_7                                    
+	#define RACEMODE  CHAN_OFF
+		#define HORIZON   CHAN_ON
+		#define HORIZON_TRANSITION 0.7f
+  //horizon transition is the point of stick deflection where controls transition to full acro.
 #define LEDS_ON CHAN_ON
 #define RATES CHAN_ON
 
