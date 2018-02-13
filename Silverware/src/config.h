@@ -59,7 +59,8 @@
 // *************CHAN_ON - on always ( all protocols)
 // *************CHAN_OFF - off always ( all protocols)
 // *************Aux channels are selectable as CHAN_5 through CHAN_10 for DEVO and MULTIMODULE users
-// *************Toy transmitters have only CHAN_5 (rates button), CHAN_6 (stick gestures RRD/LLD), and CHAN_7 (headfree button)
+// *************Toy transmitter mapping is CHAN_5 (rates button), CHAN_6 (stick gestures RRD/LLD), 
+//**************CHAN_7 (headfree button), CHAN_8 (roll trim buttons), CHAN_9 (pitch trim buttons)
 
 //*************Idle up-Arm switch
 //*************comment out to disable
@@ -74,8 +75,8 @@
 		#define HORIZON   CHAN_8
 		#define HORIZON_TRANSITION 0.7f
   //horizon transition is the point of stick deflection where controls transition to full acro.
-#define LEDS_ON CHAN_ON
 #define RATES CHAN_ON
+#define LEDS_ON CHAN_ON
 
 // *************switch for fpv / other, requires fet
 // *************comment out to disable
