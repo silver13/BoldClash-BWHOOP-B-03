@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03.svg?branch=master)](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03)
 
-## DO NOT DOWNLOAD RIGHT NOW - WORKING ON AN UPDATE!!!!!!!
-
 ## NotFastEnuf Notes - Bwhoop B03 Silverware modified to work on BWHOOP, E011, or H8mini_blue_board.
 Last major update 2.16.18
 
