@@ -169,12 +169,10 @@ void imu_calc(void)
 	  }
 
 
-//	vectorcopy(&GEstG[0], &EstG[0]);
-#ifdef DEBUG
-	attitude[0] = atan2approx(EstG[0], EstG[2]) ;
+	attitude[0] = atan2approx(GEstG[0], GEstG[2]) ;
 
-	attitude[1] = atan2approx(EstG[1], EstG[2])  ;
-#endif
+	attitude[1] = atan2approx(GEstG[1], GEstG[2])  ;
+
 }
 
 
