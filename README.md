@@ -27,6 +27,8 @@ STEP 2:  Open pid.c with keil and either edit pids to your preferred values or 
  - E011 or Bwhoop Selection:  define your board type and hardware settings are automatically selected for E011, Bwhoop, bwhoop pro, E011c,  and beta fpv lite
  - Radio Type Selection:  Renamed aux channels as chan_5 through chan_10 and proper mapping is now controlled by defining your transmitter type.  Simply select devo, multi (for taranis or other multimodule), or stock (for toy tx) and assign the features you want to chan_#
  - Racemode:  flight mode with leveling on roll, acro on pitch, and yaw axis rotates about gravity vector.  Can be activated on an aux channel when in level mode.
+ - Racemode Horizon: same as above with horizon on roll.
+ - Horizon: leveling when upright, will flip or roll.
  - Kalman Gyro Filter:  adjustable gyro filter that's very similar to a 1st order filter but to me feels a little faster and a little weaker.  You decide...
  - Kalman Motor Filter:  adjustable motor output filter.  Same evaluation as the gyro version.
  - Idle up/Arming on aux channel:  idle speed is also adjustable.  Paired with mix increase throttle feature it behaves like airmode
