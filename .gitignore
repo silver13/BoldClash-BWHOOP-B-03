@@ -9,6 +9,10 @@ Objects/
 *.lst
 *.crf
 
+# binaries
+gcc/bwhoop
+gcc/bwhoop.elf
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db

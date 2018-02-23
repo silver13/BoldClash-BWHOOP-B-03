@@ -1,0 +1,10 @@
+#!/bin/sh
+make
+/usr/bin/openocd \
+	-f /usr/share/openocd/scripts/interface/stlink-v2.cfg \
+	-f /usr/share/openocd/scripts/target/stm32f0x.cfg \
+	-c init \
+	-c "reset halt" \
+	-c "flash write_image erase bwhoop 0x08000000" \
+	-c "verify_image bwhoop 0x08000000" \
+	-c "reset run"
