@@ -15,7 +15,7 @@ See [RC Groups Boldclash Thread First Post](https://www.rcgroups.com/forums/show
 There is a bug involving flashing from Keil and this mcu, while workarounds are available, the current procedure avoids this by using the ST-Link Utility program instead for flashing.
 
 # Mac
-On mac the app on [this](https://silverware.simonernst.com/) page can be used. replace the code folder with that from this repository.
+On mac the app on [this](https://silverware.simonernst.com/) page can be used. Replace the code folder with one from this repository.
 
 Or:
 Install gcc-arm-none-eabi compiler from it's [webpage](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads). Install openocd using [these](https://gnu-mcu-eclipse.github.io/openocd/install/#macos) instructions.
