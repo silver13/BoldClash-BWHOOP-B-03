@@ -83,7 +83,33 @@ void rx_init()
 {
 
 #ifdef RADIO_XN297L
+
+#ifndef TX_POWER
+#define TX_POWER 7
+#endif
 	
+// Gauss filter amplitude - lowest
+static uint8_t demodcal[2] = { 0x39 , B00000001 };
+writeregs( demodcal , sizeof(demodcal) );
+
+// powerup defaults
+//static uint8_t rfcal2[7] = { 0x3a , 0x45 , 0x21 , 0xef , 0xac , 0x3a , 0x50};
+//writeregs( rfcal2 , sizeof(rfcal2) );
+
+static uint8_t rfcal2[7] = { 0x3a , 0x45 , 0x21 , 0xef , 0x2c , 0x5a , 0x50};
+writeregs( rfcal2 , sizeof(rfcal2) );
+
+static uint8_t regs_1f[6] = { 0x3f , 0x0a, 0x6d , 0x67 , 0x9c , 0x46 };
+writeregs( regs_1f , sizeof(regs_1f) );
+
+
+static uint8_t regs_1e[4] = { 0x3e , 0xf6 , 0x37 , 0x5d };
+writeregs( regs_1e , sizeof(regs_1e) );
+
+//#define XN_TO_RX B10001111
+//#define XN_TO_TX B10000010
+//#define XN_POWER B00000001|((TX_POWER&7)<<3)
+
 #define XN_TO_RX B10001111
 #define XN_TO_TX B10000010
 #define XN_POWER B00111111
