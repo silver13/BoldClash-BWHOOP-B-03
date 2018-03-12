@@ -196,6 +196,7 @@ spi_csoff();
 delay(1000);
 }
 
+char quad_name[6] = {'N' , 'O' , 'N' , 'A' , 'M' , 'E'};
 
 
 void rx_init()
@@ -319,6 +320,24 @@ int	rxcheck = xn_readreg( 0x0f); // rx address pipe 5
 	extern void failloop( int);
 	if ( rxcheck != 0xc6) failloop(3);
 #endif	
+
+
+//fill with characters from MY_QUAD_NAME (just first 6 chars)
+int string_len = 0;
+while (string_len< 6)
+	  {
+			if (MY_QUAD_NAME[string_len]=='\0') break;
+			quad_name[string_len] = (char) MY_QUAD_NAME[string_len];
+			string_len++;
+		}
+
+//fill the rest (up to 6 bytes) with blanks
+for ( int i = string_len ; i < 6; i++)
+	{
+	quad_name[string_len] = ' '; //blank
+	}
+
+
 }
 
 
@@ -763,29 +782,13 @@ buf[L++] =  0x2F; //PID+TLM datatype_and_packetID;  // xxxxyyyy -> yyyy = 1111 p
 #endif
 
 buf[L++] = random_seed; //already custom entry - need to be randomized
-#ifdef MY_QUAD_NAME
-//fill with characters from MY_QUAD_NAME (just first 6 chars)
-int string_len = 0;
-while (string_len< 6)
-	  {
-			if (MY_QUAD_NAME[string_len]=='\0') break;
-			buf[L++] = (char) MY_QUAD_NAME[string_len];
-			string_len++;
-		}
 
-//fill the rest (up to 6 bytes) with blanks
-for ( int i = string_len ; i < 6; i++)
-	{
-	buf[L++] = ' '; //blank
-	}
-#else
-buf[L++]=(char)'N';
-buf[L++]=(char)'O';
-buf[L++]=(char)'N';
-buf[L++]=(char)'A';
-buf[L++]=(char)'M';
-buf[L++]=(char)'E';
-#endif
+buf[L++]= quad_name[0];
+buf[L++]= quad_name[1];
+buf[L++]= quad_name[2];
+buf[L++]= quad_name[3];
+buf[L++]= quad_name[4];
+buf[L++]= quad_name[5];
 
 	
 extern int current_pid_term; //0 = pidkp, 1 = pidki, 2 = pidkd
@@ -893,29 +896,17 @@ if (TLMorPID == 0)
 #endif
 
 buf[L++] = random_seed; //already custom entry - need to be randomized
-#ifdef MY_QUAD_NAME
-//fill with characters from MY_QUAD_NAME (just first 6 chars)
-int string_len = 0;
-while (string_len< 6)
-	  {
-			if (MY_QUAD_NAME[string_len]=='\0') break;
-			buf[L++] = (char) MY_QUAD_NAME[string_len];
-			string_len++;
-		}
 
-//fill the rest (up to 6 bytes) with blanks
-for ( int i = string_len ; i < 6; i++)
-	{
-	buf[L++] = ' '; //blank
-	}
-#else
-buf[L++]=(char)'N';
-buf[L++]=(char)'O';
-buf[L++]=(char)'N';
-buf[L++]=(char)'A';
-buf[L++]=(char)'M';
-buf[L++]=(char)'E';
-#endif
+    
+buf[L++]= quad_name[0];
+buf[L++]= quad_name[1];
+buf[L++]= quad_name[2];
+buf[L++]= quad_name[3];
+buf[L++]= quad_name[4];
+buf[L++]= quad_name[5];
+
+
+    
 buf[L++] =  0x00; //reserved for future use
 buf[L++] = packetpersecond_short;
 buf[L++] =  onground_and_bind; //binary xxxxabcd - xxxx = error code or warning, a -> 0 = stock TX, 1= other TX, b -> 0 = not failsafe, 1 = failsafe, c = 0 -> not bound, 1 -> bound, d = 0 -> in the air, 1 = on the ground;

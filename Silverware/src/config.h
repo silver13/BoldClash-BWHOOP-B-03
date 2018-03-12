@@ -173,14 +173,10 @@
 
 // Radio protocol selection
 // select only one
-//#define RX_CG023_PROTOCOL
-//#define RX_H7_PROTOCOL
-//#define RX_BAYANG_PROTOCOL
+
 #define RX_BAYANG_PROTOCOL_TELEMETRY
-//#define RX_BAYANG_PROTOCOL_BLE_BEACON
 //#define RX_NRF24_BAYANG_TELEMETRY
 //#define RX_BAYANG_BLE_APP
-//#define RX_CX10BLUE_PROTOCOL
 //#define RX_SBUS
 
 // 0 - 7 - power for telemetry
