@@ -68,12 +68,19 @@ extern char auxchange[AUXNUMBER];
 
 
 char lasttrim[4];
+
 char rfchannel[4];
-int rxaddress[5];
+char rxaddress[5];
+int telemetry_enabled = 0;
+int rx_bind_enable = 0;
+int rx_bind_load = 0;
+
 int rxmode = 0;
 int rf_chan = 0;
 
-
+unsigned long autobindtime = 0;
+int autobind_inhibit = 0;
+int packet_period = PACKET_PERIOD;
 
 void writeregs(uint8_t data[], uint8_t size)
 {
@@ -184,6 +191,30 @@ writeregs( demodcal , sizeof(demodcal) );
     if (rxcheck != 0xc6)
         failloop(3);
 #endif
+    
+    if ( rx_bind_load )
+    {
+          uint8_t rxaddr_regs[6] = { 0x2a ,  };                      
+          for ( int i = 1 ; i < 6; i++)
+          {
+            rxaddr_regs[i] = rxaddress[i-1];
+          }
+          // write new rx address
+          writeregs( rxaddr_regs , sizeof(rxaddr_regs) );
+          rxaddr_regs[0] = 0x30; // tx register ( write ) number
+          
+          // write new tx address
+          writeregs( rxaddr_regs , sizeof(rxaddr_regs) );
+
+          xn_writereg(0x25, rfchannel[rf_chan]);    // Set channel frequency 
+          rxmode = RX_MODE_NORMAL;
+          if ( telemetry_enabled ) packet_period = PACKET_PERIOD_TELEMETRY;
+    }
+    else
+    {
+        autobind_inhibit = 1;
+    }
+    
 }
 
 
@@ -438,8 +469,9 @@ int failsafe = 0;
 unsigned int skipchannel = 0;
 int lastrxchan;
 int timingfail = 0;
-int telemetry_enabled = 0;
-int packet_period = PACKET_PERIOD;
+
+
+
 
 void checkrx(void)
 {
@@ -465,18 +497,19 @@ void checkrx(void)
                       rfchannel[3] = rxdata[9];
                         
 
-                      uint8_t rxaddr[6] = { 0x2a ,  };
+                      uint8_t rxaddr_regs[6] = { 0x2a ,  };
                       
                       for ( int i = 1 ; i < 6; i++)
                       {
-                        rxaddr[i] = rxdata[i];
+                        rxaddr_regs[i] = rxdata[i];
+                        rxaddress[i-1] = rxdata[i];
                       }
                       // write new rx address
-                      writeregs( rxaddr , sizeof(rxaddr) );
-                      rxaddr[0] = 0x30; // tx register ( write ) number
+                      writeregs( rxaddr_regs , sizeof(rxaddr_regs) );
+                      rxaddr_regs[0] = 0x30; // tx register ( write ) number
                       
                       // write new tx address
-                      writeregs( rxaddr , sizeof(rxaddr) );
+                      writeregs( rxaddr_regs , sizeof(rxaddr_regs) );
 
                       xn_writereg(0x25, rfchannel[rf_chan]);    // Set channel frequency 
                       rxmode = RX_MODE_NORMAL;
@@ -575,7 +608,19 @@ void checkrx(void)
           rx[2] = 0;
           rx[3] = 0;
       }
-
+      
+    if ( !failsafe) autobind_inhibit = 1;
+      else if ( !autobind_inhibit && time - autobindtime > 15000000 )
+    {
+        autobind_inhibit = 1;
+        rxmode = RX_MODE_BIND;
+        static uint8_t rxaddr[6] = { 0x2a , 0 , 0 , 0 , 0 , 0  };
+        writeregs( rxaddr , sizeof(rxaddr) );
+        xn_writereg(RF_CH, 0);      // bind on channel 0
+    }
+ 
+        
+      
     if (gettime() - secondtimer > 1000000)
       {
           packetpersecond = packetrx;

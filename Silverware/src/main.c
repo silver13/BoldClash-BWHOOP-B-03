@@ -170,6 +170,16 @@ aux[CH_ON] = 1;
 #ifdef AUX1_START_ON
 aux[CH_AUX1] = 1;
 #endif
+    
+    
+#ifdef FLASH_SAVE1
+// read pid identifier for values in file pid.c
+    flash_hard_coded_pid_identifier();
+
+// load flash saved variables
+    flash_load( );
+#endif
+    
 	rx_init();
 
 	
@@ -208,7 +218,7 @@ serial_init();
 
 
 
-    imu_init();
+imu_init();
 
 #ifdef FLASH_SAVE2
 // read accelerometer calibration values from option bytes ( 2* 8bit)
@@ -217,13 +227,6 @@ extern float accelcal[3];
  accelcal[1] = flash2_readdata( OB->DATA1 ) - 127;
 #endif
 
-#ifdef FLASH_SAVE1
-// read pid identifier for values in file pid.c
-    flash_hard_coded_pid_identifier();
-
-// load flash saved variables
-    flash_load( );
-#endif
 
 extern int liberror;
 if ( liberror ) 
