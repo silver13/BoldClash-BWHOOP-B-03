@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03.svg?branch=master)](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03)
 
 ## NotFastEnuf Notes - Bwhoop B03 Silverware modified to work on BWHOOP, E011, or H8mini_blue_board.
-Last major update 2.16.18
+Last major update 3.13.18
 
 Testing a new layout for config.h  - feel free to let me know what you think.  Your feedback is appreciated. 
 
@@ -35,6 +35,7 @@ STEP 2:  Open pid.c with keil and either edit pids to your preferred values or 
  - Idle up/Arming on aux channel:  idle speed is also adjustable.  Paired with mix increase throttle feature it behaves like airmode
  - Sticks Deadband:  adjustable deadband for transmitter inputs to compensate for gimbals that don't perfectly center
  - Motor Filter Frequencies:  motor filters are adjustable by a frequency instead of a decimal value.
+ - AUTOBIND Has been added.  Set a fixed ID in your TX.  Stick gesture comand up-up-up to turn on autobind. Quad will flash once.  Stick gesture Down-Down-Down will save your fixed ID.  Unplug battery and plug in to verify.  No more power cycling TX to bind.
 
 
 _Easiest way to find me for feedback & discussion is here https://community.micro-motor-warehouse.com/t/notfastenuf-e011-bwhoop-silverware-fork/5501?u=notfastenuf_
