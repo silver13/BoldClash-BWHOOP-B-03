@@ -33,6 +33,51 @@
 #define GESTURETIME_IDLE 700e3
 
 
+#define GSIZE 7
+
+// L L D
+const uint8_t command1[GSIZE] = {
+	GESTURE_CENTER_IDLE, GESTURE_LEFT, GESTURE_CENTER, GESTURE_LEFT, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER
+};
+
+// R R D
+const uint8_t command2[GSIZE] = {
+	GESTURE_CENTER_IDLE, GESTURE_RIGHT, GESTURE_CENTER, GESTURE_RIGHT, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER
+};
+
+// D D D
+const uint8_t command3[GSIZE] = {
+	GESTURE_CENTER_IDLE, GESTURE_DOWN, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER
+};
+
+
+// U U U
+const uint8_t command8[GSIZE] = {
+	GESTURE_CENTER_IDLE, GESTURE_UP, GESTURE_CENTER, GESTURE_UP, GESTURE_CENTER, GESTURE_UP, GESTURE_CENTER
+};
+
+#ifdef PID_GESTURE_TUNING
+// U D U - Next PID term
+const uint8_t command4[GSIZE] = {
+	GESTURE_CENTER_IDLE, GESTURE_UP, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER, GESTURE_UP, GESTURE_CENTER
+};
+
+// U D D - Next PID Axis
+const uint8_t command5[GSIZE] = {
+	GESTURE_CENTER_IDLE, GESTURE_UP, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER
+};
+
+// U D R - Increase value
+const uint8_t command6[GSIZE] = {
+	GESTURE_CENTER_IDLE, GESTURE_UP, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER, GESTURE_RIGHT, GESTURE_CENTER
+};
+
+// U D L - Descrease value
+const uint8_t command7[GSIZE] = {
+	GESTURE_CENTER_IDLE, GESTURE_UP, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER, GESTURE_LEFT, GESTURE_CENTER
+};
+#endif
+
 
 
 int gesture_start;
@@ -115,47 +160,10 @@ int gestures2()
 	return 0;
 }
 
-#define GSIZE 7
 
 
 uint8_t gbuffer[GSIZE];
 
-// L L D
-const uint8_t command1[GSIZE] = {
-	GESTURE_CENTER_IDLE, GESTURE_LEFT, GESTURE_CENTER, GESTURE_LEFT, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER
-};
-
-// R R D
-const uint8_t command2[GSIZE] = {
-	GESTURE_CENTER_IDLE, GESTURE_RIGHT, GESTURE_CENTER, GESTURE_RIGHT, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER
-};
-
-// D D D
-const uint8_t command3[GSIZE] = {
-	GESTURE_CENTER_IDLE, GESTURE_DOWN, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER
-};
-
-#ifdef PID_GESTURE_TUNING
-// U D U - Next PID term
-const uint8_t command4[GSIZE] = {
-	GESTURE_CENTER_IDLE, GESTURE_UP, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER, GESTURE_UP, GESTURE_CENTER
-};
-
-// U D D - Next PID Axis
-const uint8_t command5[GSIZE] = {
-	GESTURE_CENTER_IDLE, GESTURE_UP, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER
-};
-
-// U D R - Increase value
-const uint8_t command6[GSIZE] = {
-	GESTURE_CENTER_IDLE, GESTURE_UP, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER, GESTURE_RIGHT, GESTURE_CENTER
-};
-
-// U D L - Descrease value
-const uint8_t command7[GSIZE] = {
-	GESTURE_CENTER_IDLE, GESTURE_UP, GESTURE_CENTER, GESTURE_DOWN, GESTURE_CENTER, GESTURE_LEFT, GESTURE_CENTER
-};
-#endif
 
 uint8_t check_command( uint8_t  buffer1[] , const uint8_t  command[]  )
 {
@@ -211,6 +219,15 @@ int gesture_sequence(int currentgesture)
 			    gbuffer[1] = GESTURE_OTHER;
 			    return GESTURE_DDD;
 		    }
+            if (check_command ( &gbuffer[0] , &command8[0] ))
+		    {
+			    // command 8
+
+			    //change buffer so it does not trigger again
+			    gbuffer[1] = GESTURE_OTHER;
+			    return GESTURE_UUU;
+		    }
+            
 			#ifdef PID_GESTURE_TUNING
 			if (check_command ( &gbuffer[0] , &command4[0] ))
 		    {
@@ -247,6 +264,7 @@ int gesture_sequence(int currentgesture)
 			    return GESTURE_UDL;
 		    }
 			#endif
+
 
 	  }
 

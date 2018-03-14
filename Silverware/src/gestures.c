@@ -48,7 +48,16 @@ void gestures( void)
 			    extern unsigned long lastlooptime;
 			    lastlooptime = gettime();
 		    }		
-
+            if (command == GESTURE_UUU)
+              {
+                 #ifdef RX_BAYANG_PROTOCOL_TELEMETRY                  
+                 extern int rx_bind_enable;
+                 rx_bind_enable=!rx_bind_enable;
+                 ledblink = 2 - rx_bind_enable;
+                 pid_gestures_used = 1;  
+                 #endif
+              }
+              
             if (command == GESTURE_RRD)
               {
                   aux[CH_AUX1] = 1;

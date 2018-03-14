@@ -1,6 +1,7 @@
 
 #include "project.h"
 #include "drv_fmc.h"
+#include "config.h"
 
 extern int fmc_erase( void );
 extern void fmc_unlock(void);
@@ -60,6 +61,27 @@ void flash_save( void) {
     fmc_write_float(addresscount++, accelcal[1]);
     fmc_write_float(addresscount++, accelcal[2]);
 
+   
+#ifdef RX_BAYANG_PROTOCOL_TELEMETRY
+// autobind info     
+extern char rfchannel[4];
+extern char rxaddress[5];
+extern int telemetry_enabled;
+extern int rx_bind_enable;
+    
+ // save radio bind info  
+    if ( rx_bind_enable )
+    {
+    writeword(50, rxaddress[4]|telemetry_enabled<<8);
+    writeword(51, rxaddress[0]|(rxaddress[1]<<8)|(rxaddress[2]<<16)|(rxaddress[3]<<24));
+    writeword(52, rfchannel[0]|(rfchannel[1]<<8)|(rfchannel[2]<<16)|(rfchannel[3]<<24));
+    }
+    else
+    {
+      // this will leave 255's so it will be picked up as disabled  
+    }
+#endif    
+
     writeword(255, FMC_HEADER);
     
 	fmc_lock();
@@ -92,6 +114,47 @@ void flash_load( void) {
     accelcal[1] = fmc_read_float(addresscount++ );
     accelcal[2] = fmc_read_float(addresscount++ );  
 
+       
+ #ifdef RX_BAYANG_PROTOCOL_TELEMETRY  
+extern char rfchannel[4];
+extern char rxaddress[5];
+extern int telemetry_enabled;
+extern int rx_bind_load;
+extern int rx_bind_enable;
+     
+ // save radio bind info   
+
+    int temp = fmc_read(52);
+    int error = 0;
+    for ( int i = 0 ; i < 4; i++)
+    {
+        if ( ((temp>>(i*8))&0xff  ) > 127)
+        {
+            error = 1;
+        }   
+    }
+    
+    if( !error )   
+    {
+        rx_bind_load = rx_bind_enable = 1; 
+        
+        rxaddress[4] = fmc_read(50);
+
+        telemetry_enabled = fmc_read(50)>>8;
+        int temp = fmc_read(51);
+        for ( int i = 0 ; i < 4; i++)
+        {
+            rxaddress[i] =  temp>>(i*8);        
+        }
+        
+        temp = fmc_read(52);  
+        for ( int i = 0 ; i < 4; i++)
+        {
+            rfchannel[i] =  temp>>(i*8);  
+        }
+    }
+#endif
+    
     }
     else
     {
