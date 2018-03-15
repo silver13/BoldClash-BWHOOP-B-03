@@ -37,6 +37,17 @@ STEP 2:  Open pid.c with keil and either edit pids to your preferred values or 
  - Motor Filter Frequencies:  motor filters are adjustable by a frequency instead of a decimal value.
  - AUTOBIND Has been added.  Set a fixed ID in your TX.  Stick gesture comand up-up-up to turn on autobind. Quad will flash once.  Stick gesture Down-Down-Down will save your fixed ID.  Unplug battery and plug in to verify.  No more power cycling TX to bind.
 
+ ## Bikemike's Blheli 4way Interface Support(from Betaflight) 15.03.18
+
+This commit enables flashing and configuring Blheli using
+the Silverware FC.
+
+ - FC must have MOSFETS and motor pulldown resistors removed
+ - In hardware.h file comment in either define USE_ESC_DRIVER or define USE_DSHOT_DRIVER_BETA coupled with define USE_SERIAL_4WAY_BLHELI_INTERFACE
+ - Quad must be onground and not armed
+ - Connect TX/RX of a usb TTL adapter/Arduino to DAT/CLK and GND to GND in Blheli suite, select the 4way-IF (D) interface
+ - Connect and configure/flash ESCs as usual
+ - After disconnecting, normal FC operation should resume
 
 _Easiest way to find me for feedback & discussion is here https://community.micro-motor-warehouse.com/t/notfastenuf-e011-bwhoop-silverware-fork/5501?u=notfastenuf_
 
