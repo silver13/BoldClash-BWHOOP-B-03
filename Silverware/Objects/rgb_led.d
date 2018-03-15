@@ -1,9 +1,0 @@
-.\objects\rgb_led.o: src\rgb_led.c
-.\objects\rgb_led.o: src\config.h
-.\objects\rgb_led.o: src\defines.h
-.\objects\rgb_led.o: src\hardware.h
-.\objects\rgb_led.o: src\drv_time.h
-.\objects\rgb_led.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
-.\objects\rgb_led.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-.\objects\rgb_led.o: src\util.h
-.\objects\rgb_led.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

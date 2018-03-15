@@ -1,9 +1,0 @@
-.\objects\gesture_detect.o: src\gesture_detect.c
-.\objects\gesture_detect.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
-.\objects\gesture_detect.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-.\objects\gesture_detect.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
-.\objects\gesture_detect.o: src\drv_time.h
-.\objects\gesture_detect.o: src\gestures.h
-.\objects\gesture_detect.o: src\config.h
-.\objects\gesture_detect.o: src\defines.h
-.\objects\gesture_detect.o: src\hardware.h
