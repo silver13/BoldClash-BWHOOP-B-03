@@ -11,9 +11,9 @@
 // *************uncomment BWHOOP define for bwhoop, bwhoop pro, E011C Santa Edition, and Beta FPV Lite Flight Controllers
 // *************uncomment E011 define for E011 flight Controller
 // *************uncomment H8mini_blue_board for the H8 mini flight controller with blue circuit board
-#define BWHOOP
+//#define BWHOOP
 //#define E011
-//#define H8mini_blue_board
+#define H8mini_blue_board
 
 
 //**********************************************************************************************************************
@@ -64,16 +64,16 @@
 
 //*************Idle up-Arm switch
 //*************comment out to disable
-#define IDLE_UP CHAN_5
-#define IDLE_THR 0.05f
+//#define IDLE_UP CHAN_5
+//#define IDLE_THR 0.05f
 
 //*************Assign feature to auxiliary channel.  NOTE - Switching on LEVELMODE is required for any leveling modes to 
 //*************be active.  With LEVELMODE active - MCU will apply RACEMODE if racemode channel is on, HORIZON if horizon 
 //*************channel is on, or racemodeHORIZON if both channels are on - and will be standard LEVELMODE if neither 
 //*************racemode or horizon are switched on.
 #define LEVELMODE CHAN_6
-	#define RACEMODE  CHAN_7
-	#define HORIZON   CHAN_8
+#define RACEMODE  CHAN_OFF	
+#define HORIZON   CHAN_OFF
 #define RATES CHAN_ON
 #define LEDS_ON CHAN_ON
 
@@ -247,7 +247,7 @@
 #define GYRO_LOW_PASS_FILTER 0
 
 // disable inbuilt expo functions
-//#define DISABLE_EXPO
+#define DISABLE_EXPO
 
 #define DISABLE_FLIP_SEQUENCER
 #define STARTFLIP CHAN_OFF
