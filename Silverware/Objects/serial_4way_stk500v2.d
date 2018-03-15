@@ -1,0 +1,15 @@
+.\objects\serial_4way_stk500v2.o: src\serial_4way_stk500v2.c
+.\objects\serial_4way_stk500v2.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\serial_4way_stk500v2.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\serial_4way_stk500v2.o: src\config.h
+.\objects\serial_4way_stk500v2.o: src\defines.h
+.\objects\serial_4way_stk500v2.o: src\hardware.h
+.\objects\serial_4way_stk500v2.o: src\serial_4way.h
+.\objects\serial_4way_stk500v2.o: src\config.h
+.\objects\serial_4way_stk500v2.o: src\defines.h
+.\objects\serial_4way_stk500v2.o: src\hardware.h
+.\objects\serial_4way_stk500v2.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
+.\objects\serial_4way_stk500v2.o: src\serial_4way_impl.h
+.\objects\serial_4way_stk500v2.o: src\config.h
+.\objects\serial_4way_stk500v2.o: src\defines.h
+.\objects\serial_4way_stk500v2.o: src\hardware.h

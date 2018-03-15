@@ -1,0 +1,994 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;******************** (C) COPYRIGHT 2014 STMicroelectron
+                       ics ********************
+    2 00000000         ;* File Name          : startup_stm32f031.s
+    3 00000000         ;* Author             : MCD Application Team
+    4 00000000         ;* Version            : V1.3.2
+    5 00000000         ;* Date               : 27-March-2014 
+    6 00000000         ;* Description        : STM32F031 devices vector table f
+                       or MDK-ARM toolchain.
+    7 00000000         ;*                      This module performs:
+    8 00000000         ;*                      - Set the initial SP
+    9 00000000         ;*                      - Set the initial PC == Reset_Ha
+                       ndler
+   10 00000000         ;*                      - Set the vector table entries w
+                       ith the exceptions ISR address
+   11 00000000         ;*                      - Configure the system clock
+   12 00000000         ;*                      - Branches to __main in the C li
+                       brary (which eventually
+   13 00000000         ;*                        calls main()).
+   14 00000000         ;*                      After Reset the CortexM0 process
+                       or is in Thread mode,
+   15 00000000         ;*                      priority is Privileged, and the 
+                       Stack is set to Main.
+   16 00000000         ;* <<< Use Configuration Wizard in Context Menu >>>   
+   17 00000000         ;*******************************************************
+                       ************************
+   18 00000000         ;  @attention
+   19 00000000         ; 
+   20 00000000         ;  Licensed under MCD-ST Liberty SW License Agreement V2
+                       , (the "License");
+   21 00000000         ;  You may not use this file except in compliance with t
+                       he License.
+   22 00000000         ;  You may obtain a copy of the License at:
+   23 00000000         ; 
+   24 00000000         ;         http://www.st.com/software_license_agreement_l
+                       iberty_v2
+   25 00000000         ; 
+   26 00000000         ;  Unless required by applicable law or agreed to in wri
+                       ting, software 
+   27 00000000         ;  distributed under the License is distributed on an "A
+                       S IS" BASIS, 
+   28 00000000         ;  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+                       express or implied.
+   29 00000000         ;  See the License for the specific language governing p
+                       ermissions and
+   30 00000000         ;  limitations under the License.
+   31 00000000         ; 
+   32 00000000         ;*******************************************************
+                       ************************
+   33 00000000         ;
+   34 00000000         ; Amount of memory (in bytes) allocated for Stack
+   35 00000000         ; Tailor this value to your application needs
+   36 00000000         ; <h> Stack Configuration
+   37 00000000         ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
+   38 00000000         ; </h>
+   39 00000000         
+   40 00000000 00000400 
+                       Stack_Size
+                               EQU              0x00000400
+   41 00000000         
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   42 00000000                 AREA             STACK, NOINIT, READWRITE, ALIGN
+=3
+   43 00000000         Stack_Mem
+                               SPACE            Stack_Size
+   44 00000400         __initial_sp
+   45 00000400         
+   46 00000400         
+   47 00000400         ; <h> Heap Configuration
+   48 00000400         ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
+   49 00000400         ; </h>
+   50 00000400         
+   51 00000400 00000200 
+                       Heap_Size
+                               EQU              0x00000200
+   52 00000400         
+   53 00000400                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
+3
+   54 00000000         __heap_base
+   55 00000000         Heap_Mem
+                               SPACE            Heap_Size
+   56 00000200         __heap_limit
+   57 00000200         
+   58 00000200                 PRESERVE8
+   59 00000200                 THUMB
+   60 00000200         
+   61 00000200         
+   62 00000200         ; Vector Table Mapped to Address 0 at Reset
+   63 00000200                 AREA             RESET, DATA, READONLY
+   64 00000000                 EXPORT           __Vectors
+   65 00000000                 EXPORT           __Vectors_End
+   66 00000000                 EXPORT           __Vectors_Size
+   67 00000000         
+   68 00000000 00000000 
+                       __Vectors
+                               DCD              __initial_sp ; Top of Stack
+   69 00000004 00000000        DCD              Reset_Handler ; Reset Handler
+   70 00000008 00000000        DCD              NMI_Handler ; NMI Handler
+   71 0000000C 00000000        DCD              HardFault_Handler ; Hard Fault 
+                                                            Handler
+   72 00000010 00000000        DCD              0           ; Reserved
+   73 00000014 00000000        DCD              0           ; Reserved
+   74 00000018 00000000        DCD              0           ; Reserved
+   75 0000001C 00000000        DCD              0           ; Reserved
+   76 00000020 00000000        DCD              0           ; Reserved
+   77 00000024 00000000        DCD              0           ; Reserved
+   78 00000028 00000000        DCD              0           ; Reserved
+   79 0000002C 00000000        DCD              SVC_Handler ; SVCall Handler
+   80 00000030 00000000        DCD              0           ; Reserved
+   81 00000034 00000000        DCD              0           ; Reserved
+   82 00000038 00000000        DCD              PendSV_Handler ; PendSV Handler
+                                                            
+   83 0000003C 00000000        DCD              SysTick_Handler 
+                                                            ; SysTick Handler
+   84 00000040         
+   85 00000040         ; External Interrupts
+   86 00000040 00000000        DCD              WWDG_IRQHandler 
+                                                            ; Window Watchdog
+   87 00000044 00000000        DCD              PVD_IRQHandler ; PVD through EX
+                                                            TI Line detect
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   88 00000048 00000000        DCD              RTC_IRQHandler ; RTC through EX
+                                                            TI Line
+   89 0000004C 00000000        DCD              FLASH_IRQHandler ; FLASH
+   90 00000050 00000000        DCD              RCC_IRQHandler ; RCC
+   91 00000054 00000000        DCD              EXTI0_1_IRQHandler 
+                                                            ; EXTI Line 0 and 1
+                                                            
+   92 00000058 00000000        DCD              EXTI2_3_IRQHandler 
+                                                            ; EXTI Line 2 and 3
+                                                            
+   93 0000005C 00000000        DCD              EXTI4_15_IRQHandler 
+                                                            ; EXTI Line 4 to 15
+                                                            
+   94 00000060 00000000        DCD              0           ; Reserved
+   95 00000064 00000000        DCD              DMA1_Channel1_IRQHandler 
+                                                            ; DMA1 Channel 1
+   96 00000068 00000000        DCD              DMA1_Channel2_3_IRQHandler ; DM
+                                                            A1 Channel 2 and Ch
+                                                            annel 3
+   97 0000006C 00000000        DCD              DMA1_Channel4_5_IRQHandler ; DM
+                                                            A1 Channel 4 and Ch
+                                                            annel 5
+   98 00000070 00000000        DCD              ADC1_IRQHandler ; ADC1 
+   99 00000074 00000000        DCD              TIM1_BRK_UP_TRG_COM_IRQHandler 
+                                                            ; TIM1 Break, Updat
+                                                            e, Trigger and Comm
+                                                            utation
+  100 00000078 00000000        DCD              TIM1_CC_IRQHandler ; TIM1 Captu
+                                                            re Compare
+  101 0000007C 00000000        DCD              TIM2_IRQHandler ; TIM2
+  102 00000080 00000000        DCD              TIM3_IRQHandler ; TIM3
+  103 00000084 00000000        DCD              0           ; Reserved
+  104 00000088 00000000        DCD              0           ; Reserved
+  105 0000008C 00000000        DCD              TIM14_IRQHandler ; TIM14
+  106 00000090 00000000        DCD              0           ; Reserved
+  107 00000094 00000000        DCD              TIM16_IRQHandler ; TIM16
+  108 00000098 00000000        DCD              TIM17_IRQHandler ; TIM17
+  109 0000009C 00000000        DCD              I2C1_IRQHandler ; I2C1
+  110 000000A0 00000000        DCD              0           ; Reserved
+  111 000000A4 00000000        DCD              SPI1_IRQHandler ; SPI1
+  112 000000A8 00000000        DCD              0           ; Reserved
+  113 000000AC 00000000        DCD              USART1_IRQHandler ; USART1
+  114 000000B0         
+  115 000000B0         __Vectors_End
+  116 000000B0         
+  117 000000B0 000000B0 
+                       __Vectors_Size
+                               EQU              __Vectors_End - __Vectors
+  118 000000B0         
+  119 000000B0                 AREA             |.text|, CODE, READONLY
+  120 00000000         
+  121 00000000         ; Reset handler routine
+  122 00000000         Reset_Handler
+                               PROC
+  123 00000000                 EXPORT           Reset_Handler                 [
+WEAK]
+  124 00000000                 IMPORT           __main
+  125 00000000                 IMPORT           SystemInit
+  126 00000000         
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+  127 00000000         
+  128 00000000         
+  129 00000000 480C            LDR              R0, =__initial_sp ; set stack p
+                                                            ointer 
+  130 00000002 F380 8808       MSR              MSP, R0
+  131 00000006         
+  132 00000006         ;;Check if boot space corresponds to test memory 
+  133 00000006         
+  134 00000006 480C            LDR              R0,=0x00000004
+  135 00000008 6801            LDR              R1, [R0]
+  136 0000000A 0E09            LSRS             R1, R1, #24
+  137 0000000C 4A0B            LDR              R2,=0x1F
+  138 0000000E 4291            CMP              R1, R2
+  139 00000010         
+  140 00000010 D105            BNE              ApplicationStart
+  141 00000012         
+  142 00000012         ;; SYSCFG clock enable    
+  143 00000012         
+  144 00000012 480B            LDR              R0,=0x40021018
+  145 00000014 490B            LDR              R1,=0x00000001
+  146 00000016 6001            STR              R1, [R0]
+  147 00000018         
+  148 00000018         ;; Set CFGR1 register with flash memory remap at address
+                        0
+  149 00000018         
+  150 00000018 480B            LDR              R0,=0x40010000
+  151 0000001A 490C            LDR              R1,=0x00000000
+  152 0000001C 6001            STR              R1, [R0]
+  153 0000001E         ApplicationStart
+  154 0000001E 480C            LDR              R0, =SystemInit
+  155 00000020 4780            BLX              R0
+  156 00000022 480C            LDR              R0, =__main
+  157 00000024 4700            BX               R0
+  158 00000026                 ENDP
+  159 00000026         
+  160 00000026         ; Dummy Exception Handlers (infinite loops which can be 
+                       modified)
+  161 00000026         
+  162 00000026         NMI_Handler
+                               PROC
+  163 00000026                 EXPORT           NMI_Handler                    
+[WEAK]
+  164 00000026 E7FE            B                .
+  165 00000028                 ENDP
+  167 00000028         HardFault_Handler
+                               PROC
+  168 00000028                 EXPORT           HardFault_Handler              
+[WEAK]
+  169 00000028 E7FE            B                .
+  170 0000002A                 ENDP
+  171 0000002A         SVC_Handler
+                               PROC
+  172 0000002A                 EXPORT           SVC_Handler                    
+[WEAK]
+  173 0000002A E7FE            B                .
+  174 0000002C                 ENDP
+  175 0000002C         PendSV_Handler
+                               PROC
+  176 0000002C                 EXPORT           PendSV_Handler                 
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+[WEAK]
+  177 0000002C E7FE            B                .
+  178 0000002E                 ENDP
+  179 0000002E         SysTick_Handler
+                               PROC
+  180 0000002E                 EXPORT           SysTick_Handler                
+[WEAK]
+  181 0000002E E7FE            B                .
+  182 00000030                 ENDP
+  183 00000030         
+  184 00000030         Default_Handler
+                               PROC
+  185 00000030         
+  186 00000030                 EXPORT           WWDG_IRQHandler                
+[WEAK]
+  187 00000030                 EXPORT           PVD_IRQHandler                 
+[WEAK]
+  188 00000030                 EXPORT           RTC_IRQHandler                 
+[WEAK]
+  189 00000030                 EXPORT           FLASH_IRQHandler               
+[WEAK]
+  190 00000030                 EXPORT           RCC_IRQHandler                 
+[WEAK]
+  191 00000030                 EXPORT           EXTI0_1_IRQHandler             
+[WEAK]
+  192 00000030                 EXPORT           EXTI2_3_IRQHandler             
+[WEAK]
+  193 00000030                 EXPORT           EXTI4_15_IRQHandler            
+[WEAK]
+  194 00000030                 EXPORT           DMA1_Channel1_IRQHandler       
+[WEAK]
+  195 00000030                 EXPORT           DMA1_Channel2_3_IRQHandler     
+[WEAK]
+  196 00000030                 EXPORT           DMA1_Channel4_5_IRQHandler     
+[WEAK]
+  197 00000030                 EXPORT           ADC1_IRQHandler                
+[WEAK]
+  198 00000030                 EXPORT           TIM1_BRK_UP_TRG_COM_IRQHandler 
+[WEAK]
+  199 00000030                 EXPORT           TIM1_CC_IRQHandler             
+[WEAK]
+  200 00000030                 EXPORT           TIM2_IRQHandler                
+[WEAK]
+  201 00000030                 EXPORT           TIM3_IRQHandler                
+[WEAK]
+  202 00000030                 EXPORT           TIM14_IRQHandler               
+[WEAK]
+  203 00000030                 EXPORT           TIM16_IRQHandler               
+[WEAK]
+  204 00000030                 EXPORT           TIM17_IRQHandler               
+[WEAK]
+  205 00000030                 EXPORT           I2C1_IRQHandler                
+[WEAK]
+  206 00000030                 EXPORT           SPI1_IRQHandler                
+[WEAK]
+  207 00000030                 EXPORT           USART1_IRQHandler              
+[WEAK]
+  208 00000030         
+  209 00000030         
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+  210 00000030         WWDG_IRQHandler
+  211 00000030         PVD_IRQHandler
+  212 00000030         RTC_IRQHandler
+  213 00000030         FLASH_IRQHandler
+  214 00000030         RCC_IRQHandler
+  215 00000030         EXTI0_1_IRQHandler
+  216 00000030         EXTI2_3_IRQHandler
+  217 00000030         EXTI4_15_IRQHandler
+  218 00000030         DMA1_Channel1_IRQHandler
+  219 00000030         DMA1_Channel2_3_IRQHandler
+  220 00000030         DMA1_Channel4_5_IRQHandler
+  221 00000030         ADC1_IRQHandler
+  222 00000030         TIM1_BRK_UP_TRG_COM_IRQHandler
+  223 00000030         TIM1_CC_IRQHandler
+  224 00000030         TIM2_IRQHandler
+  225 00000030         TIM3_IRQHandler
+  226 00000030         TIM14_IRQHandler
+  227 00000030         TIM16_IRQHandler
+  228 00000030         TIM17_IRQHandler
+  229 00000030         I2C1_IRQHandler
+  230 00000030         SPI1_IRQHandler
+  231 00000030         USART1_IRQHandler
+  232 00000030         
+  233 00000030 E7FE            B                .
+  234 00000032         
+  235 00000032                 ENDP
+  236 00000032         
+  237 00000032 00 00           ALIGN
+  238 00000034         
+  239 00000034         ;*******************************************************
+                       ************************
+  240 00000034         ; User Stack and Heap initialization
+  241 00000034         ;*******************************************************
+                       ************************
+  242 00000034                 IF               :DEF:__MICROLIB
+  243 00000034         
+  244 00000034                 EXPORT           __initial_sp
+  245 00000034                 EXPORT           __heap_base
+  246 00000034                 EXPORT           __heap_limit
+  247 00000034         
+  248 00000034                 ELSE
+  263                          ENDIF
+  264 00000034         
+  265 00000034                 END
+              00000000 
+              00000004 
+              0000001F 
+              40021018 
+              00000001 
+              40010000 
+              00000000 
+              00000000 
+              00000000 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M0 --apcs=interw
+ork --depend=.\objects\startup_stm32f031.d -o.\objects\startup_stm32f031.o -IC:
+\Users\Vidal\Documents\GitHub\E011-BWHOOP-H8-Silverware\Silverware\RTE\_BWhoop 
+-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include -IC:\Keil_v5\ARM\
+CMSIS\Include --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --pre
+define="__UVISION_VERSION SETA 522" --predefine="STM32F030x6 SETA 1" --list=.\l
+
+
+
+ARM Macro Assembler    Page 7 
+
+
+istings\startup_stm32f031.lst ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Tem
+plates\arm\startup_stm32f031.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+STACK 00000000
+
+Symbol: STACK
+   Definitions
+      At line 42 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+   Uses
+      None
+Comment: STACK unused
+Stack_Mem 00000000
+
+Symbol: Stack_Mem
+   Definitions
+      At line 43 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+   Uses
+      None
+Comment: Stack_Mem unused
+__initial_sp 00000400
+
+Symbol: __initial_sp
+   Definitions
+      At line 44 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+   Uses
+      At line 68 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 129 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+      At line 244 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+HEAP 00000000
+
+Symbol: HEAP
+   Definitions
+      At line 53 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+   Uses
+      None
+Comment: HEAP unused
+Heap_Mem 00000000
+
+Symbol: Heap_Mem
+   Definitions
+      At line 55 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+   Uses
+      None
+Comment: Heap_Mem unused
+__heap_base 00000000
+
+Symbol: __heap_base
+   Definitions
+      At line 54 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+   Uses
+      At line 245 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+Comment: __heap_base used once
+__heap_limit 00000200
+
+Symbol: __heap_limit
+   Definitions
+      At line 56 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+   Uses
+      At line 246 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+Comment: __heap_limit used once
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 63 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 68 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+   Uses
+      At line 64 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 117 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+__Vectors_End 000000B0
+
+Symbol: __Vectors_End
+   Definitions
+      At line 115 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 65 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 117 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 119 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      None
+Comment: .text unused
+ADC1_IRQHandler 00000030
+
+Symbol: ADC1_IRQHandler
+   Definitions
+      At line 221 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 98 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 197 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+ApplicationStart 0000001E
+
+Symbol: ApplicationStart
+   Definitions
+      At line 153 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 140 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+Comment: ApplicationStart used once
+DMA1_Channel1_IRQHandler 00000030
+
+Symbol: DMA1_Channel1_IRQHandler
+   Definitions
+      At line 218 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 95 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 194 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+DMA1_Channel2_3_IRQHandler 00000030
+
+Symbol: DMA1_Channel2_3_IRQHandler
+   Definitions
+      At line 219 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 96 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 195 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+DMA1_Channel4_5_IRQHandler 00000030
+
+Symbol: DMA1_Channel4_5_IRQHandler
+   Definitions
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 220 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 97 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 196 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+Default_Handler 00000030
+
+Symbol: Default_Handler
+   Definitions
+      At line 184 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      None
+Comment: Default_Handler unused
+EXTI0_1_IRQHandler 00000030
+
+Symbol: EXTI0_1_IRQHandler
+   Definitions
+      At line 215 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 91 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 191 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+EXTI2_3_IRQHandler 00000030
+
+Symbol: EXTI2_3_IRQHandler
+   Definitions
+      At line 216 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 92 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 192 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+EXTI4_15_IRQHandler 00000030
+
+Symbol: EXTI4_15_IRQHandler
+   Definitions
+      At line 217 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 93 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 193 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+FLASH_IRQHandler 00000030
+
+Symbol: FLASH_IRQHandler
+   Definitions
+      At line 213 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Relocatable symbols
+
+   Uses
+      At line 89 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 189 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+HardFault_Handler 00000028
+
+Symbol: HardFault_Handler
+   Definitions
+      At line 167 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 71 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 168 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+I2C1_IRQHandler 00000030
+
+Symbol: I2C1_IRQHandler
+   Definitions
+      At line 229 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 109 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+      At line 205 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+NMI_Handler 00000026
+
+Symbol: NMI_Handler
+   Definitions
+      At line 162 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 70 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 163 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+PVD_IRQHandler 00000030
+
+Symbol: PVD_IRQHandler
+   Definitions
+      At line 211 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 87 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 187 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+PendSV_Handler 0000002C
+
+Symbol: PendSV_Handler
+   Definitions
+      At line 175 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Relocatable symbols
+
+es\arm\startup_stm32f031.s
+   Uses
+      At line 82 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 176 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+RCC_IRQHandler 00000030
+
+Symbol: RCC_IRQHandler
+   Definitions
+      At line 214 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 90 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 190 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+RTC_IRQHandler 00000030
+
+Symbol: RTC_IRQHandler
+   Definitions
+      At line 212 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 88 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 188 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 122 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 69 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 123 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+SPI1_IRQHandler 00000030
+
+Symbol: SPI1_IRQHandler
+   Definitions
+      At line 230 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 111 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+      At line 206 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+SVC_Handler 0000002A
+
+Symbol: SVC_Handler
+   Definitions
+
+
+
+ARM Macro Assembler    Page 5 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 171 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 79 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 172 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+SysTick_Handler 0000002E
+
+Symbol: SysTick_Handler
+   Definitions
+      At line 179 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 83 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 180 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+TIM14_IRQHandler 00000030
+
+Symbol: TIM14_IRQHandler
+   Definitions
+      At line 226 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 105 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+      At line 202 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+TIM16_IRQHandler 00000030
+
+Symbol: TIM16_IRQHandler
+   Definitions
+      At line 227 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 107 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+      At line 203 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+TIM17_IRQHandler 00000030
+
+Symbol: TIM17_IRQHandler
+   Definitions
+      At line 228 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 108 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+      At line 204 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+TIM1_BRK_UP_TRG_COM_IRQHandler 00000030
+
+Symbol: TIM1_BRK_UP_TRG_COM_IRQHandler
+
+
+
+ARM Macro Assembler    Page 6 Alphabetic symbol ordering
+Relocatable symbols
+
+   Definitions
+      At line 222 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 99 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 198 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+TIM1_CC_IRQHandler 00000030
+
+Symbol: TIM1_CC_IRQHandler
+   Definitions
+      At line 223 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 100 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+      At line 199 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+TIM2_IRQHandler 00000030
+
+Symbol: TIM2_IRQHandler
+   Definitions
+      At line 224 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 101 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+      At line 200 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+TIM3_IRQHandler 00000030
+
+Symbol: TIM3_IRQHandler
+   Definitions
+      At line 225 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 102 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+      At line 201 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+USART1_IRQHandler 00000030
+
+Symbol: USART1_IRQHandler
+   Definitions
+      At line 231 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 113 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+      At line 207 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+WWDG_IRQHandler 00000030
+
+
+
+
+ARM Macro Assembler    Page 7 Alphabetic symbol ordering
+Relocatable symbols
+
+Symbol: WWDG_IRQHandler
+   Definitions
+      At line 210 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 86 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+      At line 186 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+
+31 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+Heap_Size 00000200
+
+Symbol: Heap_Size
+   Definitions
+      At line 51 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+   Uses
+      At line 55 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+Comment: Heap_Size used once
+Stack_Size 00000400
+
+Symbol: Stack_Size
+   Definitions
+      At line 40 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+   Uses
+      At line 43 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+Comment: Stack_Size used once
+__Vectors_Size 000000B0
+
+Symbol: __Vectors_Size
+   Definitions
+      At line 117 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 66 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Template
+s\arm\startup_stm32f031.s
+Comment: __Vectors_Size used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+SystemInit 00000000
+
+Symbol: SystemInit
+   Definitions
+      At line 125 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 154 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+Comment: SystemInit used once
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 124 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+   Uses
+      At line 156 in file ..\Libraries\CMSIS\Device\ST\STM32F0xx\Source\Templat
+es\arm\startup_stm32f031.s
+Comment: __main used once
+2 symbols
+382 symbols in table

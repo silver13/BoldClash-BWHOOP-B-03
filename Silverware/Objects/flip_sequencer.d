@@ -1,0 +1,9 @@
+.\objects\flip_sequencer.o: src\flip_sequencer.c
+.\objects\flip_sequencer.o: src\drv_time.h
+.\objects\flip_sequencer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
+.\objects\flip_sequencer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\flip_sequencer.o: src\config.h
+.\objects\flip_sequencer.o: src\defines.h
+.\objects\flip_sequencer.o: src\hardware.h
+.\objects\flip_sequencer.o: src\flip_sequencer.h
+.\objects\flip_sequencer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

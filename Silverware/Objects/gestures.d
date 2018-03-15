@@ -1,0 +1,11 @@
+.\objects\gestures.o: src\gestures.c
+.\objects\gestures.o: src\gestures.h
+.\objects\gestures.o: src\sixaxis.h
+.\objects\gestures.o: src\drv_time.h
+.\objects\gestures.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
+.\objects\gestures.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\gestures.o: src\defines.h
+.\objects\gestures.o: src\config.h
+.\objects\gestures.o: src\defines.h
+.\objects\gestures.o: src\hardware.h
+.\objects\gestures.o: src\pid.h
