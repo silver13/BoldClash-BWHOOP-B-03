@@ -75,9 +75,9 @@
 //#define SOFT_LPF_2ND_088HZ
 //#define SOFT_LPF_4TH_088HZ
 //#define SOFT_LPF_4TH_160HZ
-#define SOFT_LPF_4TH_250HZ
+//#define SOFT_LPF_4TH_250HZ
 //#define SOFT_LPF_1ST_HZ 100
-//#define SOFT_LPF_2ST_HZ 100
+#define SOFT_LPF_2ST_HZ 100
 //#define SOFT_LPF_NONE
 
 
@@ -199,6 +199,9 @@
 // external buzzer - pins in hardware.h
 //#define BUZZER_ENABLE
 
+// Hold throttle on centered stick
+#define USE_STOCK_SPRINGLOADED_HOLD
+
 // Use BARO sensor - type in hardware.h
 #define ENABLE_BARO
 
@@ -234,7 +237,7 @@
 //#define NOMOTORS
 
 // throttle direct to motors for thrust measure
-//#define MOTORS_TO_THROTTLE
+// #define MOTORS_TO_THROTTLE
 
 // throttle direct to motors for thrust measure as a flight mode
 //#define MOTORS_TO_THROTTLE_MODE MULTI_CHAN_8

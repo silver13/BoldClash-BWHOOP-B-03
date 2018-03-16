@@ -173,13 +173,12 @@ float altitude_hold(void)
         last_ah_time = ah_time;
         //last_dt = dt;
 
-        float newrx = rx[3] - 0.5f;           // Zero center throttle
+        float newrx = mapf(rx[3], 0, 1.0f, -1.0f, 1.0f);  // Zero center throttle
 
-        if (fabs(newrx) > 0.05f)
+        if (fabs(newrx) > 0.1f)
         {
-            if (newrx > 0) newrx -= 0.05f;
-            else newrx += 0.05f;
-            newrx *= 2.222222f; // newrx [-1.0f, 1.0f]
+            if (newrx > 0) newrx -= 0.1f;
+            else newrx += 0.1f;
             new_alt_target = altitude + newrx * FULL_THROTTLE_ALT_TARGET;     // Add +/- FULL_THROTTLE_ALT_TARGET meter to altitude for full throttle travel
             lpf(&alt_target, new_alt_target, lpfcalc(dt, 5.0f));             // Easy climbing and descending
 //            alt_target = new_alt_target;
@@ -196,7 +195,7 @@ float altitude_hold(void)
             }
         } else
         {
-            if (newrx < -0.9f)
+            if (newrx < -0.85f)
             {
                 if ((ah_time - low_throttle_time) * 1e-6f > LOW_THROTTLE_TIMEOUT) grounded = 1;
 

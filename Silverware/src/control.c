@@ -169,11 +169,16 @@ pid_precalc();
 	pid(2);
 
 
-float	throttle;
+float throttle;
+
+// Fixup awkward define combinations
+#if defined(USE_STOCK_SPRINGLOADED_HOLD)
+#define USE_STOCK_SPRINGLOADED_TX
+#undef ENABLE_BARO
+#endif
 
 // In Baro mode, rx[3] is a measure for desired altitude
 // which should be translated to throttle before anything else.
-
 #ifdef ENABLE_BARO
     extern int rxmode;
     int rx_good = 0;
@@ -195,17 +200,20 @@ float	throttle;
 #else
 
 // map throttle so under 10% it is zero
-#ifndef USE_STOCK_SPRINGLOADED_TX
-    if ( rx[3] < 0.1f ) throttle = 0;           // apply deadband
-    else throttle = mapf(rx[3], 0.1f, 1.0f, 0, 1.0f);
+#ifdef USE_STOCK_SPRINGLOADED_TX
+    float spring_throttle = mapf(rx[3], 0, 1.0f, -1.0f, 1.0f);    // centre stick
+    if (fabs(spring_throttle) < 0.1f) spring_throttle = 0; // apply deadband
+#ifdef USE_STOCK_SPRINGLOADED_HOLD
+    static float last_throttle;
+    throttle = last_throttle + spring_throttle * fabs(spring_throttle) * 0.5e-3;
+    last_throttle = throttle;
 #else
-    float spring_throttle;
-    spring_throttle = rx[3] - 0.5f;       // centre stick
-    if (spring_throttle < 0.05f)  throttle = 0;   // apply deadband and don't use negative throttle travel
-    else throttle = mapf(spring_throttle, 0.05f, 0.5f, 0, 1.0f);
+    throttle = spring_throttle;
+#endif
+    if (throttle < 0) throttle = 0;
+    limitf(&throttle, 1.0f);
 #endif
 #endif
-
 
 
 // turn motors off if throttle is off and pitch / roll sticks are centered
