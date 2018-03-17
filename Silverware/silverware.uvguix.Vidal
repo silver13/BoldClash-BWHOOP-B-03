@@ -1224,7 +1224,7 @@
       <Window>
         <RegID>50001</RegID>
         <PaneID>50001</PaneID>
-        <IsVisible>1</IsVisible>
+        <IsVisible>0</IsVisible>
         <IsFloating>0</IsFloating>
         <IsTabbed>0</IsTabbed>
         <IsActivated>0</IsActivated>
@@ -1234,11 +1234,11 @@
         <RecentRowIndex>0</RecentRowIndex>
         <RectRecentDocked>
           <Len>16</Len>
-          <Data>01000000A4010000EE030000BF010000</Data>
+          <Data>4A03000066000000EE03000002010000</Data>
         </RectRecentDocked>
         <RectRecentFloat>
           <Len>16</Len>
-          <Data>0A0000000A0000006E0000006E000000</Data>
+          <Data>A4000000BB0000004E01000050010000</Data>
         </RectRecentFloat>
       </Window>
       <Window>

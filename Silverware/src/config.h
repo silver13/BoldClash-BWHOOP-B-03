@@ -49,6 +49,7 @@
 //#define RX_BAYANG_BLE_APP
 //#define RX_CX10BLUE_PROTOCOL
 //#define RX_SBUS
+//#define RX_NRF24_BAYANG_TELEMETRY
 
 // *************Transmitter Type Selection
 //#define USE_STOCK_TX
