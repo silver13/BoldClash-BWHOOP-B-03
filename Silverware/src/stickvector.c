@@ -36,8 +36,8 @@ else
 float pitch, roll;
 
 	// rotate down vector to match stick position
-pitch = rx_input[1] * MAX_ANGLE_HI * DEGTORAD + (float) TRIM_PITCH  * DEGTORAD;
-roll = rx_input[0] * MAX_ANGLE_HI * DEGTORAD + (float) TRIM_ROLL  * DEGTORAD;
+pitch = rx_input[1] * LEVEL_MAX_ANGLE * DEGTORAD + (float) TRIM_PITCH  * DEGTORAD;
+roll = rx_input[0] * LEVEL_MAX_ANGLE * DEGTORAD + (float) TRIM_ROLL  * DEGTORAD;
 
 stickvector[0] = fastsin( roll );
 stickvector[1] = fastsin( pitch );

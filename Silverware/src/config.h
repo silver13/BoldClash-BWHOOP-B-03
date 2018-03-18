@@ -8,21 +8,21 @@
 // for acro mode
 #define MAX_RATE 360.0
 #define MAX_RATEYAW 360.0
+// use if your tx has no expo function
+// 0.00 to 1.00 , 0 = no exp
+// positive = less sensitive near center 
+#define ACRO_EXPO_XY 0.0
+#define ACRO_EXPO_YAW 0.0
+
+
 
 // max angle for level mode
-#define MAX_ANGLE_HI 70.0f
+#define LEVEL_MAX_ANGLE 70.0f
+#define EXPO_XY 0.0
+#define EXPO_YAW 0.0
 
 #define LOW_RATES_MULTI 0.5f
 
-// disable inbuilt expo functions
-#define DISABLE_EXPO
-
-// use if your tx has no expo function
-// also comment out DISABLE_EXPO to use
-// 0.00 to 1.00 , 0 = no exp
-// positive = less sensitive near center 
-#define EXPO_XY 0.3
-#define EXPO_YAW 0.3
 
 
 
@@ -59,16 +59,11 @@
 // gyro filter 1 = 184hz delay 2.9mS
 // gyro filter 2 = 92hz delay 3.9mS
 // gyro filter 3 = 41hz delay 5.9mS (Default)
-// gyro filter 4 = 20hz
-// gyro filter 5 = 10hz
-// gyro filter 6 = 5hz
-// gyro filter 7 = 3600hz delay 0.17mS
 #define GYRO_LOW_PASS_FILTER 3
 
 
 // software gyro lpf ( iir )
 // set only one below
-//#define SOFT_LPF_1ST_023HZ
 //#define SOFT_LPF_1ST_043HZ
 //#define SOFT_LPF_1ST_100HZ
 //#define SOFT_LPF_2ND_043HZ

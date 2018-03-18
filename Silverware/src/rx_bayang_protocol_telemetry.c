@@ -404,12 +404,6 @@ static int decodepacket(void)
                     ((rxdata[8] & 0x0003) * 256 +
                      rxdata[9]) * 0.000976562f;
 
-#ifndef DISABLE_EXPO
-                rx[0] = rcexpo(rx[0], EXPO_XY);
-                rx[1] = rcexpo(rx[1], EXPO_XY);
-                rx[2] = rcexpo(rx[2], EXPO_YAW);
-#endif
-
 
 
 #ifdef USE_STOCK_TX
@@ -443,6 +437,27 @@ static int decodepacket(void)
 
                 aux[CH_RTH] = (rxdata[2] & 0x01) ? 1 : 0;   // rth channel
 
+
+                if ( aux[LEVELMODE] )
+                {
+                // level mode expo
+                if ( EXPO_XY > 0.01)
+                {
+                    rx[0] = rcexpo(rx[0], EXPO_XY);
+                    rx[1] = rcexpo(rx[1], EXPO_XY);
+                }
+                if ( EXPO_YAW > 0.01) rx[2] = rcexpo(rx[2], EXPO_YAW);
+                }
+                else
+                {
+                // acro mode expo
+                if ( ACRO_EXPO_XY > 0.01 )
+                {
+                    rx[0] = rcexpo(rx[0], ACRO_EXPO_XY);
+                    rx[1] = rcexpo(rx[1], ACRO_EXPO_XY);
+                }
+                if ( ACRO_EXPO_YAW > 0.01 )rx[2] = rcexpo(rx[2], ACRO_EXPO_YAW);
+                }
 
 
                 for (int i = 0; i < AUXNUMBER - 2; i++)
