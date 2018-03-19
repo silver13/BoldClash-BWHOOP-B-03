@@ -1,6 +1,7 @@
 
 #include "project.h"
 #include "drv_fmc.h"
+#include "config.h"
 
 extern int fmc_erase( void );
 extern void fmc_unlock(void);
@@ -61,7 +62,8 @@ void flash_save( void) {
     fmc_write_float(addresscount++, accelcal[2]);
 
    
-   
+#ifdef RX_BAYANG_PROTOCOL_TELEMETRY_AUTOBIND
+// autobind info     
 extern char rfchannel[4];
 extern char rxaddress[5];
 extern int telemetry_enabled;
@@ -78,6 +80,8 @@ extern int rx_bind_enable;
     {
       // this will leave 255's so it will be picked up as disabled  
     }
+#endif    
+
     writeword(255, FMC_HEADER);
     
 	fmc_lock();
@@ -111,7 +115,7 @@ void flash_load( void) {
     accelcal[2] = fmc_read_float(addresscount++ );  
 
        
-   
+ #ifdef RX_BAYANG_PROTOCOL_TELEMETRY_AUTOBIND  
 extern char rfchannel[4];
 extern char rxaddress[5];
 extern int telemetry_enabled;
@@ -124,7 +128,7 @@ extern int rx_bind_enable;
     int error = 0;
     for ( int i = 0 ; i < 4; i++)
     {
-        if ((temp>>(i*8))&0xff > 127)
+        if ( ((temp>>(i*8))&0xff  ) > 127)
         {
             error = 1;
         }   
@@ -149,7 +153,8 @@ extern int rx_bind_enable;
             rfchannel[i] =  temp>>(i*8);  
         }
     }
-
+#endif
+    
     }
     else
     {

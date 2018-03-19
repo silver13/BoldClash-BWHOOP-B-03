@@ -617,6 +617,11 @@
               <FileType>1</FileType>
               <FilePath>.\src\serial_4way_avrootloader.c</FilePath>
             </File>
+            <File>
+              <FileName>rx_bayang_protocol_telemetry_autobind.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\rx_bayang_protocol_telemetry_autobind.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

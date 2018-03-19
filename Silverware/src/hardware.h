@@ -118,7 +118,7 @@
 
 // default for 1/2 divider
 // change this factor to get a correct battery voltage
-#define ADC_SCALEFACTOR 0.001364
+#define ADC_SCALEFACTOR 0.003364
 
 
 // SPI PINS DEFINITONS ( for radio ic )
@@ -151,6 +151,8 @@
 #define USE_PWM_DRIVER
 //#define USE_ESC_DRIVER
 //#define USE_DSHOT_DRIVER_BETA
+
+//FC must have MOSFETS and motor pulldown resistors removed. MAY NOT WORK WITH ALL ESCS
 //#define USE_SERIAL_4WAY_BLHELI_INTERFACE
 		
 // pwm pins disable
