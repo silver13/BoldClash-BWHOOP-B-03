@@ -105,6 +105,7 @@ http://sirdomsen.diskstation.me/dokuwiki/doku.php?id=start
 ### 03.19
 * Blheli passthrough support added for ESCs
 * Buzzer can be enabled on a channel/switch with BUZZER_ENABLES_CHAN_## (credit: Markus Gritsch)
+* Added RX_BAYANG_PROTOCOL_TELEMETRY_AUTOBIND define to ensure all protocol builds would compile due to the nature of the autobind feature
 
 ### 01.18
 * 2 new D term filters, 1st and 2nd order with custom frequency
