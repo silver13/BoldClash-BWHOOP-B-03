@@ -39,7 +39,7 @@ STEP 2:  Open pid.c with keil and either edit pids to your preferred values or 
 
  ## Bikemike's Blheli 4way Interface Support(from Betaflight) 15.03.18 (Yets)
 
-This commit enables flashing and configuring Blheli using the Silverware FC.
+This commit enables flashing and configuring Blheli using the Silverware FC. **May not work with all ESCs**
 
  - FC must have MOSFETS and motor pulldown resistors removed
  - In hardware.h file comment in either define USE_ESC_DRIVER or define USE_DSHOT_DRIVER_BETA coupled with define USE_SERIAL_4WAY_BLHELI_INTERFACE
