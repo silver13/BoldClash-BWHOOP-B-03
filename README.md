@@ -102,6 +102,10 @@ The boldclash settings may need changes to work with gcc well. Turn off the soft
 ### Wiki
 http://sirdomsen.diskstation.me/dokuwiki/doku.php?id=start
 
+### 03.19
+* Blheli passthrough support added for ESCs
+* Buzzer can be enabled on a channel/switch with BUZZER_ENABLES_CHAN_##
+
 ### 01.18
 * 2 new D term filters, 1st and 2nd order with custom frequency
 * improved led flash timing
