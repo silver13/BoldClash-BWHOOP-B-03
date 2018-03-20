@@ -205,7 +205,8 @@ float throttle;
     if (fabs(spring_throttle) < 0.1f) spring_throttle = 0; // apply deadband
 #ifdef USE_STOCK_SPRINGLOADED_HOLD
     static float last_throttle;
-    throttle = last_throttle + spring_throttle * fabs(spring_throttle) * 0.5e-3;
+//    throttle = last_throttle + pow(spring_throttle,3.0) * fabs(spring_throttle) * 1.0e-3;
+    throttle = last_throttle + pow(spring_throttle,3.0) * 1.0e-3;
     last_throttle = throttle;
 #else
     throttle = spring_throttle;
