@@ -75,8 +75,10 @@
 //#define SOFT_LPF_2ST_HZ 100
 //#define SOFT_LPF_NONE
 
-
-
+// transmitter type
+//#define USE_STOCK_TX
+#define USE_DEVO
+//#define USE_MULTI
 
 // switch function selection
 
@@ -93,6 +95,8 @@
 
 // CH_ON - on always ( all protocols)
 // CH_OFF - off always ( all protocols)
+
+// CHAN_5 - CHAN_10 - auto based on tx selection
 
 // rates / expert mode
 #define RATES CH_EXPERT
@@ -114,10 +118,6 @@
 
 // aux1 channel starts on if this is defined, otherwise off.
 #define AUX1_START_ON
-
-// improves reception and enables trims if used
-// trims are incompatible with DEVO TX when used
-//#define USE_STOCK_TX
 
 // automatically remove center bias ( needs throttle off for 1 second )
 //#define STOCK_TX_AUTOCENTER

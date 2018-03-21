@@ -88,6 +88,45 @@
 #define MULTI_CHAN_9 CH_HEADFREE
 #define MULTI_CHAN_10 CH_INV
 
+
+#ifdef USE_DEVO
+// devo tx channel mapping
+// also for nr24multipro
+#define CHAN_5 CH_INV
+#define CHAN_6 CH_FLIP
+#define CHAN_7 CH_PIC
+#define CHAN_8 CH_VID
+#define CHAN_9 CH_HEADFREE
+#define CHAN_10 CH_RTH
+#define CHAN_ON CH_ON
+#define CHAN_OFF CH_OFF
+#endif
+
+#ifdef USE_MULTI
+// multimodule mapping ( taranis )
+#define CHAN_5 CH_FLIP
+#define CHAN_6 CH_RTH
+#define CHAN_7 CH_PIC
+#define CHAN_8 CH_VID
+#define CHAN_9 CH_HEADFREE
+#define CHAN_10 CH_INV
+#define CHAN_ON CH_ON
+#define CHAN_OFF CH_OFF
+#endif
+
+#ifdef USE_STOCK_TX
+#define CHAN_5 CH_EXPERT
+#define CHAN_6 CH_AUX1
+#define CHAN_7 CH_HEADFREE
+#define CHAN_8 CH_RLL_TRIM
+#define CHAN_9 CH_PIT_TRIM
+#define CHAN_10 CH_OFF
+#define CHAN_ON CH_ON
+#define CHAN_OFF CH_OFF
+#endif
+
+
+
 // used for the pwm driver
 #define CH1 0
 #define CH2 1
