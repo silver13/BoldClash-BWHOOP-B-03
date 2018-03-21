@@ -72,7 +72,8 @@
 //#define SOFT_LPF_4TH_160HZ
 //#define SOFT_LPF_4TH_250HZ
 #define SOFT_LPF_1ST_HZ 100
-//#define SOFT_LPF_2ST_HZ 100
+//#define SOFT_LPF_2ND_HZ 100
+//#define SOFT_KALMAN_GYRO KAL1_HZ_90
 //#define SOFT_LPF_NONE
 
 // transmitter type
@@ -127,6 +128,7 @@
 // motorfilter2: 1st lpf, 0.2 - 0.6 , 0.6 = less filtering
 //#define MOTOR_FILTER
 #define MOTOR_FILTER2_ALPHA 0.3
+//#define MOTOR_KAL KAL1_HZ_70
 
 // clip feedforward attempts to resolve issues that occur near full throttle
 //#define CLIP_FF

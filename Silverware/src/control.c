@@ -352,7 +352,13 @@ pidoutput[2] = -pidoutput[2];
         #ifdef MOTOR_FILTER2_ALPHA	
         float motorlpf( float in , int x) ;           
 		mix[i] = motorlpf(  mix[i] , i);
-		#endif	
+		#endif
+
+		#ifdef MOTOR_KAL
+      		float motor_kalman( float in , int x);
+       		mix[i] = motor_kalman(  mix[i] , i);  
+       	#endif 
+	
         }
 
 
@@ -698,3 +704,41 @@ float clip_ff(float motorin, int number)
 }
 
 
+
+    //initial values for the kalman filter 
+    float x_est_last[4] ;
+    float P_last[4] ; 
+    //the noise in the system 
+    const float Q = 0.02;
+//the noise in the system ( variance -  squared )
+   
+    #ifdef MOTOR_KAL
+    const float R = Q/(float)MOTOR_KAL;
+    #else
+    float R = 0.1;
+    #endif
+
+float  motor_kalman( float in , int x)   
+{    
+
+
+    
+        //do a prediction 
+       float x_temp_est = x_est_last[x]; 
+       float P_temp = P_last[x] + Q; 
+
+       float K = P_temp * (1.0f/(P_temp + R));
+       float x_est = x_temp_est + K * (in - x_temp_est);  
+       float P = (1- K) * P_temp; 
+       
+        //update our last's 
+        P_last[x] = P; 
+        x_est_last[x] = x_est; 
+//
+
+return x_est;
+}	
+	
+	
+	
+	
