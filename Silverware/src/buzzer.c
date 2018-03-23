@@ -45,7 +45,8 @@ void buzzer()
 	// before configuring the gpio buzzer pin to ensure
 	// there is time to program the chip (if using SWDAT or SWCLK)
 
-	if ( lowbatt || failsafe )
+	extern char aux[];
+	if ( lowbatt || failsafe || aux[BUZZER_ENABLES] )
 	{
 		unsigned long time = gettime();
 		if ( buzzertime == 0)

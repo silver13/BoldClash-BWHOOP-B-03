@@ -57,8 +57,12 @@ THE SOFTWARE.
 #include <math.h>
 #include <inttypes.h>
 
-
-
+#ifdef USE_SERIAL_4WAY_BLHELI_INTERFACE
+#include "drv_softserial.h"
+#include "serial_4way.h"
+#endif									   
+						   
+						   
 #if defined (__GNUC__)&& !( defined (SOFT_LPF_NONE) || defined (SOFT_LPF_1ST_HZ) || defined (SOFT_LPF_2ST_HZ) )
 #warning the soft lpf may not work correctly with gcc due to longer loop time
 #endif
@@ -120,7 +124,10 @@ int ledblink = 0;
 unsigned long ledcommandtime = 0;
 
 void failloop( int val);
-
+#ifdef USE_SERIAL_4WAY_BLHELI_INTERFACE
+volatile int switch_to_4way = 0;
+static void setup_4way_external_interrupt(void);
+#endif									   
 int random_seed = 0;
 
 int main(void)
@@ -172,14 +179,14 @@ aux[CH_AUX1] = 1;
 #endif
     
     
-#ifdef FLASH_SAVE1
+    #ifdef FLASH_SAVE1
 // read pid identifier for values in file pid.c
     flash_hard_coded_pid_identifier();
 
 // load flash saved variables
     flash_load( );
 #endif
-    
+    	
 	rx_init();
 
 	
@@ -226,7 +233,7 @@ extern float accelcal[3];
  accelcal[0] = flash2_readdata( OB->DATA0 ) - 127;
  accelcal[1] = flash2_readdata( OB->DATA1 ) - 127;
 #endif
-
+				   
 
 extern int liberror;
 if ( liberror ) 
@@ -245,6 +252,9 @@ if ( liberror )
 //
 //
 
+#ifdef USE_SERIAL_4WAY_BLHELI_INTERFACE
+	setup_4way_external_interrupt();
+#endif  
 
 	while(1)
 	{
@@ -478,6 +488,31 @@ rgb_led_lvc( );
         }
     }
 #endif
+#ifdef USE_SERIAL_4WAY_BLHELI_INTERFACE
+		extern int onground;
+		if (onground)
+		{
+			NVIC_EnableIRQ(EXTI4_15_IRQn);
+
+			if (switch_to_4way)
+			{
+				switch_to_4way = 0;
+
+				NVIC_DisableIRQ(EXTI4_15_IRQn);
+				ledon(2);
+				esc4wayInit();
+				esc4wayProcess();
+				NVIC_EnableIRQ(EXTI4_15_IRQn);
+				ledoff(2);
+
+				lastlooptime = gettime();
+			}
+		}
+		else
+		{
+			NVIC_DisableIRQ(EXTI4_15_IRQn);
+		}
+#endif
 
 // receiver function
 checkrx();
@@ -539,6 +574,62 @@ void UsageFault_Handler(void)
 }
 
 
+#ifdef USE_SERIAL_4WAY_BLHELI_INTERFACE
+
+// set up external interrupt to check 
+// for 4way serial start byte
+static void setup_4way_external_interrupt(void)
+{
+	SYSCFG->EXTICR[3] &= ~(0x000F) ; //clear bits 3:0 in the SYSCFG_EXTICR1 reg
+	EXTI->FTSR |= EXTI_FTSR_TR14;
+	EXTI->IMR |= EXTI_IMR_MR14;
+	NVIC_SetPriority(EXTI4_15_IRQn,2);
+}
+
+// interrupt for detecting blheli serial 4way
+// start byte (0x2F) on PA14 at 38400 baud
+void EXTI4_15_IRQHandler(void)
+{
+	if( (EXTI->IMR & EXTI_IMR_MR14) && (EXTI->PR & EXTI_PR_PR14))
+	{
+#define IS_RX_HIGH (GPIOA->IDR & GPIO_Pin_14)
+		uint32_t micros_per_bit = 26;
+		uint32_t micros_per_bit_half = 13;
+
+		uint32_t i = 0;
+		// looking for 2F
+		uint8_t start_byte = 0x2F;
+		uint32_t time_next = gettime();
+		time_next += micros_per_bit_half; // move away from edge to center of bit
+
+		for (; i < 8; ++i)
+		{
+			time_next += micros_per_bit;
+			delay_until(time_next);
+			if ((0 == IS_RX_HIGH) != (0 == (start_byte & (1 << i))))
+			{
+				i = 0;
+				break;
+			}
+		}
+
+		if (i == 8)
+		{
+			time_next += micros_per_bit;
+			delay_until(time_next); // move away from edge
+
+			if (IS_RX_HIGH) // stop bit
+			{
+				// got the start byte
+				switch_to_4way = 1;
+			}
+		}
+			
+		// clear pending request
+		EXTI->PR |= EXTI_PR_PR14 ;
+	}
+}
+#endif
 
 
 

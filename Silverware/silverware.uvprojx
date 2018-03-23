@@ -597,6 +597,31 @@
               <FileType>5</FileType>
               <FilePath>.\src\debug.h</FilePath>
             </File>
+            <File>
+              <FileName>drv_softserial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\drv_softserial.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial_4way.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\serial_4way.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial_4way_stk500v2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\serial_4way_stk500v2.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial_4way_avrootloader.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\serial_4way_avrootloader.c</FilePath>
+            </File>
+            <File>
+              <FileName>rx_bayang_protocol_telemetry_autobind.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\rx_bayang_protocol_telemetry_autobind.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -842,11 +867,5 @@
       </Groups>
     </Target>
   </Targets>
-
-  <RTE>
-    <apis/>
-    <components/>
-    <files/>
-  </RTE>
 
 </Project>

@@ -45,10 +45,12 @@
 //#define RX_H7_PROTOCOL
 //#define RX_BAYANG_PROTOCOL
 #define RX_BAYANG_PROTOCOL_TELEMETRY
+//#define RX_BAYANG_PROTOCOL_TELEMETRY_AUTOBIND
 //#define RX_BAYANG_PROTOCOL_BLE_BEACON
 //#define RX_BAYANG_BLE_APP
 //#define RX_CX10BLUE_PROTOCOL
 //#define RX_SBUS
+//#define RX_NRF24_BAYANG_TELEMETRY
 
 // *************Transmitter Type Selection
 //#define USE_STOCK_TX
@@ -64,18 +66,19 @@
 
 //*************Idle up-Arm switch
 //*************comment out to disable
-#define IDLE_UP CHAN_5
-#define IDLE_THR 0.05f
+//#define IDLE_UP CHAN_5
+//#define IDLE_THR 0.05f
 
 //*************Assign feature to auxiliary channel.  NOTE - Switching on LEVELMODE is required for any leveling modes to 
 //*************be active.  With LEVELMODE active - MCU will apply RACEMODE if racemode channel is on, HORIZON if horizon 
 //*************channel is on, or racemodeHORIZON if both channels are on - and will be standard LEVELMODE if neither 
 //*************racemode or horizon are switched on.
 #define LEVELMODE CHAN_6
-	#define RACEMODE  CHAN_7
-	#define HORIZON   CHAN_8
+#define RACEMODE  CHAN_7
+#define HORIZON   CHAN_8
 #define RATES CHAN_ON
 #define LEDS_ON CHAN_ON
+
 
 // *************switch for fpv / other, requires fet
 // *************comment out to disable
@@ -194,6 +197,9 @@
 // *************lost quad beeps using motors (30 sec timeout)
 //#define MOTOR_BEEPS
 
+// ************* enable buzzer to a channel switch
+
+
 // *************0 - 7 - power for telemetry
 #define TX_POWER 7
 
@@ -205,7 +211,9 @@
 #define LED_BRIGHTNESS 15
 
 // *************external buzzer - pins in hardware.h
+// *************external buzzer channel define to enable switch control
 //#define BUZZER_ENABLE
+//#define BUZZER_ENABLES_CHAN_10
 
 // *************Comment out to disable pid tuning gestures
 #define PID_GESTURE_TUNING
@@ -247,7 +255,7 @@
 #define GYRO_LOW_PASS_FILTER 0
 
 // disable inbuilt expo functions
-//#define DISABLE_EXPO
+#define DISABLE_EXPO
 
 #define DISABLE_FLIP_SEQUENCER
 #define STARTFLIP CHAN_OFF
