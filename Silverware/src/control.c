@@ -182,16 +182,40 @@ pid_precalc();
 
 
 float	throttle;
+int armed_state;
+int idle_state;
+		
+#ifndef ARMING
+ armed_state = 1;
+#else
+	if (!aux[ARMING]){
+		armed_state = 0;
+	}else{ armed_state = 1;}
+#endif
 
 #ifndef IDLE_UP
-// map throttle so under 10% it is zero	
-if ( rx[3] < 0.1f ) throttle = 0;
-else throttle = (rx[3] - 0.1f)*1.11111111f;
+ idle_state = 0;
 #else
-// check if IDLE_UP switch is on
-if (!aux[IDLE_UP]) throttle = 0;
-else throttle =  (float) IDLE_THR + rx[3] * (1.0f - (float) IDLE_THR);
+	if (!aux[IDLE_UP]){
+		idle_state = 0;
+	}else{ idle_state = 1;}
 #endif
+	
+#ifndef IDLE_THR
+	#define IDLE_THR .05f
+#endif
+
+if (armed_state == 0){
+	throttle = 0;
+}else{
+	if (idle_state == 0){
+		if ( rx[3] < 0.05f ) throttle = 0;
+		else throttle = (rx[3] - 0.05f)*1.05623158f;
+	}else{
+		throttle =  (float) IDLE_THR + rx[3] * (1.0f - (float) IDLE_THR);
+	}
+}
+
 
 
 // turn motors off if throttle is off and pitch / roll sticks are centered
