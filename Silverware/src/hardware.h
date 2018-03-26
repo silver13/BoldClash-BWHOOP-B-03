@@ -118,9 +118,6 @@
 
 // default for 1/2 divider
 // change this factor to get a correct battery voltage - define only one
-//for 2s use:
-//#define ADC_SCALEFACTOR 0.003364
-//for 1s use:
 #define ADC_SCALEFACTOR 0.001364
 
 // SPI PINS DEFINITONS ( for radio ic )
