@@ -64,10 +64,11 @@
 // *************Toy transmitter mapping is CHAN_5 (rates button), CHAN_6 (stick gestures RRD/LLD), 
 //**************CHAN_7 (headfree button), CHAN_8 (roll trim buttons), CHAN_9 (pitch trim buttons)
 
-//*************Idle up-Arm switch
+//*************Arm switch and Idle Up switch (idle up will behave like betaflight airmode)
 //*************comment out to disable
-//#define IDLE_UP CHAN_5
-//#define IDLE_THR 0.05f
+#define ARMING CHAN_5
+#define IDLE_UP CHAN_5
+#define IDLE_THR 0.05f
 
 //*************Assign feature to auxiliary channel.  NOTE - Switching on LEVELMODE is required for any leveling modes to 
 //*************be active.  With LEVELMODE active - MCU will apply RACEMODE if racemode channel is on, HORIZON if horizon 
