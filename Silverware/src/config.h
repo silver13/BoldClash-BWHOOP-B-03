@@ -118,6 +118,9 @@
 #define LVC_LOWER_THROTTLE_VOLTAGE_RAW 2.70
 #define LVC_LOWER_THROTTLE_KP 3.0
 
+// *************automatic voltage telemetry correction/calibration factor - change the values below if voltage telemetry is inaccurate
+#define ACTUAL_BATTERY_VOLTAGE 4.20
+#define REPORTED_TELEMETRY_VOLTAGE 4.20
 
 
 
@@ -137,6 +140,8 @@
 //#define DTERM_LPF_1ST_HZ 100
 #define  DTERM_LPF_2ND_HZ 100
 //#define DTERM_LPF3_88
+
+
 
 //**********************************************************************************************************************
 //***********************************************MOTOR OUTPUT SETTINGS**************************************************
