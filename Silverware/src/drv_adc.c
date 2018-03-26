@@ -100,7 +100,7 @@ float adc_read(int channel)
 		#ifdef DEBUG
 		lpf(&debug.adcfilt , (float) adcarray[0] , 0.998);
 		#endif	
-		return (float) adcarray[0] * ((float) ADC_SCALEFACTOR) ;
+		return (float) adcarray[0] * ((float) (ADC_SCALEFACTOR*(ACTUAL_BATTERY_VOLTAGE/REPORTED_TELEMETRY_VOLTAGE))) ;
 		
 		case 1:
         #ifdef DEBUG
