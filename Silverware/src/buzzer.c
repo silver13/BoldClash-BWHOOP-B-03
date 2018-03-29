@@ -46,7 +46,7 @@ void buzzer()
 	// there is time to program the chip (if using SWDAT or SWCLK)
 
 	extern char aux[];
-	if ( lowbatt || failsafe || aux[BUZZER_ENABLES] )
+	if ( lowbatt || failsafe || aux[BUZZER_ENABLE] )
 	{
 		unsigned long time = gettime();
 		if ( buzzertime == 0)
