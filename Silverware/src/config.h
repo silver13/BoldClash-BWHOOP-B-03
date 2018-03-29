@@ -261,7 +261,7 @@
 #define GYRO_LOW_PASS_FILTER 0
 
 // disable inbuilt expo functions
-#define DISABLE_EXPO
+//#define DISABLE_EXPO
 
 #define DISABLE_FLIP_SEQUENCER
 #define STARTFLIP CHAN_OFF
