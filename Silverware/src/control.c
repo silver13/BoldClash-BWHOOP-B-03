@@ -176,9 +176,21 @@ pid_precalc();
 	  }
 
 
+ #ifdef YAW_FIX
+{	
+	rotateErrors();
 	pid(0);
 	pid(1);
-	pid(2);
+	pid(2);		}
+ #else 	
+{
+  pid(0);
+	pid(1);
+	pid(2);	
+
+}
+
+#endif
 
 
 float	throttle;
