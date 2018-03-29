@@ -85,6 +85,10 @@
 // *************comment out to disable
 //#define FPV_ON CHAN_ON
 
+// *************external buzzer - requires pin assignment in hardware.h before defining
+// *************change channel assignment from CHAN_OFF to a numbered aux switch if you want switch control
+//#define BUZZER_ENABLE CHAN_OFF
+
 // *************start in level mode for toy tx.
 //#define AUX1_START_ON
 
@@ -215,11 +219,6 @@
 // *************led brightness in-flight ( solid lights only)
 // *************0- 15 range
 #define LED_BRIGHTNESS 15
-
-// *************external buzzer - pins in hardware.h
-// *************external buzzer channel define to enable switch control
-//#define BUZZER_ENABLE
-//#define BUZZER_ENABLES_CHAN_10
 
 // *************Comment out to disable pid tuning gestures
 #define PID_GESTURE_TUNING
