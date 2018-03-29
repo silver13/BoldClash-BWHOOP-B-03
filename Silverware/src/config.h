@@ -199,6 +199,9 @@
 // *************invert yaw pid for "PROPS OUT" configuration
 //#define INVERT_YAW_PID
 
+//**************joelucid's yaw fix
+#define YAW_FIX
+
 
 
 //**********************************************************************************************************************
