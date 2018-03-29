@@ -384,4 +384,19 @@ int decrease_pid()
 	return change_pid_value(0);
 }
 
+void rotateErrors()
+{
+	#ifdef YAW_FIX
+	// rotation around x axis:
+	ierror[1] -= ierror[2] * gyro[0] * looptime;
+	ierror[2] += ierror[1] * gyro[0] * looptime;
 
+	// rotation around y axis:
+	ierror[2] -= ierror[0] * gyro[1] * looptime;
+	ierror[0] += ierror[2] * gyro[1] * looptime;
+
+	// rotation around z axis:
+	ierror[0] -= ierror[1] * gyro[2] * looptime;
+	ierror[1] += ierror[0] * gyro[2] * looptime;
+#endif
+}
