@@ -206,7 +206,7 @@ float throttle;
 #ifdef USE_STOCK_SPRINGLOADED_HOLD
     static float last_throttle;
 //    throttle = last_throttle + pow(spring_throttle,3.0) * fabs(spring_throttle) * 1.0e-3;
-    throttle = last_throttle + pow(spring_throttle,3.0) * 1.0e-3;
+    throttle = last_throttle + pow(spring_throttle,5.0) * 1.0e-3;
     last_throttle = throttle;
 #else
     throttle = spring_throttle;
