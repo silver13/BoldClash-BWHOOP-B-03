@@ -200,7 +200,7 @@
 //#define BUZZER_ENABLE
 
 // Hold throttle on centered stick
-#define USE_STOCK_SPRINGLOADED_HOLD
+//#define USE_STOCK_SPRINGLOADED_HOLD
 
 // Use BARO sensor - type in hardware.h
 #define ENABLE_BARO

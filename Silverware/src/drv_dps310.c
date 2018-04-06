@@ -90,8 +90,8 @@ float press_raw_sc, temp_raw_sc, press_fl, temp_fl;
 
 void dps310_init(void)
 {
-    int press_raw, temp_raw = 0;
-    int data[3];
+//    int press_raw, temp_raw = 0;
+//    int data[3];
 
     // send reset command
     i2c_writereg( DPS310_I2C_ADDRESS , DPS310_RESET , B10001001 );

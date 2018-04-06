@@ -39,9 +39,9 @@ int barometer_check(void)
 #ifdef USE_BARO_DPS310
     return dps310_check();
 #endif
-
-#endif
+#else
     return 1;
+#endif
 }
 
 float read_pressure(void)
@@ -49,7 +49,6 @@ float read_pressure(void)
 #ifdef USE_BARO_DPS310
     dps310_read_pressure();
     dps310_pcomp_lpf();
-#else
-    return 0;
 #endif
+		return 0;
 }

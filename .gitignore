@@ -9,6 +9,8 @@ Objects/
 *.lst
 *.crf
 
+silverware.uvguix.*
+
 # binaries
 gcc/bwhoop
 gcc/bwhoop.elf
