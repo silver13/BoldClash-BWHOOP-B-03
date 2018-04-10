@@ -134,11 +134,22 @@ static int decodepacket( void)
 		rx[3] = (cx10scale(13) + 1.0f)*0.5f ; // throttle
 		rx[2] = cx10scale(15) ; // throttle
 				
-		#ifndef DISABLE_EXPO
-			rx[0] = rcexpo ( rx[0] , EXPO_XY );
-			rx[1] = rcexpo ( rx[1] , EXPO_XY ); 
-			rx[2] = rcexpo ( rx[2] , EXPO_YAW ); 	
-		#endif
+#ifndef DISABLE_EXPO
+							if (aux[LEVELMODE]){
+								if (aux[RACEMODE]){
+									rx[0] = rcexpo(rx[0], ANGLE_EXPO_ROLL);
+									rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
+									rx[2] = rcexpo(rx[2], ANGLE_EXPO_YAW);
+								}else{
+									rx[0] = rcexpo(rx[0], ANGLE_EXPO_ROLL);
+									rx[1] = rcexpo(rx[1], ANGLE_EXPO_PITCH);
+									rx[2] = rcexpo(rx[2], ANGLE_EXPO_YAW);}
+							}else{
+								rx[0] = rcexpo(rx[0], ACRO_EXPO_ROLL);
+								rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
+								rx[2] = rcexpo(rx[2], ACRO_EXPO_YAW);
+							}
+#endif
 
     aux[0] = (rxdata[16] & 0x10)?1:0;
 			

@@ -980,9 +980,20 @@ static int decodepacket( void)
 			rx[3] = ( (rxdata[8]&0x0003) * 256 + rxdata[9] ) * 0.000976562f;
 		
 #ifndef DISABLE_EXPO
-	rx[0] = rcexpo ( rx[0] , EXPO_XY );
-	rx[1] = rcexpo ( rx[1] , EXPO_XY ); 
-	rx[2] = rcexpo ( rx[2] , EXPO_YAW ); 	
+							if (aux[LEVELMODE]){
+								if (aux[RACEMODE]){
+									rx[0] = rcexpo(rx[0], ANGLE_EXPO_ROLL);
+									rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
+									rx[2] = rcexpo(rx[2], ANGLE_EXPO_YAW);
+								}else{
+									rx[0] = rcexpo(rx[0], ANGLE_EXPO_ROLL);
+									rx[1] = rcexpo(rx[1], ANGLE_EXPO_PITCH);
+									rx[2] = rcexpo(rx[2], ANGLE_EXPO_YAW);}
+							}else{
+								rx[0] = rcexpo(rx[0], ACRO_EXPO_ROLL);
+								rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
+								rx[2] = rcexpo(rx[2], ACRO_EXPO_YAW);
+							}
 #endif
 
 

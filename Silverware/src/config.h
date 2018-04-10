@@ -32,8 +32,13 @@
 
 // *************EXPO from 0.00 to 1.00 , 0 = no exp
 // *************positive = less sensitive near center 
-#define EXPO_XY 0.8
-#define EXPO_YAW 0.6
+#define ACRO_EXPO_ROLL 0.80
+#define ACRO_EXPO_PITCH 0.80
+#define ACRO_EXPO_YAW 0.60
+
+#define ANGLE_EXPO_ROLL 0.35
+#define ANGLE_EXPO_PITCH 0.0
+#define ANGLE_EXPO_YAW 0.35
 
 // *************transmitter stick adjustable deadband for roll/pitch/yaw
 // *************.01f = 1% of stick range - comment out to disable
@@ -85,8 +90,10 @@
 // *************comment out to disable
 //#define FPV_ON CHAN_ON
 
-// *************external buzzer - requires pin assignment in hardware.h before defining
+// *************enable buzzer functionality
+// *************external buzzer requires pin assignment in hardware.h before defining below
 // *************change channel assignment from CHAN_OFF to a numbered aux switch if you want switch control
+// *************if no channel is assigned but buzzer is set to CHAN_ON - buzzer will activate on LVC and FAILSAFE.
 //#define BUZZER_ENABLE CHAN_OFF
 
 // *************start in level mode for toy tx.
@@ -209,8 +216,6 @@
 
 // *************lost quad beeps using motors (30 sec timeout)
 //#define MOTOR_BEEPS
-
-// ************* enable buzzer to a channel switch
 
 
 // *************0 - 7 - power for telemetry
