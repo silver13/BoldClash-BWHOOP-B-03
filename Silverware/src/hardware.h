@@ -1,6 +1,10 @@
 
 // HARDWARE PINS SETTING
 //
+
+//NFE NOTES:  Most of the target related pin assignments are now being staged at the bottom of config.h 
+//in preparation of being moved to seperate target files.
+
 // do not change hardware pins below
 // make sure you don't set SWDIO or SWDCLK pins (programming pins)
 // if you do, you lose board programmability without a reset pin
@@ -31,35 +35,12 @@
 
 
 
-
-//LED_NUMBER MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
-
-
-//LED1PIN GPIO MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
-//LED1PORT GPIO MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
-
-#define LED2PIN GPIO_Pin_3
-#define LED2PORT GPIOA
-
-
-
-
-// invert - leds turn on when high
-// MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
-
-
-// softi2c pins definitons:
-// sda - out/in , sck - out
-
 // i2c driver to use ( dummy - disables i2c )
 // hardware i2c used PB6 and 7 by default ( can also use PA9 and 10)
-
 //#define USE_HARDWARE_I2C
 #define USE_SOFTWARE_I2C
 //#define USE_DUMMY_I2C
 
-// for boards without a SCL pullup - E011 ( nonstandard i2c )
-// MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
 
 // I2C speed: fast = no delays 
 // slow1 = for i2c without pull-up resistors
@@ -68,77 +49,29 @@
 //#define SOFTI2C_SPEED_SLOW1
 //#define SOFTI2C_SPEED_SLOW2
 
+
 // hardware i2c speed ( 1000, 400 , 200 , 100Khz)
 #define HW_I2C_SPEED_FAST2
 //#define HW_I2C_SPEED_FAST
 //#define HW_I2C_SPEED_SLOW1
 //#define HW_I2C_SPEED_SLOW2
 
+
 // pins for hw i2c , select one only
 // select pins PB6 and PB7 OR select pins PA9 and PA10
 //#define HW_I2C_PINS_PB67
 #define HW_I2C_PINS_PA910
 
-#define SOFTI2C_SDAPIN GPIO_Pin_10
-#define SOFTI2C_SDAPORT GPIOA
-
-#define SOFTI2C_SCLPIN GPIO_Pin_9
-#define SOFTI2C_SCLPORT GPIOA
-
-#define SOFTI2C_GYRO_ADDRESS 0x68
-//#define SOFTI2C_GYRO_ADDRESS 0x69
 
 // disable the check for known gyro that causes the 4 times flash
 //#define DISABLE_GYRO_CHECK
 
-// gyro ids for the gyro check
-#define GYRO_ID_1 0x68
-// GYRO_ID_2 MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
-#define GYRO_ID_3 0x7D
-#define GYRO_ID_4 0x72
-
-
-// gyro orientation
-// the expected orientation is with the dot in the front-left corner
-// use this to rotate to the correct orientation 
-// rotations performed in order
-// note, the motors don't get rotated,
-// so they have to be referenced to the new gyro position
-//MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
+// TODO: gyro ids for the gyro check
+//move to sixaxis & defines.h
 
 
 // disable lvc functions
 //#define DISABLE_LVC
-
-// Analog battery input pin and adc channel
-
-#define BATTERYPIN GPIO_Pin_5
-#define BATTERYPORT GPIOA
-#define BATTERY_ADC_CHANNEL ADC_Channel_5
-
-// default for 1/2 divider
-// change this factor to get a correct battery voltage - define only one
-#define ADC_SCALEFACTOR 0.001364
-
-// SPI PINS DEFINITONS ( for radio ic )
-// MOSI , CLK , SS - outputs , MISO input
-// MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
-
-//spi type
-#define SOFTSPI_3WIRE
-//#define SOFTSPI_4WIRE
-//#define SOFTSPI_NONE
-
-// check for radio chip ( 3 times flash = not found)
-#define RADIO_CHECK
-
-// radio type
-//#define RADIO_XN297
-#define RADIO_XN297L
-
-
-
-// PWM PINS DEFINITIONS 
 
 
 // pwm driver = brushed motors
@@ -151,8 +84,10 @@
 //#define USE_ESC_DRIVER
 //#define USE_DSHOT_DRIVER_BETA
 
+
 //FC must have MOSFETS and motor pulldown resistors removed. MAY NOT WORK WITH ALL ESCS
 //#define USE_SERIAL_4WAY_BLHELI_INTERFACE
+		
 		
 // pwm pins disable
 // disable all pwm pins / function
@@ -176,24 +111,15 @@
 #define PWM_PB1
 
 
-// Assingment of pin to motor
-// Assign one pin to one motor
-// pins PA0 - PA11 , PB0 , PB1
-// MOVED TO CONFIG.H SO HADWARE PARAMETERS CAN BE SET BY CONFIG DEFINE
-
-
-
-
-
-
-
 // RGB led type ws2812 - ws2813
 // numbers over 8 could decrease performance
 #define RGB_LED_NUMBER 0
 
+
 // pin / port for the RGB led ( programming port ok )
 #define RGB_PIN GPIO_Pin_11
 #define RGB_PORT GPIOA
+
 
 // pin for fpv switch ( turns off at failsafe )
 // GPIO_Pin_13 // SWDAT - GPIO_Pin_14 // SWCLK  
@@ -205,7 +131,7 @@
 // BUZZER pin settings - buzzer active "high"
 // SWDAT and SWCLK pins OK here
 // GPIO_Pin_13 // SWDAT - GPIO_Pin_14 // SWCLK 
-#define BUZZER_PIN       GPIO_Pin_x 
+#define BUZZER_PIN       GPIO_Pin_14
 #define BUZZER_PIN_PORT  GPIOA
 // x (micro)seconds after loss of tx or low bat before buzzer starts
 #define BUZZER_DELAY     30e6 

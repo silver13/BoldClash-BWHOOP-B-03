@@ -33,23 +33,29 @@ THE SOFTWARE.
 
 //************************************PIDS****************************************
 
-//7mm Whoop  NotFastEnuf "High and Tight Pids" -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz
+//7mm Whoop  NotFastEnuf "High and Tight Pids" -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz  (These pids help tighten up old batteries and worn motors)
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = { 27.0e-2 , 27.0e-2  , 11.5e-1 }; 
 //float pidki[PIDNUMBER] = { 20.5e-1  , 20.5e-1 , 16e-1 };	
 //float pidkd[PIDNUMBER] = { 11.4e-1 , 11.4e-1  , 4.9e-1 };	
 
-//7mm Whoop  NotFastEnuf "Default Pids" -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz
+//7mm Whoop  NotFastEnuf "Default Pids" -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz  (These pids work nicely with new or HV batteries and fresh motors)
 //      	                 ROLL       PITCH     YAW
 float pidkp[PIDNUMBER] = { 26.5e-2 , 26.5e-2  , 8.5e-1 }; 
 float pidki[PIDNUMBER] = { 16e-1  , 16e-1 , 13e-1 };	
 float pidkd[PIDNUMBER] = {11.1e-1 , 11.1e-1  , 4.9e-1 };
 
-//6mm Whoop -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz
+//6mm Whoop -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz  
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = {19.5e-2 , 19.5e-2  , 7.5e-1 }; 
 //float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 13e-1 };	
 //float pidkd[PIDNUMBER] = { 6.9e-1 , 6.9e-1  , 5.5e-1 };
+
+//6mm Abduction Pids (Team Alienwhoop)-kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz
+//                         ROLL       PITCH     YAW
+//float pidkp[PIDNUMBER] = {20.5e-2 , 20.5e-2  , 7.5e-1 }; 
+//float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 13e-1 };	
+//float pidkd[PIDNUMBER] = { 7.4e-1 , 7.4e-1  , 5.5e-1 };
 
 //BOSS 6 & 7 - 615 and 716 motors, hm830 46mm props  -1st gyro at 70hz, D 2nd at 80hz, motor filter at 70hz
 //                         ROLL       PITCH     YAW
