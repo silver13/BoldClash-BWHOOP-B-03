@@ -22,7 +22,7 @@
 // *************rate in deg/sec
 // *************for acro mode
 #define MAX_RATE 960.0
-#define MAX_RATEYAW 800.0
+#define MAX_RATEYAW 600.0
 
 // *************max angle for level mode
 #define MAX_ANGLE_HI 70.0f
@@ -34,11 +34,11 @@
 // *************positive = less sensitive near center 
 #define ACRO_EXPO_ROLL 0.85
 #define ACRO_EXPO_PITCH 0.85
-#define ACRO_EXPO_YAW 0.65
+#define ACRO_EXPO_YAW 0.60
 
-#define ANGLE_EXPO_ROLL 0.35
+#define ANGLE_EXPO_ROLL 0.55
 #define ANGLE_EXPO_PITCH 0.0
-#define ANGLE_EXPO_YAW 0.35
+#define ANGLE_EXPO_YAW 0.55
 
 // *************transmitter stick adjustable deadband for roll/pitch/yaw
 // *************.01f = 1% of stick range - comment out to disable
@@ -255,6 +255,10 @@
 // this should not be usually changed
 //#############################################################################################################################
 //#############################################################################################################################
+
+//Throttle must drop below this value if arming feature is enabled for arming to take place.  MIX_INCREASE_THROTTLE_3 if enabled
+//will also not activate on the ground untill this threshold is passed during takeoff for safety and better staging behavior.
+#define THROTTLE_SAFETY .10f
 
 // Gyro LPF filter frequency
 // gyro filter 0 = 250hz delay 0.97mS
@@ -538,6 +542,7 @@
 #define SPI_CLK_PORT GPIOA
 #define SPI_SS_PIN GPIO_Pin_z
 #define SPI_SS_PORT GPIOA
+#define RADIO_CHECK
 
 //VOLTAGE DIVIDER
 #define BATTERYPIN GPIO_Pin_5

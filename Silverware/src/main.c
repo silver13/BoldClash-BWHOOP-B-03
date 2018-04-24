@@ -113,10 +113,13 @@ char auxchange[AUXNUMBER];
 
 // bind / normal rx mode
 extern int rxmode;
-// failsafe on / off
+// failsafe on / off 
 extern int failsafe;
 extern float hardcoded_pid_identifier;
 extern int onground;
+int in_air;
+int armed_state;
+int arming_release;
 
 // for led flash on gestures
 int ledcommand = 0;
