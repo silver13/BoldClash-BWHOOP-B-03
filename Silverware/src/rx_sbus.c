@@ -112,15 +112,11 @@ void sbus_init(void)
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-#ifdef Alienwhoop_ZERO
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
-    GPIO_Init(GPIOA, &GPIO_InitStructure); 
-    GPIO_PinAFConfig(GPIOA, GPIO_PinSource3 , GPIO_AF_1);
-#else	
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_14;
-    GPIO_Init(GPIOA, &GPIO_InitStructure); 	
-	  GPIO_PinAFConfig(GPIOA, GPIO_PinSource14 , GPIO_AF_1);
-#endif    
+
+    GPIO_InitStructure.GPIO_Pin = SERIAL_RX_PIN;
+    GPIO_Init(SERIAL_RX_PORT, &GPIO_InitStructure); 
+    GPIO_PinAFConfig(SERIAL_RX_PORT, SERIAL_RX_SOURCE , SERIAL_RX_CHANNEL);
+
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
 
     USART_InitTypeDef USART_InitStructure;

@@ -1,5 +1,5 @@
 
-
+#include "drv_time.h"
 #include "project.h"
 #include "drv_spi.h"
 #include "binary.h"
@@ -13,7 +13,9 @@ int mosi_out = 0;
 void spi_init(void)
 {    
 	// spi port inits
-
+#ifdef Alienwhoop_ZERO
+	delay (2000000);
+#endif
 		GPIO_InitTypeDef  GPIO_InitStructure;
 	
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;

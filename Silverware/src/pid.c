@@ -45,7 +45,7 @@ float pidkp[PIDNUMBER] = { 26.5e-2 , 26.5e-2  , 8.5e-1 };
 float pidki[PIDNUMBER] = { 16e-1  , 16e-1 , 13e-1 };	
 float pidkd[PIDNUMBER] = {11.1e-1 , 11.1e-1  , 4.9e-1 };
 
-//6mm Whoop -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz  
+//6mm Whoop 615 19600kv -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz  
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = {19.5e-2 , 19.5e-2  , 7.5e-1 }; 
 //float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 13e-1 };	
@@ -56,6 +56,12 @@ float pidkd[PIDNUMBER] = {11.1e-1 , 11.1e-1  , 4.9e-1 };
 //float pidkp[PIDNUMBER] = {20.5e-2 , 20.5e-2  , 7.5e-1 }; 
 //float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 13e-1 };	
 //float pidkd[PIDNUMBER] = { 7.4e-1 , 7.4e-1  , 5.5e-1 };
+
+//6mm AwesomeSauce 20000kv Pids (Team Alienwhoop)-kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz
+//                         ROLL       PITCH     YAW
+//float pidkp[PIDNUMBER] = { 25.5e-2 , 25.5e-2  , 11.5e-1 }; 
+//float pidki[PIDNUMBER] = { 20.5e-1  , 20.5e-1 , 16e-1 };	
+//float pidkd[PIDNUMBER] = { 11.4e-1 , 11.4e-1  , 4.9e-1 };	
 
 //BOSS 6 & 7 - 615 and 716 motors, hm830 46mm props  -1st gyro at 70hz, D 2nd at 80hz, motor filter at 70hz
 //                         ROLL       PITCH     YAW
@@ -86,10 +92,8 @@ float pidkd[PIDNUMBER] = {11.1e-1 , 11.1e-1  , 4.9e-1 };
 // "setpoint weighting" 0.0 - 1.0 where 1.0 = normal pid
 #define ENABLE_SETPOINT_WEIGHTING
 //            Roll   Pitch   Yaw
-float b[3] = { 0.93 , 0.95 , 0.9};
-
-
-
+//float b[3] = { 0.97 , 0.98 , 0.95};   //RACE
+float b[3] = { 0.93 , 0.93 , 0.9};      //FREESTYLE
 
 /// output limit			
 const float outlimit[PIDNUMBER] = { 1.7 , 1.7 , 0.5 };

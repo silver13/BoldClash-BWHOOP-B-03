@@ -1,6 +1,6 @@
 #include "defines.h"
 #include "hardware.h"
-
+//#define SERIAL_ENABLE
 // adjust pids in pid.c file
 
 //**********************************************************************************************************************
@@ -256,9 +256,11 @@
 //#############################################################################################################################
 //#############################################################################################################################
 
+
 //Throttle must drop below this value if arming feature is enabled for arming to take place.  MIX_INCREASE_THROTTLE_3 if enabled
 //will also not activate on the ground untill this threshold is passed during takeoff for safety and better staging behavior.
 #define THROTTLE_SAFETY .10f
+
 
 // Gyro LPF filter frequency
 // gyro filter 0 = 250hz delay 0.97mS
@@ -321,7 +323,7 @@
 
 
 // limit minimum motor output to a value (0.0 - 1.0)
-//#define MOTOR_MIN_ENABLE
+#define MOTOR_MIN_ENABLE
 #define MOTOR_MIN_VALUE 0.05
 
 
@@ -392,23 +394,38 @@
 #define SENSOR_ROTATE_90_CW
 
 // SPI PINS DEFINITONS & RADIO
+#ifdef RX_SBUS
+#define SERIAL_RX_PIN GPIO_Pin_14
+#define SERIAL_RX_PORT GPIOA
+#define SERIAL_RX_SOURCE GPIO_PinSource14
+#define SERIAL_RX_CHANNEL GPIO_AF_1
+#define SOFTSPI_NONE
+//dummy spi placeholders
+#define SPI_MOSI_PIN GPIO_Pin_x
+#define SPI_MOSI_PORT GPIOA
+#define SPI_CLK_PIN GPIO_Pin_y
+#define SPI_CLK_PORT GPIOA
+#define SPI_SS_PIN GPIO_Pin_z
+#define SPI_SS_PORT GPIOA
+#define RADIO_CHECK
+#else
 #define SOFTSPI_3WIRE
 #define SPI_MOSI_PIN GPIO_Pin_0
 #define SPI_MOSI_PORT GPIOA
-//#define SPI_MISO_PIN GPIO_Pin_15
-//#define SPI_MISO_PORT GPIOA
 #define SPI_CLK_PIN GPIO_Pin_1
 #define SPI_CLK_PORT GPIOF
 #define SPI_SS_PIN GPIO_Pin_0
 #define SPI_SS_PORT GPIOF
 #define RADIO_XN297L
 #define RADIO_CHECK
+#endif
 
 //VOLTAGE DIVIDER
 #define BATTERYPIN GPIO_Pin_5
 #define BATTERYPORT GPIOA
 #define BATTERY_ADC_CHANNEL ADC_Channel_5
 #define ADC_SCALEFACTOR 0.001364
+#define ADC_REF 1.17857f
 
 // MOTOR PINS
 #define MOTOR0_PIN_PB1 // motor 0 back-left
@@ -441,23 +458,38 @@
 #define SOFTI2C_PUSHPULL_CLK
 
 // SPI PINS DEFINITONS & RADIO
+#ifdef RX_SBUS
+#define SERIAL_RX_PIN GPIO_Pin_14
+#define SERIAL_RX_PORT GPIOA
+#define SERIAL_RX_SOURCE GPIO_PinSource14
+#define SERIAL_RX_CHANNEL GPIO_AF_1
+#define SOFTSPI_NONE
+//dummy spi placeholders
+#define SPI_MOSI_PIN GPIO_Pin_x
+#define SPI_MOSI_PORT GPIOA
+#define SPI_CLK_PIN GPIO_Pin_y
+#define SPI_CLK_PORT GPIOA
+#define SPI_SS_PIN GPIO_Pin_z
+#define SPI_SS_PORT GPIOA
+#define RADIO_CHECK
+#else
 #define SOFTSPI_3WIRE
 #define SPI_MOSI_PIN GPIO_Pin_0
 #define SPI_MOSI_PORT GPIOF
-//#define SPI_MISO_PIN GPIO_Pin_15
-//#define SPI_MISO_PORT GPIOA
 #define SPI_CLK_PIN GPIO_Pin_1
 #define SPI_CLK_PORT GPIOF
 #define SPI_SS_PIN GPIO_Pin_0
 #define SPI_SS_PORT GPIOA
 #define RADIO_XN297L
 #define RADIO_CHECK
+#endif
 
 //VOLTAGE DIVIDER
 #define BATTERYPIN GPIO_Pin_5
 #define BATTERYPORT GPIOA
 #define BATTERY_ADC_CHANNEL ADC_Channel_5
 #define ADC_SCALEFACTOR 0.001364
+#define ADC_REF 1.17857f
 
 // Assingment of pin to motor
 #define MOTOR0_PIN_PA6 // motor 0 back-left
@@ -488,6 +520,21 @@
 #define SENSOR_ROTATE_180
 
 // SPI PINS DEFINITONS & RADIO
+#ifdef RX_SBUS
+#define SERIAL_RX_PIN GPIO_Pin_14
+#define SERIAL_RX_PORT GPIOA
+#define SERIAL_RX_SOURCE GPIO_PinSource14
+#define SERIAL_RX_CHANNEL GPIO_AF_1
+#define SOFTSPI_NONE
+//dummy spi placeholders
+#define SPI_MOSI_PIN GPIO_Pin_x
+#define SPI_MOSI_PORT GPIOA
+#define SPI_CLK_PIN GPIO_Pin_y
+#define SPI_CLK_PORT GPIOA
+#define SPI_SS_PIN GPIO_Pin_z
+#define SPI_SS_PORT GPIOA
+#define RADIO_CHECK
+#else
 #define SOFTSPI_3WIRE
 #define SPI_MOSI_PIN GPIO_Pin_1
 #define SPI_MOSI_PORT GPIOA
@@ -497,12 +544,14 @@
 #define SPI_SS_PORT GPIOA
 #define RADIO_XN297L
 #define RADIO_CHECK
+#endif
 
 //VOLTAGE DIVIDER
 #define BATTERYPIN GPIO_Pin_5
 #define BATTERYPORT GPIOA
 #define BATTERY_ADC_CHANNEL ADC_Channel_5
 #define ADC_SCALEFACTOR 0.001364
+#define ADC_REF 1.17857f
 
 // Assingment of pin to motor
 #define MOTOR0_PIN_PA6 // motor 0 back-left
@@ -533,9 +582,13 @@
 #define SENSOR_ROTATE_90_CCW
 
 // SPI PINS DEFINITONS & RADIO
-//#define SOFTSPI_3WIRE
-//#define SOFTSPI_4WIRE
+#ifdef RX_SBUS
+#define SERIAL_RX_PIN GPIO_Pin_3
+#define SERIAL_RX_PORT GPIOA
+#define SERIAL_RX_SOURCE GPIO_PinSource3
+#define SERIAL_RX_CHANNEL GPIO_AF_1
 #define SOFTSPI_NONE
+//dummy spi placeholders
 #define SPI_MOSI_PIN GPIO_Pin_x
 #define SPI_MOSI_PORT GPIOA
 #define SPI_CLK_PIN GPIO_Pin_y
@@ -543,12 +596,25 @@
 #define SPI_SS_PIN GPIO_Pin_z
 #define SPI_SS_PORT GPIOA
 #define RADIO_CHECK
+#else
+#define SOFTSPI_3WIRE
+#define SPI_MOSI_PIN GPIO_Pin_14
+#define SPI_MOSI_PORT GPIOA
+#define SPI_CLK_PIN GPIO_Pin_2
+#define SPI_CLK_PORT GPIOA
+#define SPI_SS_PIN GPIO_Pin_3
+#define SPI_SS_PORT GPIOA
+#define RADIO_CHECK
+#define RADIO_XN297L
+#endif
 
 //VOLTAGE DIVIDER
 #define BATTERYPIN GPIO_Pin_5
 #define BATTERYPORT GPIOA
 #define BATTERY_ADC_CHANNEL ADC_Channel_5
-#define ADC_SCALEFACTOR 0.001364
+#define ADC_SCALEFACTOR 0.002423
+#define ADC_REF 1.0f
+
 
 // MOTOR PINS
 #define MOTOR0_PIN_PA7

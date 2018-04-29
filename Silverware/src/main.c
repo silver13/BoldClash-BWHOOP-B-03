@@ -113,7 +113,7 @@ char auxchange[AUXNUMBER];
 
 // bind / normal rx mode
 extern int rxmode;
-// failsafe on / off 
+// failsafe on / off
 extern int failsafe;
 extern float hardcoded_pid_identifier;
 extern int onground;
@@ -144,7 +144,7 @@ clk_init();
 #endif
 	
   gpio_init();	
-	
+  ledon(255);									//Turn on LED during boot so that if a delay is used as part of using programming pins for other functions, the FC does not appear inactive while programming times out
 	spi_init();
 	
   time_init();
