@@ -40,36 +40,42 @@ void time_init()
 }
 
 // return time in uS from start ( micros())
-// called at least once per second or time will overflow
+// called at least once per 16ms or time will overflow
 unsigned long gettime(void)
 {
-        
-    unsigned long maxticks = SysTick->LOAD;	
-    unsigned long ticks = SysTick->VAL;	
-    unsigned long elapsedticks;	
-        
-    static unsigned long remainder = 0; // carry forward the remainder ticks;
-    
-    if (ticks < lastticks) elapsedticks = lastticks - ticks;	
-    else
-    {// overflow ( underflow really)
-        elapsedticks = lastticks + ( maxticks - ticks);			
-    }
-        
-    lastticks = ticks;
-    elapsedticks += remainder;
+	unsigned long maxticks = SysTick->LOAD;	
+	unsigned long ticks = SysTick->VAL;	
+	unsigned long quotient;	
+	unsigned long elapsedticks;	
+	static unsigned long remainder = 0;// carry forward the remainder ticks;
 
-    #ifdef ENABLE_OVERCLOCK
-        const unsigned long quotient = elapsedticks / 8;
-        remainder = elapsedticks - quotient * 8;
-    #else
-        unsigned long quotient = elapsedticks / 6;
-        remainder = elapsedticks - quotient * 6;
-    #endif	
-    globalticks += quotient;	
-    return globalticks;	
+	if (ticks < lastticks) 
+	{
+		elapsedticks = lastticks - ticks;	
+	}
+	else
+	{
+		// overflow ( underflow really)
+		elapsedticks = lastticks + ( maxticks - ticks);			
+	}
+
+	lastticks = ticks;
+	elapsedticks += remainder;
+
+#ifdef ENABLE_OVERCLOCK
+	quotient = elapsedticks / 8;
+	remainder = elapsedticks - quotient*8;
+#else
+	// faster divide by 6, but requires that gettime 
+	// be called at minimum every 16ms 
+	// (max val for elapsedticks: 98303)
+	quotient = elapsedticks*43691>>18; 
+	remainder = elapsedticks - quotient*6;
+#endif	
+	globalticks = globalticks + quotient; 
+
+	return globalticks;	
 }
-
 
 
 #ifdef ENABLE_OVERCLOCK

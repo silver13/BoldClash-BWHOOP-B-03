@@ -29,7 +29,6 @@ CFLAGS = $(MCFLAGS)  $(OPTIMIZE)  $(DEFS) -I. -I./ $(INCLUDES)  -Wl,-T,flash.ld,
 AFLAGS = $(MCFLAGS)
 
 SRC = $(wildcard $(topdir)/Silverware/src/*.c) \
-	$(wildcard $(topdir)/Silverware/src/*.h) \
 	$(wildcard $(topdir)/Silverware/src/*.cpp) \
 	$(topdir)/Libraries/STM32F0xx_StdPeriph_Driver/src/*.c  \
 	$(topdir)/Utilities/system_stm32f0xx.c \
