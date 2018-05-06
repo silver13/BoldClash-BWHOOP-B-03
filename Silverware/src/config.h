@@ -150,6 +150,7 @@
 
 // a filter which makes throttle feel faster
 //#define THROTTLE_TRANSIENT_COMPENSATION 
+// if the quad resets , or for brushless ,try a lower value
 #define THROTTLE_TRANSIENT_COMPENSATION_FACTOR 7.0 
 
 // lost quad beeps using motors (30 sec timeout)
