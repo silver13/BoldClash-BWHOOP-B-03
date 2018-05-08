@@ -23,9 +23,9 @@ STEP 1:  Open config.h with keil and make edits to set your selections in 6 cat
          
 STEP 2:  Open pid.c with keil and either edit pids to your preferred values or select a set of pids that I have prepared.   I plan to keep all my tunes in pid.c and will have them labeled and noted with the associated filter settings for each type of build.  All you have to do to use one of my tunes is uncomment the pid group you want to use and make sure the others are commented out.  I will keep whatever pids I'm using updated here if I change them and the default set will always be for a 7mm whoop with fpv gear installed.  Setpoint weight values are also just below pids - if you want a sharper stick feel on one of my tunes then change these values closer to 1.0
 
-## Current Experimental Features 
+## Current Experimental Features and DEVIATIONS FROM STOCK SILVERWARE 
 
- - Target Selection:  define your board type and hardware settings are automatically selected for E011, Bwhoop, bwhoop pro, E011c,  and beta fpv lite.  
+ - Target Selection:  define your board type and hardware settings are automatically selected for E011 (OLD STYLE), Bwhoop, bwhoop pro, E011c, beta fpv lite, and ALIENWHOOP ZER0.  
  - Radio Type Selection:  Renamed aux channels as chan_5 through chan_10 and proper mapping is now controlled by defining your transmitter type.  Simply select devo, multi (for taranis or other multimodule), or stock (for toy tx) and assign the features you want to chan_#.  Your aux channel mapping will be adjusted in software to match your radio channel numbering.
  - Racemode:  flight mode with leveling on roll, acro on pitch, and yaw axis rotates about gravity vector.  Can be activated on an aux channel when in level mode.
  - Racemode Horizon: same as above with horizon on roll.
