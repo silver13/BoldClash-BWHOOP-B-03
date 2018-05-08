@@ -1,6 +1,6 @@
 #include "defines.h"
 #include "hardware.h"
-//#define SERIAL_ENABLE
+
 // adjust pids in pid.c file
 
 //**********************************************************************************************************************
@@ -21,8 +21,8 @@
 
 // *************rate in deg/sec
 // *************for acro mode
-#define MAX_RATE 960.0
-#define MAX_RATEYAW 600.0
+#define MAX_RATE 860.0
+#define MAX_RATEYAW 500.0
 
 // *************max angle for level mode
 #define MAX_ANGLE_HI 70.0f
@@ -32,8 +32,8 @@
 
 // *************EXPO from 0.00 to 1.00 , 0 = no exp
 // *************positive = less sensitive near center 
-#define ACRO_EXPO_ROLL 0.85
-#define ACRO_EXPO_PITCH 0.85
+#define ACRO_EXPO_ROLL 0.80
+#define ACRO_EXPO_PITCH 0.80
 #define ACRO_EXPO_YAW 0.60
 
 #define ANGLE_EXPO_ROLL 0.55
@@ -61,6 +61,12 @@
 //#define USE_STOCK_TX
 #define USE_DEVO
 //#define USE_MULTI
+
+// *************SPECIAL TEST MODE TO CHECK TRANSMITTER STICK THROWS
+// *************This define will override the stick gesture controlled aux channel and allow you to check if your radio is reaching 100% throws
+// *************entering <RIGHT-RIGHT-DOWN> gesture will disable throttle and will rapid blink the led when sticks are moved to 100% throws
+// *************entering <LEFT-LEFT-DOWN> will return the quad to normal operation.
+//#define STICK_TRAVEL_CHECK
 
 // *******************************SWITCH SELECTION*****************************
 // *************CHAN_ON - on always ( all protocols)
@@ -94,7 +100,7 @@
 // *************external buzzer requires pin assignment in hardware.h before defining below
 // *************change channel assignment from CHAN_OFF to a numbered aux switch if you want switch control
 // *************if no channel is assigned but buzzer is set to CHAN_ON - buzzer will activate on LVC and FAILSAFE.
-#define BUZZER_ENABLE CHAN_OFF
+//#define BUZZER_ENABLE CHAN_OFF
 
 // *************start in level mode for toy tx.
 //#define AUX1_START_ON
@@ -202,6 +208,9 @@
 
 //#define MIX_LOWER_THROTTLE_3
 #define MIX_INCREASE_THROTTLE_3
+//Currently eperimenting with the value below for whoop format.  Default was previously .2f and should be
+//changed back for anything other than a whoop.  This gives "airmode" more authority at low throttle
+#define MIX_THROTTLE_INCREASE_MAX 0.5f
 
 // *************invert yaw pid for "PROPS OUT" configuration
 //#define INVERT_YAW_PID
@@ -308,6 +317,7 @@
 // debug things ( debug struct and other)
 //#define DEBUG
 
+
 // rxdebug structure
 //#define RXDEBUG
 
@@ -319,6 +329,7 @@
 #define ENABLESTIX_TIMEOUT 1e6
 
 // overclock to 64Mhz
+
 //#define ENABLE_OVERCLOCK
 
 
@@ -598,11 +609,11 @@
 #define RADIO_CHECK
 #else
 #define SOFTSPI_3WIRE
-#define SPI_MOSI_PIN GPIO_Pin_14
+#define SPI_MOSI_PIN GPIO_Pin_3
 #define SPI_MOSI_PORT GPIOA
 #define SPI_CLK_PIN GPIO_Pin_2
 #define SPI_CLK_PORT GPIOA
-#define SPI_SS_PIN GPIO_Pin_3
+#define SPI_SS_PIN GPIO_Pin_1
 #define SPI_SS_PORT GPIOA
 #define RADIO_CHECK
 #define RADIO_XN297L

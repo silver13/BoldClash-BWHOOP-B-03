@@ -248,6 +248,15 @@ if (armed_state == 0){
 	}	
 }
 
+#ifdef STICK_TRAVEL_CHECK
+//Stick endpoints check tied to aux channel stick gesture
+if (aux[CH_AUX1]){
+	throttle = 0;
+	if ((rx[0]<= -0.99f) || (rx[0] >= 0.99f) || (rx[1] <= -0.99f) || (rx[1] >= 0.99f) || (rx[2] <= -0.99f) || (rx[2] >= 0.99f) || (rx[3] <= 0.0f) || (rx[3] >= 0.99f)){
+		ledcommand = 1;}
+}
+#endif
+
 
 
 // turn motors off if throttle is off and pitch / roll sticks are centered
@@ -594,27 +603,28 @@ if ( overthrottle > 0.1f) ledcommand = 1;
 #ifndef MIX_THROTTLE_INCREASE_MAX
 #define MIX_THROTTLE_INCREASE_MAX 0.2f
 #endif
+	if (in_air == 1){
+		float underthrottle = 0;
 
-float underthrottle = 0;
-
-for (int i = 0; i < 4; i++)
-    {
-        if (mix[i] < underthrottle)
-            underthrottle = mix[i];
-    }
+		for (int i = 0; i < 4; i++)
+			{
+					if (mix[i] < underthrottle)
+							underthrottle = mix[i];
+			}
 
 
-// limit to half throttle max reduction
-if ( underthrottle < -(float) MIX_THROTTLE_INCREASE_MAX)  underthrottle = -(float) MIX_THROTTLE_INCREASE_MAX;
+		// limit to half throttle max reduction
+		if ( underthrottle < -(float) MIX_THROTTLE_INCREASE_MAX)  underthrottle = -(float) MIX_THROTTLE_INCREASE_MAX;
 
-if ( underthrottle < 0.0f)
-    {
-        for ( int i = 0 ; i < 4 ; i++)
+		if ( underthrottle < 0.0f)
+			{
+					for ( int i = 0 ; i < 4 ; i++)
             mix[i] -= underthrottle;
-    }
-#ifdef MIX_THROTTLE_FLASHLED
-if ( underthrottle < -0.01f) ledcommand = 1;
-#endif
+			}
+		#ifdef MIX_THROTTLE_FLASHLED
+			if ( underthrottle < -0.01f) ledcommand = 1;
+		#endif
+	}
 }
 #endif
 
