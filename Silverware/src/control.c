@@ -244,8 +244,12 @@ pid_precalc();
 	
 	}else{                                                    	  										// CONDITION: armed state variable is 1 so quad is ARMED							 
 			if (idle_state == 0){                                     										//            CONDITION: idle up is turned OFF				
-				if ( rx[3] < 0.05f ) throttle = 0;                      										//   											set a small dead zone where throttle is zero and
-				else throttle = (rx[3] - 0.05f)*1.05623158f;            										//                        map the remainder of the the active throttle region to 100%
+				if ( rx[3] < 0.05f ){
+					throttle = 0;                      																				//   											set a small dead zone where throttle is zero and
+				  in_air = 0;																																//												deactivate mix increase 3 since throttle is off
+				}else{ 
+					throttle = (rx[3] - 0.05f)*1.05623158f;            												//                        map the remainder of the the active throttle region to 100%
+					in_air = 1;}																															//												activate mix increase since throttle is on
 			}else{ 																																				//						CONDITION: idle up is turned ON												
 				throttle =  (float) IDLE_THR + rx[3] * (1.0f - (float) IDLE_THR);						//            						throttle range is mapped from idle throttle value to 100%							  
 				if ((rx[3] > THROTTLE_SAFETY) && (in_air == 0)) in_air = 1; 			  				//            						change the state of in air flag when first crossing the throttle 
