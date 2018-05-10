@@ -331,7 +331,7 @@
 
 
 // limit minimum motor output to a value (0.0 - 1.0)
-//#define MOTOR_MIN_ENABLE
+#define MOTOR_MIN_ENABLE
 #define MOTOR_MIN_VALUE 0.05
 
 
