@@ -51,7 +51,7 @@ THE SOFTWARE.
 //float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 13e-1 };	
 //float pidkd[PIDNUMBER] = { 6.9e-1 , 6.9e-1  , 5.5e-1 };
 
-//6mm and 7mm Abduction Pids (Team Alienwhoop)-kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz
+//6mm and 7mm Abduction Pids (Team Alienwhoop)-kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz, mix increase 3 max strength at 100%
 //                         ROLL       PITCH     YAW
 float pidkp[PIDNUMBER] = {20.5e-2 , 20.5e-2  , 11.5e-1 }; 
 float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 16e-1 };	
