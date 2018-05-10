@@ -57,7 +57,7 @@ extern char auxchange[AUXNUMBER];
 	int rxaddress[5];
 	int rxmode = 0;
 	int rf_chan = 0;
-
+  int rx_state = 0;
 	
 void bleinit( void);
 
@@ -747,7 +747,7 @@ unsigned long temptime = gettime();
 			      }
 
 		    }		// end normal rx mode
-
+			rx_state = 1;
 	  }			// end packet received
 
 	beacon_sequence();

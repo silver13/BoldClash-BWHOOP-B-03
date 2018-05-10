@@ -40,7 +40,7 @@ THE SOFTWARE.
 #ifdef RX_BAYANG_PROTOCOL
 
 
-
+int rx_state = 1;
 extern float rx[4];
 extern char aux[AUXNUMBER];
 extern char lastaux[AUXNUMBER];
@@ -220,6 +220,7 @@ return 0; // first byte different
 	int rxaddress[5];
 	int rxmode = 0;
 	int chan = 0;
+ 
 
 void nextchannel()
 {
@@ -305,7 +306,7 @@ void checkrx(void)
 			      }
 		    }
 		  else
-		    {		// normal mode  
+		    {		                // normal mode 
 #ifdef RXDEBUG
 			    channelcount[chan]++;
 			    packettime = gettime() - lastrxtime;
@@ -340,9 +341,9 @@ unsigned long temptime = gettime();
 				      failcount++;
 #endif
 			      }
-
+					rx_state = 1;
 		    }		// end normal rx mode
-
+			
 	  }			// end packet received
 
 		

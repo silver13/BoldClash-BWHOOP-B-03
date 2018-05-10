@@ -77,6 +77,7 @@ int rx_bind_load = 0;
 
 int rxmode = 0;
 int rf_chan = 0;
+int rx_state = 0;
 
 unsigned long autobindtime = 0;
 int autobind_inhibit = 0;
@@ -219,6 +220,7 @@ writeregs( regs_1e , sizeof(regs_1e) );
 
           xn_writereg(0x25, rfchannel[rf_chan]);    // Set channel frequency 
           rxmode = RX_MODE_NORMAL;
+ 
           if ( telemetry_enabled ) packet_period = PACKET_PERIOD_TELEMETRY;
     }
     else
@@ -534,7 +536,9 @@ void checkrx(void)
                       writeregs( rxaddr_regs , sizeof(rxaddr_regs) );
 
                       xn_writereg(0x25, rfchannel[rf_chan]);    // Set channel frequency 
+		//									rx_state++;
                       rxmode = RX_MODE_NORMAL;
+											 
 
 #ifdef SERIAL
                       printf(" BIND \n");
@@ -542,7 +546,7 @@ void checkrx(void)
                   }
             }
           else
-            {                   // normal mode  
+            {               // normal mode  
 #ifdef RXDEBUG
                 channelcount[rf_chan]++;
                 packettime = gettime() - lastrxtime;
@@ -579,7 +583,7 @@ void checkrx(void)
                       failcount++;
 #endif
                   }
-
+							rx_state = 1; 
             }                   // end normal rx mode
 
       }                         // end packet received

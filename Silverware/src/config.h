@@ -46,14 +46,11 @@
 
 // *************Radio protocol selection
 // *************select only one
-//#define RX_CG023_PROTOCOL
-//#define RX_H7_PROTOCOL
 //#define RX_BAYANG_PROTOCOL
 //#define RX_BAYANG_PROTOCOL_TELEMETRY
 #define RX_BAYANG_PROTOCOL_TELEMETRY_AUTOBIND
 //#define RX_BAYANG_PROTOCOL_BLE_BEACON
 //#define RX_BAYANG_BLE_APP
-//#define RX_CX10BLUE_PROTOCOL
 //#define RX_SBUS
 //#define RX_NRF24_BAYANG_TELEMETRY
 
@@ -209,8 +206,8 @@
 //#define MIX_LOWER_THROTTLE_3
 #define MIX_INCREASE_THROTTLE_3
 //Currently eperimenting with the value below for whoop format.  Default was previously .2f and should be
-//changed back for anything other than a whoop.  This gives "airmode" more authority at low throttle
-#define MIX_THROTTLE_INCREASE_MAX 0.5f
+//changed back for anything other than a whoop.  This gives "airmode" 100% authority over throttle
+#define MIX_THROTTLE_INCREASE_MAX 1.0f
 
 // *************invert yaw pid for "PROPS OUT" configuration
 //#define INVERT_YAW_PID
