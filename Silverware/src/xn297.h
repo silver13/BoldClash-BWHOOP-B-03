@@ -43,6 +43,7 @@ void xn_writetxaddress(  int *addr )	;
 #define EN_CRC      3
 #define CRCO        2
 #define PWR_UP      1
+#define PWR_DOWN    0
 #define PRIM_RX     0
 #define ENAA_P5     5
 #define ENAA_P4     4
@@ -76,10 +77,16 @@ void xn_writetxaddress(  int *addr )	;
 #define RX_FULL     1
 #define RX_EMPTY    0
 
+// address width (bytes)
+#define AW_3B 1
+#define AW_4B 2
+#define AW_5B 3
+
 // commands
 #define R_REGISTER    0x00
 #define W_REGISTER    0x20
 #define REGISTER_MASK 0x1F
+#define ACTIVATE      0x50
 #define R_RX_PAYLOAD  0x61
 #define W_TX_PAYLOAD  0xA0
 #define FLUSH_TX      0xE1
@@ -88,7 +95,10 @@ void xn_writetxaddress(  int *addr )	;
 #define NOP           0xFF
 
 
-
+// bitrate
+#define BITRATE_1M 		0x0
+#define BITRATE_2M 		0x1
+#define BITRATE_250K 	0x2
 
 
 

@@ -529,12 +529,13 @@ while ( (gettime() - time) < LOOPTIME );
 }
 
 // 2 - low battery at powerup - if enabled by config
-
+// 3 - radio chip not detected
 // 4 - Gyro not found
-// 5 - clock , intterrupts , systick
+// 5 - clock , interrupts , systick, bad code
+// 6 - loop time issue
 // 7 - i2c error 
 // 8 - i2c error main loop
-// 6 - loop time issue
+
 
 void failloop( int val)
 {

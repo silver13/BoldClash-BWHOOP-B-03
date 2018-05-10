@@ -4,6 +4,7 @@
 #include "drv_fmc.h"
 
 // address 32768 - 1024 = 31k - last flash block
+// yes it's true, it has 32k
 #define FLASH_ADDR 0x08007C00
 
 extern void failloop( int);

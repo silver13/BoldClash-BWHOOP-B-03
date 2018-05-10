@@ -147,7 +147,6 @@ extern void buffer_add(int val );
 // print a 32bit signed int
 void print_int( int val )
 {
-// multiple of 4
 #define SP_INT_BUFFERSIZE 12	
 char buffer2[SP_INT_BUFFERSIZE];
  
