@@ -25,7 +25,7 @@
 #define MAX_RATEYAW 500.0
 
 // *************max angle for level mode
-#define MAX_ANGLE_HI 70.0f
+#define MAX_ANGLE_HI 65.0f
 
 // ************* low rates multiplier if rates are assigned to a channel
 #define LOW_RATES_MULTI 0.5f
@@ -141,6 +141,16 @@
 //**********************************************************************************************************************
 //***********************************************FILTER SETTINGS********************************************************
 
+// *************Select the appropriate filtering set for your craft's gyro, D-term, and motor output or select CUSTOM_FILTERING to pick your own values.  
+// *************If your throttle does not want to drop crisply and quickly when you lower the throttle stick, then move to a stronger filter set
+
+//#define WEAK_FILTERING
+#define STRONG_FILTERING
+//#define VERY_STRONG_FILTERING
+//#define CUSTOM_FILTERING
+
+
+#ifdef CUSTOM_FILTERING
 // *************gyro low pass filter ( iir )
 // *************set only one below - kalman, 1st order, or second order - and adjust frequency
 //**************ABOVE 100 ADJUST IN INCRIMENTS OF 20, BELOW 100 ADJUST IN INCRIMENTS OF 10
@@ -148,21 +158,21 @@
 //#define SOFT_LPF_1ST_HZ 80
 //#define SOFT_LPF_2ND_HZ 80
 
-
 // *************D term low pass filter type - set only one below and adjust frequency if adjustable filter is used
 // *************1st order adjustable, second order adjustable, or 3rd order fixed (non adjustable)
 //#define DTERM_LPF_1ST_HZ 100
 #define  DTERM_LPF_2ND_HZ 100
-//#define DTERM_LPF3_88
+//#define DTERM_LPF3_88    //non adjustable
+
+// *************enable motor output filter - select and adjust frequency
+//#define MOTOR_FILTER2_ALPHA MFILT1_HZ_90
+#define MOTOR_KAL KAL1_HZ_70
+#endif
 
 
 
 //**********************************************************************************************************************
 //***********************************************MOTOR OUTPUT SETTINGS**************************************************
-
-// *************enable motor output filter - select and adjust frequency
-#define MOTOR_FILTER2_ALPHA MFILT1_HZ_90
-//#define MOTOR_KAL KAL1_HZ_70
 
 // *************pwm frequency for motor control
 // *************a higher frequency makes the motors more linear
@@ -267,29 +277,44 @@
 //will also not activate on the ground untill this threshold is passed during takeoff for safety and better staging behavior.
 #define THROTTLE_SAFETY .10f
 
-
-// Gyro LPF filter frequency
-// gyro filter 0 = 250hz delay 0.97mS
-// gyro filter 1 = 184hz delay 2.9mS
-// gyro filter 2 = 92hz delay 3.9mS
-// gyro filter 3 = 41hz delay 5.9mS (Default)
-// gyro filter 4 = 20hz
-// gyro filter 5 = 10hz
-// gyro filter 6 = 5hz
-// gyro filter 7 = 3600hz delay 0.17mS
-#define GYRO_LOW_PASS_FILTER 0
-
-// disable inbuilt expo functions
-//#define DISABLE_EXPO
-
-#define DISABLE_FLIP_SEQUENCER
-#define STARTFLIP CHAN_OFF
-
 // level mode "manual" trims ( in degrees)
 // pitch positive forward
 // roll positive right
 #define TRIM_PITCH 0.0
 #define TRIM_ROLL 0.0
+
+// max rate used by level pid ( limit )
+#define LEVEL_MAX_RATE 230
+
+// limit minimum motor output to a value (0.0 - 1.0)
+#define MOTOR_MIN_ENABLE
+#define MOTOR_MIN_VALUE 0.05
+
+// disable inbuilt expo functions
+//#define DISABLE_EXPO
+
+#ifdef WEAK_FILTERING
+#define SOFT_KALMAN_GYRO KAL1_HZ_90
+#define  DTERM_LPF_2ND_HZ 100
+#define MOTOR_FILTER2_ALPHA MFILT1_HZ_90
+#endif
+
+#ifdef STRONG_FILTERING
+#define SOFT_KALMAN_GYRO KAL1_HZ_80
+#define  DTERM_LPF_2ND_HZ 90
+#define MOTOR_FILTER2_ALPHA MFILT1_HZ_80
+#endif
+
+#ifdef VERY_STRONG_FILTERING
+#define SOFT_KALMAN_GYRO KAL1_HZ_70
+#define  DTERM_LPF_2ND_HZ 80
+#define MOTOR_FILTER2_ALPHA MFILT1_HZ_70
+#endif
+
+#define GYRO_LOW_PASS_FILTER 0
+
+#define DISABLE_FLIP_SEQUENCER
+#define STARTFLIP CHAN_OFF
 
 // disable motors for testing
 //#define NOMOTORS
@@ -300,7 +325,6 @@
 // throttle direct to motors for thrust measure as a flight mode
 //#define MOTORS_TO_THROTTLE_MODE MULTI_CHAN_8
 
-
 // loop time in uS
 // this affects soft gyro lpf frequency if used
 #define LOOPTIME 1000
@@ -308,12 +332,8 @@
 // failsafe time in uS
 #define FAILSAFETIME 1000000  // one second
 
-// max rate used by level pid ( limit )
-#define LEVEL_MAX_RATE 360
-
 // debug things ( debug struct and other)
 //#define DEBUG
-
 
 // rxdebug structure
 //#define RXDEBUG
@@ -329,23 +349,10 @@
 
 //#define ENABLE_OVERCLOCK
 
-
-// limit minimum motor output to a value (0.0 - 1.0)
-#define MOTOR_MIN_ENABLE
-#define MOTOR_MIN_VALUE 0.05
-
-
-
-
-
 #pragma diag_warning 1035 , 177 , 4017
 #pragma diag_error 260
 
 //--fpmode=fast
-
-
-
-
 
 // define logic - do not change
 ///////////////
@@ -357,27 +364,20 @@
 #define SYS_CLOCK_FREQ_HZ 48000000
 #endif
 
-
-
 #ifdef MOTOR_BEEPS
 #ifdef USE_ESC_DRIVER
 #warning "MOTOR BEEPS_WORKS WITH BRUSHED MOTORS ONLY"
 #endif
 #endif
 
-
-
 // for the ble beacon to work after in-flight reset
 #ifdef RX_BAYANG_PROTOCOL_BLE_BEACON
 #undef STOP_LOWBATTERY
 #endif
 
-
 // gcc warnings in main.c
 
-
-
-//Hardware defines moved from hardware.h so that board selection of bwhoop or e011 can be performed in config.h file
+//Hardware target defines moved from hardware.h so that board selection of bwhoop or e011 can be performed in config.h file
 
 #ifdef BWHOOP
 //LEDS

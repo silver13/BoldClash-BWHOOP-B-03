@@ -11,12 +11,12 @@
 //**************************** ANGLE PIDS - used in level mode to set leveling strength
 
 
-//Team ALIENWHOOP angle racing settings                       
+//HIGH LEVELING STRENGTH angle settings                       
 //float apidkp[APIDNUMBER] = { 13.00 };  // Kp ROLL + PITCH 
 //float apidkd[APIDNUMBER] = { 5.0 };    // Kd ROLL + PITCH 
 
 //NotFastEnuf personal settings                       
-float apidkp[APIDNUMBER] = { 7.00 };  // Kp ROLL + PITCH 
+float apidkp[APIDNUMBER] = { 5.00 };  // Kp ROLL + PITCH 
 float apidkd[APIDNUMBER] = { 0.0 };    // Kd ROLL + PITCH
 
 

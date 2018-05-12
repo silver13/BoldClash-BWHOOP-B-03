@@ -33,55 +33,44 @@ THE SOFTWARE.
 
 //************************************PIDS****************************************
 
-//7mm Whoop  NotFastEnuf "High and Tight Pids" -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz, mix increase 3 max strength at .20  (These pids help tighten up old batteries and worn motors)
-//                         ROLL       PITCH     YAW
-//float pidkp[PIDNUMBER] = { 27.0e-2 , 27.0e-2  , 11.5e-1 }; 
-//float pidki[PIDNUMBER] = { 20.5e-1  , 20.5e-1 , 16e-1 };	
-//float pidkd[PIDNUMBER] = { 11.4e-1 , 11.4e-1  , 4.9e-1 };	
 
-//7mm Whoop  NotFastEnuf "Default Pids" -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz, mix increase 3 max strength at .20  (These pids work nicely with new or HV batteries and fresh motors)
-//      	                 ROLL       PITCH     YAW
-//float pidkp[PIDNUMBER] = { 26.5e-2 , 26.5e-2  , 8.5e-1 }; 
-//float pidki[PIDNUMBER] = { 16e-1  , 16e-1 , 13e-1 };	
-//float pidkd[PIDNUMBER] = {11.1e-1 , 11.1e-1  , 4.9e-1 };
-
-//6mm Whoop 615 19600kv -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz  
+//Origional 6mm Whoop Tune 615 19600kv - set filtering to WEAK_FILTERING 
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = {19.5e-2 , 19.5e-2  , 7.5e-1 }; 
 //float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 13e-1 };	
 //float pidkd[PIDNUMBER] = { 6.9e-1 , 6.9e-1  , 5.5e-1 };
 
-//6mm and 7mm Abduction Pids (Team Alienwhoop)-kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz, mix increase 3 max strength at 100%
+//6mm & 7mm Abduction Pids (Team Alienwhoop)- set filtering to WEAK_FILTERING for 6mm, and STRONG_FILTERING or VERY_STRONG_FILTERING for 7mm
 //                         ROLL       PITCH     YAW
-float pidkp[PIDNUMBER] = {20.5e-2 , 20.5e-2  , 11.5e-1 }; 
-float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 16e-1 };	
-float pidkd[PIDNUMBER] = { 7.4e-1 , 7.4e-1  , 5.5e-1 };
+float pidkp[PIDNUMBER] = {21.5e-2 , 21.5e-2  , 10.5e-1 }; 
+float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 15e-1 };	
+float pidkd[PIDNUMBER] = { 7.4e-1 , 7.4e-1  , 0.0e-1 };
 
-//6mm AwesomeSauce 20000kv Pids (Team Alienwhoop)-kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz
+//6mm AwesomeSauce 20000kv Pids (Team Alienwhoop) - set filtering to WEAK_FILTERING
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = { 25.5e-2 , 25.5e-2  , 11.5e-1 }; 
 //float pidki[PIDNUMBER] = { 20.5e-1  , 20.5e-1 , 16e-1 };	
 //float pidkd[PIDNUMBER] = { 11.4e-1 , 11.4e-1  , 4.9e-1 };	
 
-//BOSS 6 & 7 - 615 and 716 motors, hm830 46mm props  -1st gyro at 70hz, D 2nd at 80hz, motor filter at 70hz
+//BOSS 6 & 7 - 615 and 716 motors, hm830 46mm props  - set filtering to VERY_STRONG_FILTERING
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = { 24.5e-2 , 24.5e-2  , 9.5e-1 }; 
 //float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 8e-1 };	
 //float pidkd[PIDNUMBER] = {14.1e-1 , 14.1e-1  , 7e-1 };
 
-//(EXPERIMENTAL) BOSS 7 with TORQUE_BOOST at 2.0 - same gyro & d filters as regular boss 7 tune
+//(EXPERIMENTAL) BOSS 7 with TORQUE_BOOST at 2.0 - set filtering to VERY_STRONG_FILTERING
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = { 22.7e-2 , 22.7e-2  , 9.5e-1 }; 
 //float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 8e-1 };	
 //float pidkd[PIDNUMBER] = {8.7e-1 , 8.7e-1  , 0e-1 };	
 
-//BOSS 8.0 - 816 motors, kingkong 66mm props  -kalman gyro at 90hz, D 2nd at 100hz, motor filter at 90hz
+//BOSS 8.0 - 816 motors, kingkong 66mm props  - set filtering to WEAK_FILTERING
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = { 26.7e-2 , 26.7e-2  , 9.5e-1 }; 
 //float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 8e-1 };	
 //float pidkd[PIDNUMBER] = {16.2e-1 , 16.2e-1  , 7e-1 };	
 
-//BOSS 8.5 - 820 motors, kingkong 66mm props  -kalman at 80hz, D 2nd at 90hz, motor filter at 90hz
+//BOSS 8.5 - 820 motors, kingkong 66mm props  - set filtering to STRONG_FILTERING
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = { 29.5e-2 , 29.5e-2  , 11.5e-1 }; 
 //float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 12.0e-1 };	
@@ -123,6 +112,8 @@ extern float looptime;
 extern float gyro[3];
 extern int onground;
 extern float looptime;
+extern int in_air;
+extern char aux[AUXNUMBER];
 
 
 #ifdef NORMAL_DTERM
@@ -149,11 +140,11 @@ float timefactor;
 float pid(int x )
 { 
     
-    if (onground) 
-    {
-    ierror[x] *= 0.98f;
-    }
-
+    if ((onground) || (in_air == 0)){
+			if ((aux[LEVELMODE]) && (!aux[RACEMODE])){
+				ierror[x] *= 0.98f;
+			}
+		}
     int iwindup = 0;
     if (( pidoutput[x] == outlimit[x] )&& ( error[x] > 0) )
     {
@@ -254,7 +245,7 @@ float pid(int x )
         if ( pidkd[x] > 0)
         {
             dterm = - (gyro[x] - lastrate[x]) * pidkd[x] * timefactor;
-            lastrate[x] = gyro[x];
+            lastrate[x] = gyro[x];		
             dterm = lpf2(  dterm, x );
             pidoutput[x] += dterm;
         }                       
