@@ -139,12 +139,13 @@ float timefactor;
 // output: pidoutput[x] = change required from motors
 float pid(int x )
 { 
-    
-    if ((onground) || (in_air == 0)){
-			if ((aux[LEVELMODE]) && (!aux[RACEMODE])){
-				ierror[x] *= 0.98f;
-			}
+    if ((aux[LEVELMODE]) && (!aux[RACEMODE])){
+				if ((onground) || (in_air == 0)){
+						ierror[x] *= 0.98f;}
+		}else{
+			  if (onground) ierror[x] *= 0.98f;
 		}
+			
     int iwindup = 0;
     if (( pidoutput[x] == outlimit[x] )&& ( error[x] > 0) )
     {
