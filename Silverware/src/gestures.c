@@ -4,6 +4,7 @@
 #include "defines.h"
 #include "config.h"
 #include "pid.h"
+#include "drv_fmc2.h"
 
 extern int ledcommand;
 extern int ledblink;
@@ -21,12 +22,12 @@ void gestures( void)
         {
             if (command == GESTURE_DDD)
 		    {
-			                  
+
                 //skip accel calibration if pid gestures used
                 if ( !pid_gestures_used )
                 {
                     gyro_cal();	// for flashing lights
-                    acc_cal();                   
+                    acc_cal();
                 }
                 else
                 {
@@ -37,27 +38,27 @@ void gestures( void)
                 extern float accelcal[3];
                 flash2_fmc_write( accelcal[0] + 127 , accelcal[1] + 127);
                 #endif
-                
+
                 #ifdef FLASH_SAVE1
 			    extern void flash_save( void);
                 extern void flash_load( void);
                 flash_save( );
                 flash_load( );
                 #endif
-			    // reset loop time 
+			    // reset loop time
 			    extern unsigned long lastlooptime;
 			    lastlooptime = gettime();
-		    }		
+		    }
             if (command == GESTURE_UUU)
               {
-                 #ifdef RX_BAYANG_PROTOCOL_TELEMETRY                  
+                 #ifdef RX_BAYANG_PROTOCOL_TELEMETRY
                  extern int rx_bind_enable;
                  rx_bind_enable=!rx_bind_enable;
                  ledblink = 2 - rx_bind_enable;
-                 pid_gestures_used = 1;  
+                 pid_gestures_used = 1;
                  #endif
               }
-              
+
             if (command == GESTURE_RRD)
               {
                   aux[CH_AUX1] = 1;
@@ -68,9 +69,9 @@ void gestures( void)
                   ledcommand = 1;
                   aux[CH_AUX1] = 0;
               }
-            #ifdef PID_GESTURE_TUNING              
-            if ( command >= GESTURE_UDR ) pid_gestures_used = 1;   
-              
+            #ifdef PID_GESTURE_TUNING
+            if ( command >= GESTURE_UDR ) pid_gestures_used = 1;
+
             if (command == GESTURE_UDU)
               {
                         // Cycle to next pid term (P I D)
@@ -91,9 +92,9 @@ void gestures( void)
                         // Descrease by 10%
                   ledblink = decrease_pid();
               }
-            // flash long on zero  
-            if ( pid_gestures_used && ledblink == 0) ledcommand = 1; 
-              
+            // flash long on zero
+            if ( pid_gestures_used && ledblink == 0) ledcommand = 1;
+
                 // U D U - Next PID term
                 // U D D - Next PID Axis
                 // U D R - Increase value
@@ -102,6 +103,6 @@ void gestures( void)
                 #endif
 
 	  }
-		#endif		
+		#endif
  }
 

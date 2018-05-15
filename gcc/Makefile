@@ -1,3 +1,6 @@
+export PATH := /home/martin/Projects/Bwhoop-B03/gcc-arm-none-eabi-7-2017-q4-major/bin:$(PATH)
+# export PATH := /home/martin/Projects/Bwhoop-B03/gcc-arm-none-eabi-6-2017-q2-update/bin:$(PATH)
+
 TARGET=bwhoop
 EXECUTABLE=bwhoop.elf
 
@@ -11,10 +14,10 @@ OD=arm-none-eabi-objdump
 topdir = ..
 
 DEFS = -DUSE_STDPERIPH_DRIVER -DSTM32F031
-STARTUP = $(topdir)/Libraries/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc_ride7/startup_stm32f030.s
+STARTUP = $(topdir)/Libraries/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc_ride7/startup_stm32f031.s
 
 MCU = cortex-m0
-MCFLAGS = -mcpu=$(MCU) -g -ggdb -mthumb -fdata-sections -ffunction-sections -fsingle-precision-constant -ffast-math -nostartfiles   --specs=nano.specs -flto
+MCFLAGS = -mcpu=$(MCU) -g -ggdb -mthumb -fdata-sections -ffunction-sections -fsingle-precision-constant -ffast-math -nostartfiles --specs=nano.specs --specs=nosys.specs -flto
 
 INCLUDES = -I$(topdir)/Silverware/src/ \
 	-I$(topdir)/Libraries/CMSIS/Device/ST/STM32F0xx/Include/ \
@@ -23,7 +26,9 @@ INCLUDES = -I$(topdir)/Silverware/src/ \
 	-I$(topdir)/Libraries/STM32F0xx_StdPeriph_Driver/inc/
 
 OPTIMIZE = -Os
+# OPTIMIZE = -Og
 
+# CFLAGS = $(MCFLAGS)  $(OPTIMIZE)  $(DEFS) -I. -I./ $(INCLUDES)  -Wl,-T,flash.ld,-Map,output.map,--gc-sections -std=gnu99
 CFLAGS = $(MCFLAGS)  $(OPTIMIZE)  $(DEFS) -I. -I./ $(INCLUDES)  -Wl,-T,flash.ld,-Map,output.map,--gc-sections
 
 AFLAGS = $(MCFLAGS)
@@ -48,7 +53,7 @@ $(TARGET).hex: $(EXECUTABLE)
 $(TARGET): $(EXECUTABLE)
 	$(CP) -O binary $^ $@
 
-$(EXECUTABLE): $(SRC) $(STARTUP)
+$(EXECUTABLE): $(STARTUP) $(SRC)
 	$(CC) $(CFLAGS) $^ -lm -o $@
 	arm-none-eabi-size $(EXECUTABLE)
 

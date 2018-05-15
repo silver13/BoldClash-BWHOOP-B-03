@@ -31,8 +31,8 @@
 // timing: 300 - 78uS bitbang
 // timing: 150 - 150uS bitbang
 
-//#define DSHOT600
-#define DSHOT150
+#define DSHOT600
+//#define DSHOT150
 //#define DSHOT300
 
 // IDLE_OFFSET is added to the throttle. Adjust its value so that the motors

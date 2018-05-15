@@ -41,9 +41,9 @@ THE SOFTWARE.
 // Define minimum low_throttle_time before motors off
 #define LOW_THROTTLE_TIMEOUT    1.0f
 
-#define KP 80.0f
-#define KI 80.1f
-#define KD 00.0f
+#define KP 30.0f
+#define KI 20.0f
+#define KD 10.0f
 
 #define ALT_P 0.1f
 #define ALT_I 0.1f

@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
+#include "project.h"
 
 #include "binary.h"
 #include "sixaxis.h"
@@ -34,21 +34,19 @@ THE SOFTWARE.
 
 #include "drv_i2c.h"
 
-
 #include <math.h>
 #include <stdio.h>
 #include <inttypes.h>
 
-
 #include "debug.h"
-
-
 
 // this works only on newer boards (non mpu-6050)
 // on older boards the hw gyro setting controls the acc as well
 #define ACC_LOW_PASS_FILTER 5
 
 extern debug_type debug;
+uint8_t i2c_rx_buffer[14];
+volatile uint16_t i2c_dma_phase = 0;			//	0:idel	1:delay is counting	2:DMA triggered
 
 // temporary fix for compatibility between versions
 #ifndef GYRO_ID_1
@@ -69,7 +67,7 @@ void sixaxis_init( void)
 // gyro soft reset
 
 
-	i2c_writereg(SOFTI2C_GYRO_ADDRESS, 107 ,128);
+	i2c_writereg(SOFTI2C_GYRO_ADDRESS, 107 , 128);
 
  delay(40000);
 
@@ -82,6 +80,7 @@ void sixaxis_init( void)
     delay(100);
 
 	i2c_writereg(SOFTI2C_GYRO_ADDRESS, 28, B00011000);	// 16G scale
+	i2c_writereg(SOFTI2C_GYRO_ADDRESS, 25, B00000000);	// Sample Rate = Gyroscope Output Rate
 
 
 // acc lpf for the new gyro type
@@ -90,19 +89,107 @@ void sixaxis_init( void)
 
 // gyro scale 2000 deg (FS =3)
 
-	i2c_writereg(SOFTI2C_GYRO_ADDRESS, 27, 24);
+	i2c_writereg(SOFTI2C_GYRO_ADDRESS, 27 , 24);
 
 // Gyro DLPF low pass filter
 
-	i2c_writereg(SOFTI2C_GYRO_ADDRESS, 26, GYRO_LOW_PASS_FILTER);
+	i2c_writereg(SOFTI2C_GYRO_ADDRESS, 26 , GYRO_LOW_PASS_FILTER);
+
+#ifdef SIXAXIS_READ_DMA
+	#ifndef USE_HARDWARE_I2C
+		#warning "I2C DMA must use Hardware I2C"
+	#endif
+
+	#if defined(ENABLE_OVERCLOCK) && !(defined(HW_I2C_SPEED_FAST_OC) || defined(HW_I2C_SPEED_FAST2_OC) )
+ 		#warning "HW_I2C_SPEED_FAST(2)_OC not set"
+	#endif
+
+	#if !defined(ENABLE_OVERCLOCK) && !(defined(HW_I2C_SPEED_FAST) || defined(HW_I2C_SPEED_FAST2) )
+ 		#warning "HW_I2C_SPEED_FAST(2) not set"
+	#endif
+
+	#if	defined(HW_I2C_SPEED_FAST2) || defined(HW_I2C_SPEED_FAST2_OC)
+		#define	SIXAXIS_READ_TIME	280			// 270us + 10us as a tolerance
+	#else
+		#define SIXAXIS_READ_TIME	510			// 500us + 10us as a tolerance
+	#endif
+
+	#define SIXAXIS_READ_PERIOD		( (SYS_CLOCK_FREQ_HZ * ((LOOPTIME-SIXAXIS_READ_TIME)*1e-6f)) )
+
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
+
+	TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
+	// TIM17 Periph clock enable
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM17, ENABLE);
+
+	/* Time base configuration */
+	TIM_TimeBaseStructure.TIM_Period =							SIXAXIS_READ_PERIOD;
+	TIM_TimeBaseStructure.TIM_Prescaler = 					0;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 			0;
+	TIM_TimeBaseStructure.TIM_CounterMode = 				TIM_CounterMode_Up;
+	TIM_TimeBaseInit(TIM17, &TIM_TimeBaseStructure);
+	TIM_ARRPreloadConfig(TIM17, ENABLE);
+	TIM_Cmd( TIM17, DISABLE );
+
+	/* configure TIM17 interrupt */
+  NVIC_InitStructure.NVIC_IRQChannel =						TIM17_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPriority =		0;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = 				ENABLE;
+  NVIC_Init( &NVIC_InitStructure );
+	TIM_ClearITPendingBit( TIM17, TIM_IT_Update );
+	TIM_ITConfig( TIM17, TIM_IT_Update, ENABLE );
+
+	////////////////////////////////////////////////////////////////////////
+	DMA_InitTypeDef DMA_InitStructure;
+
+	DMA_StructInit(&DMA_InitStructure);
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
+
+	/* DMA1 Channe3 configuration ----------------------------------------------*/
+	DMA_DeInit(DMA1_Channel3);
+	DMA_InitStructure.DMA_PeripheralBaseAddr = 		(uint32_t)&I2C1->RXDR;
+	DMA_InitStructure.DMA_MemoryBaseAddr = 				(uint32_t)i2c_rx_buffer;
+	DMA_InitStructure.DMA_DIR = 									DMA_DIR_PeripheralSRC;
+	DMA_InitStructure.DMA_BufferSize = 						14;
+	DMA_InitStructure.DMA_PeripheralInc = 				DMA_PeripheralInc_Disable;
+	DMA_InitStructure.DMA_MemoryInc = 						DMA_MemoryInc_Enable;
+	DMA_InitStructure.DMA_PeripheralDataSize = 		DMA_PeripheralDataSize_Byte;
+	DMA_InitStructure.DMA_MemoryDataSize = 				DMA_MemoryDataSize_Byte;
+	DMA_InitStructure.DMA_Mode = 									DMA_Mode_Normal;
+	DMA_InitStructure.DMA_Priority = 							DMA_Priority_High;
+	DMA_InitStructure.DMA_M2M = 									DMA_M2M_Disable;
+	DMA_Init(DMA1_Channel3, &DMA_InitStructure);
+#endif
 }
 
+#ifdef SIXAXIS_READ_DMA
+extern int hw_i2c_sendheader(int, int, int );
+
+void TIM17_IRQHandler(void)
+{
+	TIM_Cmd( TIM17, DISABLE );
+	TIM_ClearITPendingBit( TIM17, TIM_IT_Update );
+
+	DMA_ClearFlag( DMA1_FLAG_GL3 );
+	DMA1_Channel3->CNDTR = 14;
+
+	hw_i2c_sendheader(SOFTI2C_GYRO_ADDRESS, 59 , 1 );
+	//send restart + readaddress
+	I2C_TransferHandling(I2C1, (0x68)<<1 , 14, I2C_AutoEnd_Mode, I2C_Generate_Start_Read);
+
+	DMA_Cmd( DMA1_Channel3, ENABLE );
+  I2C_DMACmd( I2C1, I2C_DMAReq_Rx, ENABLE );
+
+	i2c_dma_phase = 2;
+}
+#endif
 
 int sixaxis_check( void)
 {
 	#ifndef DISABLE_GYRO_CHECK
 	// read "who am I" register
-	int id = i2c_readreg(SOFTI2C_GYRO_ADDRESS, 117);
+	int id = i2c_readreg(SOFTI2C_GYRO_ADDRESS, 117 );
 
 	#ifdef DEBUG
 	debug.gyroid = id;
@@ -114,35 +201,57 @@ int sixaxis_check( void)
 	#endif
 }
 
-
-
-
-
 float accel[3];
 float gyro[3];
 
 float accelcal[3];
 float gyrocal[3];
 
-
 float lpffilter(float in, int num);
 
 void sixaxis_read(void)
 {
-	int data[16];
 	float gyronew[3];
 
-	i2c_readdata(SOFTI2C_GYRO_ADDRESS, 59, data , 14);
+#ifdef SIXAXIS_READ_DMA
+	if( i2c_dma_phase == 0 ) {
+		TIM_SetCounter( TIM17, SIXAXIS_READ_PERIOD );
+		TIM_Cmd( TIM17, ENABLE );
+		i2c_dma_phase = 1;
+		while( !DMA_GetFlagStatus( DMA1_FLAG_TC3 ) ) { };
+	}
+
+	//if DMA not ready, SIXAXIS_READ_TIME should be larger and make less delay for trigger DMA
+	extern void failloop(int);
+	uint32_t	time=gettime();
+	while( !DMA_GetFlagStatus( DMA1_FLAG_TC3 ) && (gettime()-time) < LOOPTIME ) { } 	// wait maximum a LOOPTIME for I2C DMA to complete
+	while( !DMA_GetFlagStatus( DMA1_FLAG_TC3 ) ) {
+					failloop(9);
+		}
+  DMA_Cmd( DMA1_Channel3, DISABLE );
+  I2C_DMACmd( I2C1, I2C_DMAReq_Rx, DISABLE );
+	//i2c_dma_phase = 0;
+
+	// delayed trigger next DMA by TIM17
+	TIM_SetCounter( TIM17, 0 );
+	TIM_Cmd( TIM17, ENABLE );
+	i2c_dma_phase = 1;
+#else
+	int data[14];
+
+	i2c_readdata(SOFTI2C_GYRO_ADDRESS, 59, data, 14 );
+	for( int i=0;i<14;i++) i2c_rx_buffer[i] = (uint8_t)data[i];
+#endif
 
 #ifdef SENSOR_ROTATE_90_CW
-        accel[0] = (int16_t) ((data[2] << 8) + data[3]);
-        accel[1] = -(int16_t) ((data[0] << 8) + data[1]);
-        accel[2] = (int16_t) ((data[4] << 8) + data[5]);
+        accel[0] = (int16_t) ((i2c_rx_buffer[2] << 8) + i2c_rx_buffer[3]);
+        accel[1] = -(int16_t) ((i2c_rx_buffer[0] << 8) + i2c_rx_buffer[1]);
+        accel[2] = (int16_t) ((i2c_rx_buffer[4] << 8) + i2c_rx_buffer[5]);
 #else
 
-	accel[0] = -(int16_t) ((data[0] << 8) + data[1]);
-	accel[1] = -(int16_t) ((data[2] << 8) + data[3]);
-	accel[2] = (int16_t) ((data[4] << 8) + data[5]);
+	accel[0] = -(int16_t) ((i2c_rx_buffer[0] << 8) + i2c_rx_buffer[1]);
+	accel[1] = -(int16_t) ((i2c_rx_buffer[2] << 8) + i2c_rx_buffer[3]);
+	accel[2] = (int16_t) ((i2c_rx_buffer[4] << 8) + i2c_rx_buffer[5]);
 
 #endif
 
@@ -197,9 +306,9 @@ void sixaxis_read(void)
 		}
 #endif
 //order
-	gyronew[1] = (int16_t) ((data[8] << 8) + data[9]);
-	gyronew[0] = (int16_t) ((data[10] << 8) + data[11]);
-	gyronew[2] = (int16_t) ((data[12] << 8) + data[13]);
+	gyronew[1] = (int16_t) ((i2c_rx_buffer[8] << 8) + i2c_rx_buffer[9]);
+	gyronew[0] = (int16_t) ((i2c_rx_buffer[10] << 8) + i2c_rx_buffer[11]);
+	gyronew[2] = (int16_t) ((i2c_rx_buffer[12] << 8) + i2c_rx_buffer[13]);
 
 
 gyronew[0] = gyronew[0] - gyrocal[0];
@@ -268,16 +377,13 @@ gyronew[2] = - gyronew[2];
 		  gyro[i] = gyronew[i];
 #endif
 	  }
-
-
 }
-
 
 void gyro_read( void)
 {
 int data[6];
 
-i2c_readdata(SOFTI2C_GYRO_ADDRESS, 67, data ,6);
+i2c_readdata(SOFTI2C_GYRO_ADDRESS, 67, data, 6);
 
 float gyronew[3];
 	// order
@@ -390,7 +496,7 @@ while ( time - timestart < CAL_TIME  &&  time - timemax < 15e6 )
 		lastlooptime = time;
 		if ( looptime == 0 ) looptime = 1;
 
-	i2c_readdata(SOFTI2C_GYRO_ADDRESS, 67, data , 6);
+	i2c_readdata(SOFTI2C_GYRO_ADDRESS, 67, data, 6 );
 
 
 	gyro[1] = (int16_t) ((data[0]<<8) + data[1]);

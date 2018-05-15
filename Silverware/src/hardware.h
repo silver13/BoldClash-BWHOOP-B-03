@@ -88,6 +88,9 @@
 #define SOFTI2C_GYRO_ADDRESS 0x68
 //#define SOFTI2C_GYRO_ADDRESS 0x69
 
+// Enable DMA for sixaxis I2C readout
+#define SIXAXIS_READ_DMA
+
 // disable the check for known gyro that causes the 4 times flash
 //#define DISABLE_GYRO_CHECK
 
@@ -171,9 +174,10 @@
 
 //**DO NOT ENABLE ESC DRIVER WITH BRUSHED MOTORS ATTACHED**
 
-#define USE_PWM_DRIVER
+// #define USE_PWM_DRIVER
 //#define USE_ESC_DRIVER
 //#define USE_DSHOT_DRIVER_BETA
+#define USE_DSHOT_DMA_DRIVER
 
 // pwm pins disable
 // disable all pwm pins / function
