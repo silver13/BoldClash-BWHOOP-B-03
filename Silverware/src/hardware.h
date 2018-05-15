@@ -167,7 +167,10 @@
 
 #define USE_PWM_DRIVER
 //#define USE_ESC_DRIVER
+//#define USE_DSHOT_DMA_DRIVER
 //#define USE_DSHOT_DRIVER_BETA
+
+// pass thru used with 1 of the above selections
 //#define USE_SERIAL_4WAY_BLHELI_INTERFACE
 
 		
