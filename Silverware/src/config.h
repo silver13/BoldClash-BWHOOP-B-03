@@ -1,7 +1,7 @@
 #include "defines.h"
 #include "hardware.h"
 
-// adjust pids in pid.c file
+//Universal pids are already loaded for 6mm and 7mm whoops by default.  Adjust pids in pid.c file for any non whoop builds.  
 
 //**********************************************************************************************************************
 //***********************************************HARDWARE SELECTION*****************************************************
@@ -15,6 +15,30 @@
 //#define E011
 //#define H8mini_blue_board
 //#define Alienwhoop_ZERO  // requires defining RX_SBUS radio protocol
+
+
+
+//**********************************************************************************************************************
+//***********************************************BETA TESTING ON STICK GESTURE******************************************
+// *************DEFINE ONLY ONE OPTION FROM THIS SECTION!!!
+// *************This is a new section that will allow certain beta testing features to be activated by the stick gesture
+// *************auxillary channel.  Even when defined - the quad will power up with these features off.  To activate -  
+// *************use the following stick gesture on the pitch/roll stick RIGHT-RIGHT-DOWN (leds will blink). To deactivate - 
+// *************stick gesture LEFT-LEFT-DOWN.  Please test the features you are interested in below and give feedback!!!
+
+// *************SPECIAL TEST MODE TO CHECK TRANSMITTER STICK THROWS
+// *************This define will allow you to check if your radio is reaching 100% throws entering <RIGHT-RIGHT-DOWN> gesture
+// ************* will disable throttle and will rapid blink the led when sticks are moved to 100% throws
+// *************entering <LEFT-LEFT-DOWN> will return the quad to normal operation.
+//#define STICK_TRAVEL_CHECK
+
+// *************SPECIAL TEST MODE TO CHANGE D TERM CALCULATION TO ERROR INSTEAD OF MEASUREMENT
+// *************This define will enable you to change the calculation of the PID's D term to track both sticks and gyro (error method)
+// *************instead of just gyro (measurement method).  The quad will start up using the measurement calculation.  Entering 
+// *************RIGHT-RIGHT-DOWN will change over to the error type D calculation.  LEFT-LEFT-DOWN will change back to measurement.
+//#define ERROR_D_TERM
+
+
 
 //**********************************************************************************************************************
 //***********************************************RECEIVER SETTINGS******************************************************
@@ -51,19 +75,13 @@
 #define RX_BAYANG_PROTOCOL_TELEMETRY_AUTOBIND
 //#define RX_BAYANG_PROTOCOL_BLE_BEACON
 //#define RX_BAYANG_BLE_APP
-//#define RX_SBUS
 //#define RX_NRF24_BAYANG_TELEMETRY
+//#define RX_SBUS
 
 // *************Transmitter Type Selection
 //#define USE_STOCK_TX
 #define USE_DEVO
 //#define USE_MULTI
-
-// *************SPECIAL TEST MODE TO CHECK TRANSMITTER STICK THROWS
-// *************This define will override the stick gesture controlled aux channel and allow you to check if your radio is reaching 100% throws
-// *************entering <RIGHT-RIGHT-DOWN> gesture will disable throttle and will rapid blink the led when sticks are moved to 100% throws
-// *************entering <LEFT-LEFT-DOWN> will return the quad to normal operation.
-//#define STICK_TRAVEL_CHECK
 
 // *******************************SWITCH SELECTION*****************************
 // *************CHAN_ON - on always ( all protocols)
@@ -73,21 +91,20 @@
 //**************CHAN_7 (headfree button), CHAN_8 (roll trim buttons), CHAN_9 (pitch trim buttons)
 
 //*************Arm switch and Idle Up switch (idle up will behave like betaflight airmode)
-//*************comment out to disable
-#define ARMING CHAN_5
-#define IDLE_UP CHAN_5
-#define IDLE_THR 0.05f
+//*************comment out to disable arming or idle up features ONLY if not wanted.  Other features set to CHAN_OFF to disable
 
 //*************Assign feature to auxiliary channel.  NOTE - Switching on LEVELMODE is required for any leveling modes to 
 //*************be active.  With LEVELMODE active - MCU will apply RACEMODE if racemode channel is on, HORIZON if horizon 
 //*************channel is on, or racemodeHORIZON if both channels are on - and will be standard LEVELMODE if neither 
 //*************racemode or horizon are switched on.
+#define ARMING CHAN_5
+#define IDLE_UP CHAN_5
+#define IDLE_THR 0.05f                   //This designates an idle throttle of 5%
 #define LEVELMODE CHAN_6
 #define RACEMODE  CHAN_7
 #define HORIZON   CHAN_8
 #define RATES CHAN_ON
 #define LEDS_ON CHAN_ON
-
 
 // *************switch for fpv / other, requires fet
 // *************comment out to disable

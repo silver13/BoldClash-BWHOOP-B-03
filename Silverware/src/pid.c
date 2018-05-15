@@ -239,18 +239,35 @@ float pid(int x )
         pidoutput[x] += dlpf[x];                   
         #endif
         
-        #ifdef DTERM_LPF_2ND_HZ
+        #if (defined DTERM_LPF_2ND_HZ && defined ERROR_D_TERM)
         float dterm;
-        static float lastrate[3];       
+        static float lastrate[3]; 
+				static float lasterrorx[PIDNUMBER];
         float lpf2( float in, int num);
         if ( pidkd[x] > 0)
         {
-            dterm = - (gyro[x] - lastrate[x]) * pidkd[x] * timefactor;
-            lastrate[x] = gyro[x];		
+					if (aux[CH_AUX1]){
+						     dterm =  (error[x] - lasterrorx[x]) * pidkd[x] * timefactor;
+                 lasterrorx[x] = error[x];
+					}else{	
+								 dterm = - (gyro[x] - lastrate[x]) * pidkd[x] * timefactor;
+								 lastrate[x] = gyro[x];	}
+	
             dterm = lpf2(  dterm, x );
-            pidoutput[x] += dterm;
-        }                       
-        #endif
+            pidoutput[x] += dterm;}
+				#endif
+				
+        #if (defined DTERM_LPF_2ND_HZ && !defined ERROR_D_TERM)
+        float dterm;
+        static float lastrate[3]; 
+        float lpf2( float in, int num);
+        if ( pidkd[x] > 0){
+						dterm = - (gyro[x] - lastrate[x]) * pidkd[x] * timefactor;
+						lastrate[x] = gyro[x];	
+            dterm = lpf2(  dterm, x );
+            pidoutput[x] += dterm;}
+				#endif                           
+     
     }
     
     limitf(  &pidoutput[x] , outlimit[x]);
