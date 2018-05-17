@@ -5,7 +5,7 @@
 	// DShot timer/DMA init
 	// TIM1_UP  DMA_CH5: set all output to HIGH		at TIM1 update
 	// TIM1_CH1 DMA_CH2: reset output if data=0		at T0H timing
-	// TIM1_CH4 DMA_CH4: reset all output					at T1H timing  
+	// TIM1_CH4 DMA_CH4: reset all output					at T1H timing
 
 // this DMA driver is done with the reference to http://www.cnblogs.com/shangdawei/p/4762035.html
 
@@ -116,7 +116,7 @@ volatile uint16_t dshot_packet[4];								// 16bits dshot data for 4 motors
 volatile uint16_t motor_data_portA[ 16 ] = { 0 };	// DMA buffer: reset output when bit data=0 at TOH timing
 volatile uint16_t motor_data_portB[ 16 ] = { 0 };	//
 
-volatile uint16_t dshot_portA[1] = { 0 };					// sum of all motor pins at portA 								
+volatile uint16_t dshot_portA[1] = { 0 };					// sum of all motor pins at portA
 volatile uint16_t dshot_portB[1] = { 0 };					// sum of all motor pins at portB
 
 typedef enum { false, true } bool;
@@ -155,10 +155,10 @@ void pwm_init()
 
 	GPIO_InitStructure.GPIO_Pin = DSHOT_PIN_3 ;
 	GPIO_Init( DSHOT_PORT_3, &GPIO_InitStructure );
-	
+
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3 ;
 	GPIO_Init( GPIOA, &GPIO_InitStructure );
-	
+
 	if( DSHOT_PORT_0 == GPIOA )	*dshot_portA |= DSHOT_PIN_0;
 	else												*dshot_portB |= DSHOT_PIN_0;
 	if( DSHOT_PORT_1 == GPIOA )	*dshot_portA |= DSHOT_PIN_1;
@@ -171,16 +171,16 @@ void pwm_init()
 // DShot timer/DMA init
 	// TIM1_UP  DMA_CH5: set all output to HIGH		at TIM1 update
 	// TIM1_CH1 DMA_CH2: reset output if data=0		at T0H timing
-	// TIM1_CH4 DMA_CH4: reset all output					at T1H timing  
-	
+	// TIM1_CH4 DMA_CH4: reset all output					at T1H timing
+
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 	TIM_OCInitTypeDef TIM_OCInitStructure;
-	
+
 	TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
   TIM_OCStructInit(&TIM_OCInitStructure);
 	// TIM1 Periph clock enable
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
-	
+
 	/* Time base configuration */
 	TIM_TimeBaseStructure.TIM_Period = 						DSHOT_BIT_TIME;
 	TIM_TimeBaseStructure.TIM_Prescaler = 				0;
@@ -194,7 +194,7 @@ void pwm_init()
 	TIM_OCInitStructure.TIM_OutputState = 				TIM_OutputState_Disable;
 	TIM_OCInitStructure.TIM_Pulse = 							DSHOT_T0H_TIME;
 	TIM_OC1Init(TIM1, &TIM_OCInitStructure);
-	TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Disable);	
+	TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Disable);
 
 	/* Timing Mode configuration: Channel 4 */
 	TIM_OCInitStructure.TIM_OCMode = 							TIM_OCMode_Timing;
@@ -202,14 +202,14 @@ void pwm_init()
 	TIM_OCInitStructure.TIM_Pulse = 							DSHOT_T1H_TIME;
 	TIM_OC4Init(TIM1, &TIM_OCInitStructure);
 	TIM_OC4PreloadConfig(TIM1, TIM_OCPreload_Disable);
-	
+
 	DMA_InitTypeDef DMA_InitStructure;
-	
+
 	DMA_StructInit(&DMA_InitStructure);
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
-	
+
 	/* DMA1 Channe5 configuration ----------------------------------------------*/
-	DMA_DeInit(DMA1_Channel3);
+	DMA_DeInit(DMA1_Channel5);
 	DMA_InitStructure.DMA_PeripheralBaseAddr = 		(uint32_t)&GPIOA->BSRR;
 	DMA_InitStructure.DMA_MemoryBaseAddr = 				(uint32_t)dshot_portA;
 	DMA_InitStructure.DMA_DIR = 									DMA_DIR_PeripheralDST;
@@ -222,7 +222,7 @@ void pwm_init()
 	DMA_InitStructure.DMA_Priority = 							DMA_Priority_High;
 	DMA_InitStructure.DMA_M2M = 									DMA_M2M_Disable;
 	DMA_Init(DMA1_Channel5, &DMA_InitStructure);
-	
+
 	/* DMA1 Channel2 configuration ----------------------------------------------*/
 	DMA_DeInit(DMA1_Channel2);
 	DMA_InitStructure.DMA_PeripheralBaseAddr = 		(uint32_t)&GPIOA->BRR;
@@ -237,7 +237,7 @@ void pwm_init()
 	DMA_InitStructure.DMA_Priority = 							DMA_Priority_High;
 	DMA_InitStructure.DMA_M2M = 									DMA_M2M_Disable;
 	DMA_Init(DMA1_Channel2, &DMA_InitStructure);
-	
+
 	/* DMA1 Channel4 configuration ----------------------------------------------*/
 	DMA_DeInit(DMA1_Channel4);
 	DMA_InitStructure.DMA_PeripheralBaseAddr = 		(uint32_t)&GPIOA->BRR;
@@ -252,9 +252,9 @@ void pwm_init()
 	DMA_InitStructure.DMA_Priority = 							DMA_Priority_High;
 	DMA_InitStructure.DMA_M2M = 									DMA_M2M_Disable;
 	DMA_Init(DMA1_Channel4, &DMA_InitStructure);
-	
+
 	TIM_DMACmd(TIM1, TIM_DMA_Update | TIM_DMA_CC4 | TIM_DMA_CC1, ENABLE);
-	
+
 	NVIC_InitTypeDef NVIC_InitStructure;
 	/* configure DMA1 Channel4 interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel = 					DMA1_Channel4_5_IRQn;
@@ -263,62 +263,62 @@ void pwm_init()
 	NVIC_Init(&NVIC_InitStructure);
 	/* enable DMA1 Channel4 transfer complete interrupt */
 	DMA_ITConfig(DMA1_Channel4, DMA_IT_TC, ENABLE);
-	
+
 	// set failsafetime so signal is off at start
 	pwm_failsafe_time = gettime() - 100000;
 	pwmdir = FORWARD;
 }
 
 void dshot_dma_portA()
-{		
+{
 	DMA1_Channel5->CPAR = (uint32_t)&GPIOA->BSRR;
 	DMA1_Channel5->CMAR = (uint32_t)dshot_portA;
 	DMA1_Channel2->CPAR = (uint32_t)&GPIOA->BRR;
 	DMA1_Channel2->CMAR = (uint32_t)motor_data_portA;
 	DMA1_Channel4->CPAR = (uint32_t)&GPIOA->BRR;
 	DMA1_Channel4->CMAR = (uint32_t)dshot_portA;
-	
+
 	DMA_ClearFlag( DMA1_FLAG_GL2 | DMA1_FLAG_GL4 | DMA1_FLAG_GL5 );
-	
+
 	DMA1_Channel5->CNDTR = 16;
 	DMA1_Channel2->CNDTR = 16;
 	DMA1_Channel4->CNDTR = 16;
-	
+
 	TIM1->SR = 0;
-		
+
 	DMA_Cmd(DMA1_Channel2, ENABLE);
 	DMA_Cmd(DMA1_Channel4, ENABLE);
-	DMA_Cmd(DMA1_Channel5, ENABLE);	
-	
+	DMA_Cmd(DMA1_Channel5, ENABLE);
+
 	TIM_DMACmd(TIM1, TIM_DMA_Update | TIM_DMA_CC4 | TIM_DMA_CC1, ENABLE);
-	
+
 	TIM_SetCounter( TIM1, DSHOT_BIT_TIME );
 	TIM_Cmd( TIM1, ENABLE );
 }
 
 void dshot_dma_portB()
-{		
+{
 	DMA1_Channel5->CPAR = (uint32_t)&GPIOB->BSRR;
 	DMA1_Channel5->CMAR = (uint32_t)dshot_portB;
 	DMA1_Channel2->CPAR = (uint32_t)&GPIOB->BRR;
 	DMA1_Channel2->CMAR = (uint32_t)motor_data_portB;
 	DMA1_Channel4->CPAR = (uint32_t)&GPIOB->BRR;
 	DMA1_Channel4->CMAR = (uint32_t)dshot_portB;
-	
+
 	DMA_ClearFlag( DMA1_FLAG_GL2 | DMA1_FLAG_GL4 | DMA1_FLAG_GL5 );
-	
+
 	DMA1_Channel5->CNDTR = 16;
 	DMA1_Channel2->CNDTR = 16;
 	DMA1_Channel4->CNDTR = 16;
-	
+
 	TIM1->SR = 0;
-		
+
 	DMA_Cmd(DMA1_Channel2, ENABLE);
 	DMA_Cmd(DMA1_Channel4, ENABLE);
-	DMA_Cmd(DMA1_Channel5, ENABLE);	
-	
+	DMA_Cmd(DMA1_Channel5, ENABLE);
+
 	TIM_DMACmd(TIM1, TIM_DMA_Update | TIM_DMA_CC4 | TIM_DMA_CC1, ENABLE);
-	
+
 	TIM_SetCounter( TIM1, DSHOT_BIT_TIME );
 	TIM_Cmd( TIM1, ENABLE );
 }
@@ -330,13 +330,13 @@ void make_packet( uint8_t number, uint16_t value, bool telemetry )
 	// compute checksum
 	uint16_t csum = 0;
 	uint16_t csum_data = packet;
-	
+
 	for ( uint8_t i = 0; i < 3; ++i ) {
 		csum ^= csum_data; // xor data by nibbles
 		csum_data >>= 4;
 	}
 
-	csum &= 0xf;	
+	csum &= 0xf;
 	// append checksum
 	dshot_packet[ number ] = ( packet << 4 ) | csum;
 }
@@ -347,32 +347,32 @@ void dshot_dma_start()
 	uint32_t	time=gettime();
 	while( dshot_dma_phase != 0 && (gettime()-time) < DMA_WAIT_TIME ) { } // wait maximum a LOOPTIME for dshot dma to complete
 	if( dshot_dma_phase != 0 ) return;																		// skip this dshot command
-	
+
 #if	defined(RGB_LED_DMA) && (RGB_LED_NUMBER>0)
 	/// terminate current RGB transfer
 	extern int	rgb_dma_phase;
-	
+
 	time=gettime();
 	while( rgb_dma_phase ==1 && (gettime()-time) < DMA_WAIT_TIME ) { } 	// wait maximum a LOOPTIME for RGB dma to complete
-	
-	if( rgb_dma_phase ==1 ) {																						// terminate current RGB dma transfer, proceed dshot 
+
+	if( rgb_dma_phase ==1 ) {																						// terminate current RGB dma transfer, proceed dshot
 		rgb_dma_phase =0;
 		DMA_Cmd(DMA1_Channel5, DISABLE);
 		DMA_Cmd(DMA1_Channel2, DISABLE);
-		DMA_Cmd(DMA1_Channel4, DISABLE);		
-	
-		TIM_DMACmd(TIM1, TIM_DMA_Update | TIM_DMA_CC4 | TIM_DMA_CC1, DISABLE);	
+		DMA_Cmd(DMA1_Channel4, DISABLE);
+
+		TIM_DMACmd(TIM1, TIM_DMA_Update | TIM_DMA_CC4 | TIM_DMA_CC1, DISABLE);
 		TIM_Cmd( TIM1, DISABLE );
 		extern void failloop();
 		failloop(9);
-	}	
-#endif		
-		
+	}
+#endif
+
 		// generate dshot dma packet
 	for ( uint8_t i = 0; i < 16; i++ ) {
 		motor_data_portA[ i ] = 0;
 		motor_data_portB[ i ] = 0;
-			
+
 	  if ( !( dshot_packet[0] & 0x8000 ) ) {
 			if( DSHOT_PORT_0 == GPIOA )	motor_data_portA[ i ] |= DSHOT_PIN_0;
 			else 												motor_data_portB[ i ] |= DSHOT_PIN_0; }
@@ -385,19 +385,21 @@ void dshot_dma_start()
 	  if ( !( dshot_packet[3] & 0x8000 ) ) {
 			if( DSHOT_PORT_3 == GPIOA )	motor_data_portA[ i ] |= DSHOT_PIN_3;
 			else 												motor_data_portB[ i ] |= DSHOT_PIN_3; }
-		
+
 	  dshot_packet[0] <<= 1;
 	  dshot_packet[1] <<= 1;
 	  dshot_packet[2] <<= 1;
 	  dshot_packet[3] <<= 1;
-	}	
-	
-	dshot_dma_phase = DSHOT_DMA_PHASE;	
-		
+	}
+
+	dshot_dma_phase = DSHOT_DMA_PHASE;
+
 	TIM1->ARR 	= DSHOT_BIT_TIME;
 	TIM1->CCR1 	= DSHOT_T0H_TIME;
 	TIM1->CCR4 	= DSHOT_T1H_TIME;
-	
+
+	DMA1_Channel2->CCR |= DMA_MemoryDataSize_HalfWord;
+
 	dshot_dma_portA();
 }
 
@@ -460,8 +462,8 @@ void pwm_set( uint8_t number, float pwm )
 	}
 
 	make_packet( number, value, false );
-	
-	if ( number == 3 ) {	
+
+	if ( number == 3 ) {
 			dshot_dma_start();
 	}
 }
@@ -495,8 +497,8 @@ void motorbeep()
 				beep_command = DSHOT_CMD_BEEP2;
 			} else if ( delta_time % 2000000 < 1000000 ) {
 				beep_command = DSHOT_CMD_BEEP4;
-			}			
-	
+			}
+
 			if ( beep_command != 0 ) {
 				make_packet( 0, beep_command, false );
 				make_packet( 1, beep_command, false );
@@ -514,15 +516,15 @@ void motorbeep()
 #if defined(USE_DSHOT_DMA_DRIVER) || ( defined(RGB_LED_DMA) && (RGB_LED_NUMBER>0) )
 
 void DMA1_Channel4_5_IRQHandler(void)
-{	
+{
 	DMA_Cmd(DMA1_Channel5, DISABLE);
 	DMA_Cmd(DMA1_Channel2, DISABLE);
-	DMA_Cmd(DMA1_Channel4, DISABLE);		
-	
+	DMA_Cmd(DMA1_Channel4, DISABLE);
+
 	TIM_DMACmd(TIM1, TIM_DMA_Update | TIM_DMA_CC4 | TIM_DMA_CC1, DISABLE);
-	DMA_ClearITPendingBit(DMA1_IT_TC4);		
+	DMA_ClearITPendingBit(DMA1_IT_TC4);
 	TIM_Cmd( TIM1, DISABLE );
-	
+
 #ifdef USE_DSHOT_DMA_DRIVER
 	switch( dshot_dma_phase ) {
 		case 2:
@@ -534,24 +536,24 @@ void DMA1_Channel4_5_IRQHandler(void)
 			#if defined(RGB_LED_DMA) && (RGB_LED_NUMBER>0)
 				extern int rgb_dma_phase;
 				extern void rgb_dma_trigger();
-		
+
 				if( rgb_dma_phase == 2 ) {
 					rgb_dma_phase = 1;
-					rgb_dma_trigger();						
+					rgb_dma_trigger();
 				}
 			#endif
 			return;
 		default :
 			dshot_dma_phase =0;
-			break;		
+			break;
 	}
 #endif
-	
-#if defined(RGB_LED_DMA) && (RGB_LED_NUMBER>0)	
+
+#if defined(RGB_LED_DMA) && (RGB_LED_NUMBER>0)
 	extern int rgb_dma_phase;
 	rgb_dma_phase = 0;
 #endif
-	
+
 }
 #endif
 

@@ -46,7 +46,7 @@ THE SOFTWARE.
 
 extern debug_type debug;
 uint8_t i2c_rx_buffer[14];
-volatile uint16_t i2c_dma_phase = 0;			//	0:idel	1:delay is counting	2:DMA triggered
+// volatile uint16_t i2c_dma_phase = 0;			//	0:idle	1:delay is counting	2:DMA triggered
 
 // temporary fix for compatibility between versions
 #ifndef GYRO_ID_1
@@ -160,6 +160,14 @@ void sixaxis_init( void)
 	DMA_InitStructure.DMA_Priority = 							DMA_Priority_High;
 	DMA_InitStructure.DMA_M2M = 									DMA_M2M_Disable;
 	DMA_Init(DMA1_Channel3, &DMA_InitStructure);
+
+    TIM_SetCounter( TIM17, SIXAXIS_READ_PERIOD );
+    TIM_Cmd( TIM17, ENABLE );
+    while( !DMA_GetFlagStatus( DMA1_FLAG_TC3 ) ) { };
+    DMA_Cmd( DMA1_Channel3, DISABLE );
+    I2C_DMACmd( I2C1, I2C_DMAReq_Rx, DISABLE );
+
+// 	}
 #endif
 }
 
@@ -181,7 +189,6 @@ void TIM17_IRQHandler(void)
 	DMA_Cmd( DMA1_Channel3, ENABLE );
   I2C_DMACmd( I2C1, I2C_DMAReq_Rx, ENABLE );
 
-	i2c_dma_phase = 2;
 }
 #endif
 
@@ -214,39 +221,31 @@ void sixaxis_read(void)
 	float gyronew[3];
 
 #ifdef SIXAXIS_READ_DMA
-	if( i2c_dma_phase == 0 ) {
-		TIM_SetCounter( TIM17, SIXAXIS_READ_PERIOD );
-		TIM_Cmd( TIM17, ENABLE );
-		i2c_dma_phase = 1;
-		while( !DMA_GetFlagStatus( DMA1_FLAG_TC3 ) ) { };
-	}
-
 	//if DMA not ready, SIXAXIS_READ_TIME should be larger and make less delay for trigger DMA
 	extern void failloop(int);
 	uint32_t	time=gettime();
 	while( !DMA_GetFlagStatus( DMA1_FLAG_TC3 ) && (gettime()-time) < LOOPTIME ) { } 	// wait maximum a LOOPTIME for I2C DMA to complete
-	while( !DMA_GetFlagStatus( DMA1_FLAG_TC3 ) ) {
-					failloop(9);
-		}
+	if( !DMA_GetFlagStatus( DMA1_FLAG_TC3 ) ) failloop(9);
+
   DMA_Cmd( DMA1_Channel3, DISABLE );
   I2C_DMACmd( I2C1, I2C_DMAReq_Rx, DISABLE );
-	//i2c_dma_phase = 0;
 
-	// delayed trigger next DMA by TIM17
+  // delayed trigger next DMA by TIM17
 	TIM_SetCounter( TIM17, 0 );
 	TIM_Cmd( TIM17, ENABLE );
-	i2c_dma_phase = 1;
 #else
 	int data[14];
 
 	i2c_readdata(SOFTI2C_GYRO_ADDRESS, 59, data, 14 );
 	for( int i=0;i<14;i++) i2c_rx_buffer[i] = (uint8_t)data[i];
 #endif
+#ifdef SIXAXIS_READ_DMA
+#endif
 
 #ifdef SENSOR_ROTATE_90_CW
-        accel[0] = (int16_t) ((i2c_rx_buffer[2] << 8) + i2c_rx_buffer[3]);
-        accel[1] = -(int16_t) ((i2c_rx_buffer[0] << 8) + i2c_rx_buffer[1]);
-        accel[2] = (int16_t) ((i2c_rx_buffer[4] << 8) + i2c_rx_buffer[5]);
+    accel[0] = (int16_t) ((i2c_rx_buffer[2] << 8) + i2c_rx_buffer[3]);
+    accel[1] = -(int16_t) ((i2c_rx_buffer[0] << 8) + i2c_rx_buffer[1]);
+    accel[2] = (int16_t) ((i2c_rx_buffer[4] << 8) + i2c_rx_buffer[5]);
 #else
 
 	accel[0] = -(int16_t) ((i2c_rx_buffer[0] << 8) + i2c_rx_buffer[1]);
