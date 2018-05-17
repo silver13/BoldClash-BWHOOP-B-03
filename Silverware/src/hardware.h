@@ -222,6 +222,8 @@
 // numbers over 8 could decrease performance
 #define RGB_LED_NUMBER 0
 
+#define RGB_LED_DMA
+
 // pin / port for the RGB led ( programming port ok )
 #define RGB_PIN GPIO_Pin_11
 #define RGB_PORT GPIOA

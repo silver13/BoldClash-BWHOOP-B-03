@@ -467,6 +467,10 @@ if ( LED_NUMBER > 0)
 // RGB led control
 extern	void rgb_led_lvc( void);
 rgb_led_lvc( );
+#ifdef RGB_LED_DMA
+extern void rgb_dma_start();
+rgb_dma_start();
+#endif
 #endif
 
 
