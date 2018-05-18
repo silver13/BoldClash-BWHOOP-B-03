@@ -237,6 +237,29 @@ void pid_precalc()
 }
 
 
+// i vector rotation by joelucid
+// https://www.rcgroups.com/forums/showpost.php?p=39354943&postcount=13468
+
+void rotateErrors()
+{
+	// rotation around x axis:
+    float temp = gyro[0] * looptime;
+	ierror[1] -= ierror[2] * temp;
+	ierror[2] += ierror[1] * temp;
+
+	// rotation around y axis:
+    temp = gyro[1] * looptime;
+	ierror[2] -= ierror[0] * temp;
+	ierror[0] += ierror[2] * temp;
+
+	// rotation around z axis:
+    temp = gyro[2] * looptime;
+	ierror[0] -= ierror[1] * temp;
+	ierror[1] += ierror[0] * temp;
+}
+
+
+
 #ifndef DTERM_LPF_2ND_HZ 
 #define DTERM_LPF_2ND_HZ 99
 #endif

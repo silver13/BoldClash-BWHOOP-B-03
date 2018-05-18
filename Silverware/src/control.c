@@ -165,7 +165,10 @@ pid_precalc();
 
 	  }
 
-
+    #ifdef PID_ROTATE_ERRORS      
+	rotateErrors();
+    #endif
+      
 	pid(0);
 	pid(1);
 	pid(2);
