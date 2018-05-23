@@ -43,7 +43,7 @@ THE SOFTWARE.
 #include "config.h"
 #include "led.h"
 #include "defines.h"
-
+#include <math.h>
 
 // Kp	                  ROLL       PITCH     YAW
 float pidkp[PIDNUMBER] = { 13.0e-2 , 13.0e-2  , 6e-1 }; 
@@ -79,8 +79,9 @@ float * current_pid_term_pointer = pidkp;
 
 float ierror[PIDNUMBER] = { 0 , 0 , 0};	
 float pidoutput[PIDNUMBER];
-static float lasterror[PIDNUMBER];
+float setpoint[PIDNUMBER];
 
+static float lasterror[PIDNUMBER];
 extern float error[PIDNUMBER];
 extern float looptime;
 extern float gyro[3];
@@ -116,6 +117,18 @@ float pid(int x )
     ierror[x] *= 0.98f;
     }
 
+    
+#ifdef TRANSIENT_WINDUP_PROTECTION
+    static float avgSetpoint[3];
+    static int count[3];
+    extern float splpf( float in,int num );
+    
+    if ( x < 2 && (count[x]++ % 2) == 0 ) {
+        avgSetpoint[x] = splpf( setpoint[x], x );
+    }
+#endif
+    
+    
     int iwindup = 0;
     if (( pidoutput[x] == outlimit[x] )&& ( error[x] > 0) )
     {
@@ -127,8 +140,16 @@ float pid(int x )
         iwindup = 1;				
     } 
     
+
+    
     #ifdef ANTI_WINDUP_DISABLE
     iwindup = 0;
+    #endif
+
+    #ifdef TRANSIENT_WINDUP_PROTECTION
+	if ( x < 2 && fabsf( setpoint[x] - avgSetpoint[x] ) > 0.1f ) {
+		iwindup = 1;
+	}
     #endif
     
     if ( !iwindup)

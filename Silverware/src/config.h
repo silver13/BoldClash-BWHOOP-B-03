@@ -208,6 +208,8 @@
 
 //#define PID_ROTATE_ERRORS
 
+// Removes roll and pitch bounce back after flips
+//#define TRANSIENT_WINDUP_PROTECTION
 
 
 
