@@ -642,8 +642,11 @@
 
 
 // MOTOR PINS
+// MOTOR PINS
 #define MOTOR0_PIN_PA7
-#define MOTOR1_PIN_PA4
-#define MOTOR2_PIN_PB1
+//#define MOTOR1_PIN_PA4  //2nd Draft prototype patch
+//#define MOTOR2_PIN_PB1  //2nd Draft prototype patch
+#define MOTOR1_PIN_PB1
+#define MOTOR2_PIN_PA4
 #define MOTOR3_PIN_PA6
 #endif
