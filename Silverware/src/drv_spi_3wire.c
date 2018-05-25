@@ -13,9 +13,9 @@ int mosi_out = 0;
 void spi_init(void)
 {    
 	// spi port inits
-#ifdef Alienwhoop_ZERO
-	delay (2000000);
-#endif
+//#ifdef Alienwhoop_ZERO   //Only for 2nd prototype w/spi bayang rx and chip select on programming clock pin
+//	delay (2000000);
+//#endif
 		GPIO_InitTypeDef  GPIO_InitStructure;
 	
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;

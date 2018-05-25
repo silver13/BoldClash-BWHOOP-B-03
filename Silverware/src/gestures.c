@@ -43,6 +43,11 @@ void gestures( void)
                 extern void flash_load( void);
                 flash_save( );
                 flash_load( );
+                // reset flash numbers
+                extern int number_of_increments[3][3];
+                for( int i = 0 ; i < 3 ; i++)
+                    for( int j = 0 ; j < 3 ; j++)
+                        number_of_increments[i][j] = 0; 
                 #endif
 			    // reset loop time 
 			    extern unsigned long lastlooptime;

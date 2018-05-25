@@ -196,12 +196,16 @@ else
 		
 	}
 
+#ifdef RGB_LED_DMA
+// send dma start signal    
+rgb_send(0);    
+#else
 // send data to leds
 for (int i = 0 ; i < RGB_LED_NUMBER ; i++)
 	{
 		rgb_send( rgb_led_value[i] );
 	}
-
+#endif
 }	
 }
 

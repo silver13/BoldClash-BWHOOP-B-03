@@ -49,7 +49,7 @@
 #define MAX_RATEYAW 500.0
 
 // *************max angle for level mode
-#define MAX_ANGLE_HI 65.0f
+#define LEVEL_MAX_ANGLE 65.0f
 
 // ************* low rates multiplier if rates are assigned to a channel
 #define LOW_RATES_MULTI 0.5f
@@ -140,10 +140,10 @@
 // *************calculate above factor automatically
 #define AUTO_VDROP_FACTOR
 
-// *************voltage hysteresys in volts
+// *************voltage hysteresis in volts
 #define HYST 0.10
 
-// *************lower throttle when battery below treshold - forced landing low voltage cutoff
+// *************lower throttle when battery below threshold - forced landing low voltage cutoff
 //#define LVC_LOWER_THROTTLE
 #define LVC_LOWER_THROTTLE_VOLTAGE 3.30
 #define LVC_LOWER_THROTTLE_VOLTAGE_RAW 2.70
@@ -232,9 +232,9 @@
 
 //#define MIX_LOWER_THROTTLE_3
 #define MIX_INCREASE_THROTTLE_3
-//Currently eperimenting with the value below for whoop format.  Default was previously .2f and should be
-//changed back for anything other than a whoop.  This gives "airmode" 100% authority over throttle
-#define MIX_THROTTLE_INCREASE_MAX 1.0f
+//Currently eperimenting with the value 1.0f below for whoop format.  Default was previously .2f and should remain .2f
+//for anything other than a whoop.  The value 1.0f gives "airmode" 100% authority over throttle and is AWESOME on a whoop for locked in dives!!
+#define MIX_THROTTLE_INCREASE_MAX 0.2f
 
 // *************invert yaw pid for "PROPS OUT" configuration
 //#define INVERT_YAW_PID

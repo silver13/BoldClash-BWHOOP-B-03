@@ -14,7 +14,7 @@ DEFS = -DUSE_STDPERIPH_DRIVER -DSTM32F031
 STARTUP = $(topdir)/Libraries/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc_ride7/startup_stm32f030.s
 
 MCU = cortex-m0
-MCFLAGS = -mcpu=$(MCU) -g -ggdb -mthumb -fdata-sections -ffunction-sections -fsingle-precision-constant -ffast-math -nostartfiles   --specs=nano.specs -flto
+MCFLAGS = -mcpu=$(MCU) -g -ggdb -mthumb -fdata-sections -ffunction-sections -fsingle-precision-constant -ffast-math -nostartfiles --specs=nano.specs --specs=nosys.specs -flto
 
 INCLUDES = -I$(topdir)/Silverware/src/ \
 	-I$(topdir)/Libraries/CMSIS/Device/ST/STM32F0xx/Include/ \
@@ -29,7 +29,6 @@ CFLAGS = $(MCFLAGS)  $(OPTIMIZE)  $(DEFS) -I. -I./ $(INCLUDES)  -Wl,-T,flash.ld,
 AFLAGS = $(MCFLAGS)
 
 SRC = $(wildcard $(topdir)/Silverware/src/*.c) \
-	$(wildcard $(topdir)/Silverware/src/*.h) \
 	$(wildcard $(topdir)/Silverware/src/*.cpp) \
 	$(topdir)/Libraries/STM32F0xx_StdPeriph_Driver/src/*.c  \
 	$(topdir)/Utilities/system_stm32f0xx.c \
@@ -48,10 +47,10 @@ $(TARGET).hex: $(EXECUTABLE)
 $(TARGET): $(EXECUTABLE)
 	$(CP) -O binary $^ $@
 
-$(EXECUTABLE): $(SRC) $(STARTUP)
+$(EXECUTABLE): $(STARTUP) $(SRC)
 	$(CC) $(CFLAGS) $^ -lm -o $@
 	arm-none-eabi-size $(EXECUTABLE)
-	
+
 
 clean:
 	rm -f Startup.lst $(TARGET) $(TARGET).lst $(OBJ) $(AUTOGEN) \

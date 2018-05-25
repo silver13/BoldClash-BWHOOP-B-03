@@ -197,7 +197,7 @@ spi_csoff();
 delay(1000);
 }
 
-
+char quad_name[6] = {'N' , 'O' , 'N' , 'A' , 'M' , 'E'};
 
 void rx_init()
 {
@@ -218,10 +218,35 @@ aux[CH_AUX1] = 1;
 
 	
 #ifdef RADIO_XN297L
-	
+
+#ifndef TX_POWER
+#define TX_POWER 7
+#endif
+ 	
+// Gauss filter amplitude - lowest
+static uint8_t demodcal[2] = { 0x39 , B00000001 };
+writeregs( demodcal , sizeof(demodcal) );
+
+// powerup defaults
+//static uint8_t rfcal2[7] = { 0x3a , 0x45 , 0x21 , 0xef , 0xac , 0x3a , 0x50};
+//writeregs( rfcal2 , sizeof(rfcal2) );
+
+static uint8_t rfcal2[7] = { 0x3a , 0x45 , 0x21 , 0xef , 0x2c , 0x5a , 0x50};
+writeregs( rfcal2 , sizeof(rfcal2) );
+
+static uint8_t regs_1f[6] = { 0x3f , 0x0a, 0x6d , 0x67 , 0x9c , 0x46 };
+writeregs( regs_1f , sizeof(regs_1f) );
+
+
+static uint8_t regs_1e[4] = { 0x3e , 0xf6 , 0x37 , 0x5d };
+writeregs( regs_1e , sizeof(regs_1e) );
+
+
+#define XN_POWER B00000001|((TX_POWER&7)<<3)
+
 #define XN_TO_RX B10001111
 #define XN_TO_TX B10000010
-#define XN_POWER B00111111
+//#define XN_POWER B00111111
 	
 #endif
 
@@ -294,6 +319,21 @@ int	rxcheck = xn_readreg( 0x0f); // rx address pipe 5
 	extern void failloop( int);
 	if ( rxcheck != 0xc6) failloop(3);
 #endif	
+
+//fill with characters from MY_QUAD_NAME (just first 6 chars)
+int string_len = 0;
+while (string_len< 6)
+	  {
+			if (MY_QUAD_NAME[string_len]=='\0') break;
+			quad_name[string_len] = (char) MY_QUAD_NAME[string_len];
+			string_len++;
+		}
+
+//fill the rest (up to 6 bytes) with blanks
+for ( int i = string_len ; i < 6; i++)
+	{
+	quad_name[string_len] = ' '; //blank
+	}
 }
 
 
@@ -738,30 +778,12 @@ buf[L++] =  0x2F; //PID+TLM datatype_and_packetID;  // xxxxyyyy -> yyyy = 1111 p
 #endif
 
 buf[L++] = random_seed; //already custom entry - need to be randomized
-#ifdef MY_QUAD_NAME
-//fill with characters from MY_QUAD_NAME (just first 6 chars)
-int string_len = 0;
-while (string_len< 6)
-	  {
-			if (MY_QUAD_NAME[string_len]=='\0') break;
-			buf[L++] = (char) MY_QUAD_NAME[string_len];
-			string_len++;
-		}
-
-//fill the rest (up to 6 bytes) with blanks
-for ( int i = string_len ; i < 6; i++)
-	{
-	buf[L++] = ' '; //blank
-	}
-#else
-buf[L++]=(char)'N';
-buf[L++]=(char)'O';
-buf[L++]=(char)'N';
-buf[L++]=(char)'A';
-buf[L++]=(char)'M';
-buf[L++]=(char)'E';
-#endif
-
+buf[L++]= quad_name[0];
+buf[L++]= quad_name[1];
+buf[L++]= quad_name[2];
+buf[L++]= quad_name[3];
+buf[L++]= quad_name[4];
+buf[L++]= quad_name[5];
 	
 extern int current_pid_term; //0 = pidkp, 1 = pidki, 2 = pidkd
 extern int current_pid_axis; //0 = roll, 1 = pitch, 2 = yaw

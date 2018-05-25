@@ -293,10 +293,10 @@ extern "C" void lpf( float *out, float in , float coeff);
 
 extern float looptime;
 
-static float alpha = 0.0;
-static float two_one_minus_alpha = 2.0;
-static float one_minus_alpha_sqr = 1.0;
-static float alpha_sqr = 0.0;
+static float alpha = 1.0;
+static float two_one_minus_alpha = 0.0;
+static float one_minus_alpha_sqr = 0.0;
+static float alpha_sqr = 1.0;
 
 static float looptime_filt = 0.001;
 

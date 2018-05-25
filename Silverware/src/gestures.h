@@ -3,7 +3,7 @@ int gestures2( void);
 int gesture_sequence( int gesture);
 void gestures( void);
 
-// warning: using if x>GESTURE_UDR to check pid gestures
+// warning: using if x>GESTURE_UDR to check if pid gestures used
 enum gestures_enum{
     GESTURE_NONE = 0, 
     GESTURE_DDD,

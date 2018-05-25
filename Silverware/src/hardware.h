@@ -27,7 +27,7 @@
 // 2 - low battery at powerup - if enabled by config.h "#define STOP_LOWBATTERY" 
 // 3 - radio chip not found
 // 4 - Gyro not found - maybe i2c speed
-// 5 - clock , intterrupts , systick - this should not come up
+// 5 - clock , intterrupts , systick , gcc bad code , bad memory access (code issues like bad pointers)- this should not come up
 // 6 - loop time issue - if loop time exceeds 20mS
 // 7 - i2c error  - triggered by hardware i2c driver only
 // 8 - i2c error main loop  - triggered by hardware i2c driver only
@@ -82,6 +82,7 @@
 
 #define USE_PWM_DRIVER
 //#define USE_ESC_DRIVER
+//#define USE_DSHOT_DMA_DRIVER
 //#define USE_DSHOT_DRIVER_BETA
 
 
@@ -114,6 +115,7 @@
 // RGB led type ws2812 - ws2813
 // numbers over 8 could decrease performance
 #define RGB_LED_NUMBER 0
+#define RGB_LED_DMA
 
 
 // pin / port for the RGB led ( programming port ok )

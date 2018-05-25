@@ -13,7 +13,7 @@
 void xn_writereg( int reg , int val)
 {
 	reg = reg&0x0000003F;
-	reg = reg|0x00000020;
+	reg = reg|W_REGISTER;
 	spi_cson();
 	spi_sendbyte( reg);
 	spi_sendbyte( val);
@@ -22,7 +22,7 @@ void xn_writereg( int reg , int val)
 
 int xn_readreg( int reg)
 {
-	reg = reg&0x0000001F;
+	reg = reg&REGISTER_MASK;
 	spi_cson();
 	spi_sendrecvbyte( reg);
 	int val =spi_sendzerorecvbyte();
@@ -53,10 +53,10 @@ void xn_readpayload( int *data , int size )
 {
 	int index = 0;
 	spi_cson();
-	spi_sendrecvbyte( B01100001 ); // read rx payload
-	while(index<size)
+	spi_sendrecvbyte( R_RX_PAYLOAD ); // read rx payload
+	while( index < size 
 	{
-	data[index]=	spi_sendzerorecvbyte();
+	data[index]= spi_sendzerorecvbyte();
 	index++;
 	}
 	spi_csoff();
@@ -66,9 +66,9 @@ void xn_readpayload( int *data , int size )
 
 void xn_writerxaddress(  int *addr )	
 {
- int index = 0;
-spi_cson();
-spi_sendbyte(0x2a);
+		int index = 0;
+    spi_cson();
+    spi_sendbyte(W_REGISTER | RX_ADDR_P0);
 	while(index<5)
 	{
 	spi_sendbyte( addr[index] );
@@ -80,9 +80,9 @@ spi_csoff();
 
 void xn_writetxaddress(  int *addr )	
 {
- int index = 0;
-spi_cson();
-spi_sendbyte(0x10|0x20);
+		int index = 0;
+    spi_cson();
+    spi_sendbyte(W_REGISTER|TX_ADDR)
 	while(index<5)
 	{
 	spi_sendbyte( addr[index] );
@@ -96,7 +96,7 @@ void xn_writepayload( int data[] , int size )
 {
 	int index = 0;
 	spi_cson();
-	spi_sendrecvbyte( 0xA0 ); // write tx payload
+	spi_sendrecvbyte( W_TX_PAYLOAD ); // write tx payload
 	while(index<size)
 	{
 	spi_sendrecvbyte( data[index] );
