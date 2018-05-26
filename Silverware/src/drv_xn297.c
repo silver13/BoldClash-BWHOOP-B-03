@@ -82,7 +82,7 @@ void xn_writetxaddress(  int *addr )
 {
 		int index = 0;
     spi_cson();
-    spi_sendbyte(W_REGISTER|TX_ADDR)
+    spi_sendbyte(W_REGISTER|TX_ADDR);
 	while(index<5)
 	{
 	spi_sendbyte( addr[index] );
