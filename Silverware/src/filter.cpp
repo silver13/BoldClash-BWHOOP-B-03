@@ -2,7 +2,7 @@
 #include "config.h"
 
 
-// These filters were made with the filter calculator at  "http://www.schwietering.com/jayduino/filtuino/"
+// Most of these filters were made with the filter calculator at  "http://www.schwietering.com/jayduino/filtuino/"
 // the sample rate is 1Khz (loop time)
 
 
@@ -434,4 +434,34 @@ extern "C" float throttlehpf( float in )
 }
 
 
+
+// for TRANSIENT_WINDUP_PROTECTION feature
+//Low pass bessel filter order=1 alpha1=0.023
+class  FilterSP
+{
+	public:
+		FilterSP()
+		{
+			v[0]=0.0;
+		}
+	private:
+		float v[2];
+	public:
+		float step(float x) //class II
+		{
+			v[0] = v[1];
+			v[1] = (6.749703162983405891e-2f * x)
+				 + (0.86500593674033188218f * v[0]);
+			return
+				 (v[0] + v[1]);
+		}
+};
+
+FilterSP spfilter[3];
+
+extern "C" float splpf( float in,int num )
+{
+
+	return spfilter[num].step(in );
+}
 

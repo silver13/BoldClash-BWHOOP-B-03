@@ -242,7 +242,8 @@
 //**************joelucid's yaw fix
 #define YAW_FIX
 
-
+//**************joelucid's transient windup protection.  Removes roll and pitch bounce back after flips
+#define TRANSIENT_WINDUP_PROTECTION
 
 //**********************************************************************************************************************
 //***********************************************ADDITIONAL FEATURES****************************************************
