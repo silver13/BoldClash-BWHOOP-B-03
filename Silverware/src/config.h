@@ -39,6 +39,14 @@
 //#define ERROR_D_TERM
 
 
+// *************SPECIAL TEST MODE TO ACTIVATE FEEDFORWARD PID CONTROLLER
+// *************This define will allow you to test the feeling of a feed forward pid controller.  The quad will start up with the regular
+// *************pid controller running.  To activate feed forward - enter RIGHT-RIGHT-DOWN stick gesture.  When feed forward activates during
+// *************sharp stick commands - the leds will rapidly blink to indicate a feed forward condition.  This should help to tune this new feature.
+// *************The idea is for feed forward to accelerate sharp stick commands by replaceing the pidoutput for P with the derivative of stick inputs
+// *************but leave softer commands running on the stock pid controller with the softer feel of the measurement based D term.  LEFT-LEFT-DOWN gesture to exit.
+// *************https://www.rcgroups.com/forums/showpost.php?p=39667667&postcount=13956
+//#define FEED_FORWARD_STRENGTH 1.5f
 
 //**********************************************************************************************************************
 //***********************************************RECEIVER SETTINGS******************************************************

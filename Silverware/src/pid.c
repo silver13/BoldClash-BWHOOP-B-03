@@ -116,6 +116,7 @@ extern int onground;
 extern float looptime;
 extern int in_air;
 extern char aux[AUXNUMBER];
+extern int ledcommand;
 
 
 #ifdef NORMAL_DTERM
@@ -213,6 +214,34 @@ float pid(int x )
     pidoutput[x] = error[x] * pidkp[x];
     #endif
     
+#ifdef FEED_FORWARD_STRENGTH
+if (aux[CH_AUX1]){		
+	if ( x < 2 ) {
+		static float lastSetpoint[2];
+		static float bucket[2];
+		static float buckettake[2];
+		if ( setpoint[x] != lastSetpoint[x] ) {
+			bucket[x] += setpoint[x] - lastSetpoint[x];
+			buckettake[x] = bucket[x] * 0.2f; // Spread it evenly over 5 ms (PACKET_PERIOD)
+		}
+		if ( fabsf( bucket[x] ) > 0.0f ) {
+			float take = buckettake[x];
+			if ( bucket[x] < 0.0f != take < 0.0f || fabsf( take ) > fabsf( bucket[x] ) ) {
+				take = bucket[x];
+			}
+			bucket[x] -= take;
+
+			float ff = take * timefactor * FEED_FORWARD_STRENGTH * pidkd[x];
+			if ( ff < 0.0f == pidoutput[x] < 0.0f && fabsf( ff ) > fabsf( pidoutput[x] ) ) {
+				pidoutput[x] = ff;
+				ledcommand = 1;
+			}
+		}
+		lastSetpoint[x] = setpoint[x];
+	}
+}	
+#endif		
+		
     // I term	
     pidoutput[x] += ierror[x];
 
