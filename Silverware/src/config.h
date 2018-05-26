@@ -307,8 +307,6 @@
 #define MOTOR_MIN_ENABLE
 #define MOTOR_MIN_VALUE 0.05
 
-// disable inbuilt expo functions
-//#define DISABLE_EXPO
 
 #ifdef WEAK_FILTERING
 #define SOFT_KALMAN_GYRO KAL1_HZ_90

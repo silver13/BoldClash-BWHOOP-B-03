@@ -54,7 +54,7 @@ void xn_readpayload( int *data , int size )
 	int index = 0;
 	spi_cson();
 	spi_sendrecvbyte( R_RX_PAYLOAD ); // read rx payload
-	while( index < size 
+	while( index < size )
 	{
 	data[index]= spi_sendzerorecvbyte();
 	index++;

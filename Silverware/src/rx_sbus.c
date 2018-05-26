@@ -311,22 +311,22 @@ if ( frame_received )
         rx[3] = 0.000610128f * channels[2]; 
         
         if ( rx[3] > 1 ) rx[3] = 1;
-     #ifndef DISABLE_EXPO
+				
 							if (aux[LEVELMODE]){
 								if (aux[RACEMODE]){
-									rx[0] = rcexpo(rx[0], ANGLE_EXPO_ROLL);
-									rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
-									rx[2] = rcexpo(rx[2], ANGLE_EXPO_YAW);
+									if ( ANGLE_EXPO_ROLL > 0.01) rx[0] = rcexpo(rx[0], ANGLE_EXPO_ROLL);
+									if ( ACRO_EXPO_PITCH > 0.01) rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
+									if ( ANGLE_EXPO_YAW > 0.01) rx[2] = rcexpo(rx[2], ANGLE_EXPO_YAW);
 								}else{
-									rx[0] = rcexpo(rx[0], ANGLE_EXPO_ROLL);
-									rx[1] = rcexpo(rx[1], ANGLE_EXPO_PITCH);
-									rx[2] = rcexpo(rx[2], ANGLE_EXPO_YAW);}
+									if ( ANGLE_EXPO_ROLL > 0.01) rx[0] = rcexpo(rx[0], ANGLE_EXPO_ROLL);
+									if ( ANGLE_EXPO_PITCH > 0.01) rx[1] = rcexpo(rx[1], ANGLE_EXPO_PITCH);
+									if ( ANGLE_EXPO_YAW > 0.01) rx[2] = rcexpo(rx[2], ANGLE_EXPO_YAW);}
 							}else{
-								rx[0] = rcexpo(rx[0], ACRO_EXPO_ROLL);
-								rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
-								rx[2] = rcexpo(rx[2], ACRO_EXPO_YAW);
-							}
-#endif   
+								if ( ACRO_EXPO_ROLL > 0.01) rx[0] = rcexpo(rx[0], ACRO_EXPO_ROLL);
+								if ( ACRO_EXPO_PITCH > 0.01) rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
+								if ( ACRO_EXPO_YAW > 0.01) rx[2] = rcexpo(rx[2], ACRO_EXPO_YAW);
+							}  
+							
 			aux[CHAN_5] = (channels[4] > 993) ? 1 : 0;
 		    aux[CHAN_6] = (channels[5] > 993) ? 1 : 0;
 		    aux[CHAN_7] = (channels[6] > 993) ? 1 : 0;
