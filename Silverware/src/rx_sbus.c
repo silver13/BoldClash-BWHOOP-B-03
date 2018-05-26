@@ -173,7 +173,6 @@ if ( framestarted == 0)
             {
                 // start detected
                 framestart = rx_start;
-                rx_start = rx_start;
                 framestarted = 1;  
                 stat_framestartcount++; 
             break;                
