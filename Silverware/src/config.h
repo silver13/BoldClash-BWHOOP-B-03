@@ -38,7 +38,8 @@
 // *************RIGHT-RIGHT-DOWN will change over to the error type D calculation.  LEFT-LEFT-DOWN will change back to measurement.
 //#define ERROR_D_TERM
 
-
+//WARNING WARNING WARNING - I FEEL LIKE FEED FORWARD IS A BROKEN FEATURE - PLEASE JOIN IN DISCUSSION AT MICRO MOTOR COMMUNITY
+//IF YOU WOULD LIKE TO PARTICIPATE IN HELPING DEVELOP THIS FEATURE.  MAYBE I'M WRONG - DECIDE FOR YOURSELF.  HAPPY TESTING
 // *************SPECIAL TEST MODE TO ACTIVATE FEEDFORWARD PID CONTROLLER
 // *************This define will allow you to test the feeling of a feed forward pid controller.  The quad will start up with the regular
 // *************pid controller running.  To activate feed forward - enter RIGHT-RIGHT-DOWN stick gesture.  When feed forward activates during
