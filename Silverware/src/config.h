@@ -38,8 +38,8 @@
 // *************RIGHT-RIGHT-DOWN will change over to the error type D calculation.  LEFT-LEFT-DOWN will change back to measurement.
 //#define ERROR_D_TERM
 
-//WARNING WARNING WARNING - I FEEL LIKE FEED FORWARD IS A BROKEN FEATURE - PLEASE JOIN IN DISCUSSION AT MICRO MOTOR COMMUNITY
-//IF YOU WOULD LIKE TO PARTICIPATE IN HELPING DEVELOP THIS FEATURE.  MAYBE I'M WRONG - DECIDE FOR YOURSELF.  HAPPY TESTING
+//WARNING WARNING WARNING - I FEEL LIKE THIS FEATURE IS BROKEN.  JOIN IN DISCUSSION ON MICRO MOTOR COMMUNITY OR RCGOUPS AFTER YOU TEST FOR YOURSELF.
+//I SEE/FEEL FEED FORWARD ACTIVATE WHEN STICKS LEAVE OR RETURN TO NEUTRAL POINT.  THAT SEEMS WRONG TO ME.
 // *************SPECIAL TEST MODE TO ACTIVATE FEEDFORWARD PID CONTROLLER
 // *************This define will allow you to test the feeling of a feed forward pid controller.  The quad will start up with the regular
 // *************pid controller running.  To activate feed forward - enter RIGHT-RIGHT-DOWN stick gesture.  When feed forward activates during
@@ -47,7 +47,9 @@
 // *************The idea is for feed forward to accelerate sharp stick commands by replaceing the pidoutput for P with the derivative of stick inputs
 // *************but leave softer commands running on the stock pid controller with the softer feel of the measurement based D term.  LEFT-LEFT-DOWN gesture to exit.
 // *************https://www.rcgroups.com/forums/showpost.php?p=39667667&postcount=13956
-//#define FEED_FORWARD_STRENGTH 1.5f
+//#define FEED_FORWARD_STRENGTH 5.0f
+
+
 
 //**********************************************************************************************************************
 //***********************************************RECEIVER SETTINGS******************************************************
@@ -136,27 +138,29 @@
 //**********************************************************************************************************************
 //***********************************************VOLTAGE SETTINGS*******************************************************
 
-// *************battery saver
-// *************do not start software if battery is too low
-// *************flashes 2 times repeatedly at startup
-//#define STOP_LOWBATTERY
-
-// *************voltage to start warning
-#define VBATTLOW 3.5
+// ************* Raises pids automatically as battery voltage drops in flight
+#define PID_VOLTAGE_COMPENSATION
 
 // *************compensation for battery voltage vs throttle drop
 #define VDROP_FACTOR 0.7
 // *************calculate above factor automatically
 #define AUTO_VDROP_FACTOR
 
-// *************voltage hysteresis in volts
-#define HYST 0.10
-
 // *************lower throttle when battery below threshold - forced landing low voltage cutoff
 //#define LVC_LOWER_THROTTLE
 #define LVC_LOWER_THROTTLE_VOLTAGE 3.30
 #define LVC_LOWER_THROTTLE_VOLTAGE_RAW 2.70
 #define LVC_LOWER_THROTTLE_KP 3.0
+
+// *************do not start software if battery is too low
+// *************flashes 2 times repeatedly at startup
+//#define STOP_LOWBATTERY
+
+// *************voltage to start warning led blinking
+#define VBATTLOW 3.5
+
+// *************voltage hysteresis in volts
+#define HYST 0.10
 
 // *************automatic voltage telemetry correction/calibration factor - change the values below if voltage telemetry is inaccurate
 #define ACTUAL_BATTERY_VOLTAGE 4.20
@@ -243,7 +247,7 @@
 #define MIX_INCREASE_THROTTLE_3
 //Currently eperimenting with the value 1.0f below for whoop format.  Default was previously .2f and should remain .2f
 //for anything other than a whoop.  The value 1.0f gives "airmode" 100% authority over throttle and is AWESOME on a whoop for locked in dives!!
-#define MIX_THROTTLE_INCREASE_MAX 0.2f
+#define MIX_THROTTLE_INCREASE_MAX 1.0f
 
 // *************invert yaw pid for "PROPS OUT" configuration
 //#define INVERT_YAW_PID
@@ -254,12 +258,13 @@
 //**************joelucid's transient windup protection.  Removes roll and pitch bounce back after flips
 #define TRANSIENT_WINDUP_PROTECTION
 
+
+
 //**********************************************************************************************************************
 //***********************************************ADDITIONAL FEATURES****************************************************
 
-// *************lost quad beeps using motors (30 sec timeout)
+// *************lost quad beeps using motors (30 sec timeout) - pulses motors after timeout period to help find a lost model
 //#define MOTOR_BEEPS
-
 
 // *************0 - 7 - power for telemetry
 #define TX_POWER 7
@@ -280,7 +285,6 @@
 // *************flash_save 2: accel calibration to option bytes
 #define FLASH_SAVE1
 //#define FLASH_SAVE2
-
 
 // enable inverted flight code ( brushless only )
 //#define INVERTED_ENABLE

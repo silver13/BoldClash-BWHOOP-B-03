@@ -108,6 +108,7 @@ float ierror[PIDNUMBER] = { 0 , 0 , 0};
 float pidoutput[PIDNUMBER];
 float setpoint[PIDNUMBER];
 static float lasterror[PIDNUMBER];
+float v_compensation = 1.00;
 
 extern float error[PIDNUMBER];
 extern float looptime;
@@ -116,8 +117,12 @@ extern int onground;
 extern float looptime;
 extern int in_air;
 extern char aux[AUXNUMBER];
+extern float vbattfilt;
 extern int ledcommand;
 
+
+// multiplier for pids at 3V - for PID_VOLTAGE_COMPENSATION - default 1.33f from H101 code
+#define PID_VC_FACTOR 1.33f
 
 #ifdef NORMAL_DTERM
 static float lastrate[PIDNUMBER];
@@ -230,8 +235,8 @@ if (aux[CH_AUX1]){
 				take = bucket[x];
 			}
 			bucket[x] -= take;
-
 			float ff = take * timefactor * FEED_FORWARD_STRENGTH * pidkd[x];
+			
 			if ( ff < 0.0f == pidoutput[x] < 0.0f && fabsf( ff ) > fabsf( pidoutput[x] ) ) {
 				pidoutput[x] = ff;
 				ledcommand = 1;
@@ -313,10 +318,12 @@ if (aux[CH_AUX1]){
 						lastrate[x] = gyro[x];	
             dterm = lpf2(  dterm, x );
             pidoutput[x] += dterm;}
-				#endif                           
-     
+				#endif   
+
     }
-    
+    		#ifdef PID_VOLTAGE_COMPENSATION
+					pidoutput[x] *= v_compensation;
+				#endif
     limitf(  &pidoutput[x] , outlimit[x]);
 
 return pidoutput[x];		 		
@@ -328,6 +335,12 @@ return pidoutput[x];
 void pid_precalc()
 {
 	timefactor = 0.0032f / looptime;
+	
+	#ifdef PID_VOLTAGE_COMPENSATION
+	v_compensation = mapf ( vbattfilt , 3.00 , 4.00 , PID_VC_FACTOR , 1.00);
+	if( v_compensation > PID_VC_FACTOR) v_compensation = PID_VC_FACTOR;
+	if( v_compensation < 1.00f) v_compensation = 1.00;
+#endif
 }
 
 
