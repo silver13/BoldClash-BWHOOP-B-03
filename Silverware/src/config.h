@@ -247,7 +247,7 @@
 #define MIX_INCREASE_THROTTLE_3
 //Currently eperimenting with the value 1.0f below for whoop format.  Default was previously .2f and should remain .2f
 //for anything other than a whoop.  The value 1.0f gives "airmode" 100% authority over throttle and is AWESOME on a whoop for locked in dives!!
-#define MIX_THROTTLE_INCREASE_MAX 1.0f
+#define MIX_THROTTLE_INCREASE_MAX 0.2f
 
 // *************invert yaw pid for "PROPS OUT" configuration
 //#define INVERT_YAW_PID
