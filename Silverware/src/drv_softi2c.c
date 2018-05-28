@@ -310,7 +310,7 @@ return data;
 }
 
 
-int softi2c_write( int device_address , int address, int value)
+int softi2c_writereg( int device_address , int address, int value)
 {
  _sendstart();
  _sendbyte((device_address<<1));

@@ -116,6 +116,7 @@ extern int rxmode;
 extern int failsafe;
 extern float hardcoded_pid_identifier;
 extern int onground;
+extern int liberror;
 
 // for led flash on gestures
 int ledcommand = 0;
@@ -123,6 +124,7 @@ int ledblink = 0;
 unsigned long ledcommandtime = 0;
 
 void failloop( int val);
+void mainloop( void );
 
 int random_seed = 0;
 
@@ -154,7 +156,8 @@ clk_init();
 	pwm_set( MOTOR_BR , 0);
 
 
-	sixaxis_init();
+    // sixaxis_init
+    sixaxis_init();
 
 	if ( sixaxis_check() )
 	{
@@ -247,34 +250,39 @@ extern float accelcal[3];
 #endif
 
 
-extern int liberror;
 if ( liberror )
 {
 		failloop(7);
 }
 
 
+    sixaxis_start();
 
- lastlooptime = gettime();
 
+    lastlooptime = gettime();
+
+//     while(1) mainloop();
+    while(1);
+
+}
 
 //
 //
 // 		MAIN LOOP
 //
 //
-
-
-	while(1)
+void mainloop(void)
 	{
+/*
 		// gettime() needs to be called at least once per second
-		unsigned long time = gettime();
+		unsigned long time;
+        time = gettime();
 		looptime = ((uint32_t)( time - lastlooptime));
 		if ( looptime <= 0 ) looptime = 1;
 		looptime = looptime * 1e-6f;
 		if ( looptime > 0.02f ) // max loop 20ms
 		{
-			failloop( 6);
+// 			failloop( 6);
 			//endless loop
 		}
 
@@ -283,7 +291,7 @@ if ( liberror )
 		lpf ( &debug.timefilt , looptime, 0.998 );
 		#endif
 		lastlooptime = time;
-
+*/
 		if ( liberror > 20)
 		{
 			failloop(8);
@@ -291,7 +299,7 @@ if ( liberror )
 		}
 
         // read gyro and accelerometer data
-		sixaxis_read();
+// 		sixaxis_read();
 
 #ifdef ENABLE_BARO
         // read the altitude
@@ -506,13 +514,13 @@ rgb_led_lvc( );
 checkrx();
 
 
-while ( (gettime() - time) < LOOPTIME );
+// while ( (gettime() - time) < LOOPTIME );
 
 
 	}// end loop
 
 
-}
+// }
 
 // 2 - low battery at powerup - if enabled by config
 

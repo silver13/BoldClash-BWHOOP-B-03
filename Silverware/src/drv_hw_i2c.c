@@ -181,7 +181,8 @@ I2C_Cmd(I2C1, ENABLE);
 int hw_i2c_sendheader(int address, int reg, int bytes)
 {
 
-unsigned int i2c_timeout = 0;
+static unsigned int i2c_timeout;
+i2c_timeout = 0;
 //check i2c ready
 while(I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY) == SET)
 	{
@@ -261,7 +262,8 @@ int hw_i2c_readdata(int address, int reg, int *data, int size )
 {
 
 static uint8_t i = 0;
-unsigned int i2c_timeout = 0;
+static unsigned int i2c_timeout;
+i2c_timeout = 0;
 
 	// send start + writeaddress + register location, common send+receive
 hw_i2c_sendheader(address, reg, 1 );

@@ -7,4 +7,4 @@ void softi2c_writedata(int device_address ,int register_address , int *data, int
 int softi2c_readreg(int device_address , int register_address);
 int softi2c_readbytes(int device_address , int register_address , int size);
 
-int softi2c_write( int device_address , int address,int value);
+int softi2c_writereg( int device_address , int address,int value);

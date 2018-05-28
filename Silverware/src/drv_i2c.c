@@ -67,7 +67,7 @@ void i2c_writereg(int address, int reg ,int data)
 	#endif
 
 	#ifdef USE_SOFTWARE_I2C
-	softi2c_write( address , reg , data);
+	softi2c_writereg( address , reg , data);
 	#endif
 
 	#ifdef USE_DUMMY_I2C
