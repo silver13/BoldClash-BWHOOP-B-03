@@ -34,9 +34,9 @@
 // Select Dshot150 or Dshot300. Dshot150 consumes quite some main loop time.
 // DShot300 may require removing the input filter cap on the ESC:
 
-#define DSHOT600
+// #define DSHOT600
 //#define DSHOT300
-//#define DSHOT150
+#define DSHOT150
 
 
 

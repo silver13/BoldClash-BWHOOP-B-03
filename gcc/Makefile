@@ -14,7 +14,7 @@ OD=arm-none-eabi-objdump
 topdir = ..
 
 DEFS = -DUSE_STDPERIPH_DRIVER -DSTM32F030
-STARTUP = $(topdir)/Libraries/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc_ride7/startup_stm32f031.s
+STARTUP = $(topdir)/Libraries/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc_ride7/startup_stm32f030.s
 
 MCU = cortex-m0
 MCFLAGS = -mcpu=$(MCU) -g -ggdb -mthumb -fdata-sections -ffunction-sections -fsingle-precision-constant -ffast-math -nostartfiles --specs=nano.specs --specs=nosys.specs -flto
@@ -25,8 +25,8 @@ INCLUDES = -I$(topdir)/Silverware/src/ \
 	-I$(topdir)/Utilities/ \
 	-I$(topdir)/Libraries/STM32F0xx_StdPeriph_Driver/inc/
 
-# OPTIMIZE = -Os
-OPTIMIZE = -Og
+OPTIMIZE = -Os
+#OPTIMIZE = -Og
 
 # CFLAGS = $(MCFLAGS)  $(OPTIMIZE)  $(DEFS) -I. -I./ $(INCLUDES)  -Wl,-T,flash.ld,-Map,output.map,--gc-sections -std=gnu99
 CFLAGS = $(MCFLAGS)  $(OPTIMIZE)  $(DEFS) -I. -I./ $(INCLUDES)  -Wl,-T,flash.ld,-Map,output.map,--gc-sections

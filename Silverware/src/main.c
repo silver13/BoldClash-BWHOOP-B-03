@@ -259,10 +259,10 @@ if ( liberror )
     sixaxis_start();
 
 
-    lastlooptime = gettime();
-
+//     lastlooptime = gettime();
+    looptime = 1e-3f;
 //     while(1) mainloop();
-    while(1);
+//     while(1);
 
 }
 
@@ -274,7 +274,7 @@ if ( liberror )
 void mainloop(void)
 	{
 /*
-		// gettime() needs to be called at least once per second
+        // gettime() needs to be called at least once per second
 		unsigned long time;
         time = gettime();
 		looptime = ((uint32_t)( time - lastlooptime));
@@ -282,7 +282,7 @@ void mainloop(void)
 		looptime = looptime * 1e-6f;
 		if ( looptime > 0.02f ) // max loop 20ms
 		{
-// 			failloop( 6);
+			failloop( 6);
 			//endless loop
 		}
 
@@ -292,14 +292,14 @@ void mainloop(void)
 		#endif
 		lastlooptime = time;
 */
-		if ( liberror > 20)
+        if ( liberror > 20)
 		{
 			failloop(8);
 			// endless loop
 		}
 
         // read gyro and accelerometer data
-// 		sixaxis_read();
+		sixaxis_read(0);
 
 #ifdef ENABLE_BARO
         // read the altitude

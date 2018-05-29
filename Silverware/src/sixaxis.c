@@ -151,7 +151,7 @@ void sixaxis_init( void)
 	/* Time base configuration */
 	TIM_TimeBaseStructure.TIM_Period =							SIXAXIS_READ_PERIOD;
 // 	TIM_TimeBaseStructure.TIM_Period =							sixaxis_read_period;
-	TIM_TimeBaseStructure.TIM_Prescaler = 					3;
+	TIM_TimeBaseStructure.TIM_Prescaler = 					0;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 			TIM_CKD_DIV1;
 	TIM_TimeBaseStructure.TIM_CounterMode = 				TIM_CounterMode_Up;
 	TIM_TimeBaseInit(TIM17, &TIM_TimeBaseStructure);
@@ -171,7 +171,7 @@ void sixaxis_init( void)
 	DMA_InitTypeDef DMA_InitStructure;
 
 	DMA_StructInit(&DMA_InitStructure);
-// 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
 
 	/* DMA1 Channe3 configuration ----------------------------------------------*/
 	DMA_DeInit(DMA1_Channel3);
@@ -186,20 +186,20 @@ void sixaxis_init( void)
 	DMA_InitStructure.DMA_Mode = 									DMA_Mode_Normal;
 	DMA_InitStructure.DMA_Priority = 							DMA_Priority_High;
 	DMA_InitStructure.DMA_M2M = 									DMA_M2M_Disable;
-// 	DMA_Init(DMA1_Channel3, &DMA_InitStructure);
+	DMA_Init(DMA1_Channel3, &DMA_InitStructure);
 
 	/* configure DMA_Channel3 TC interrupt */
    	NVIC_InitStructure.NVIC_IRQChannel = 					DMA1_Channel2_3_IRQn;
-// 	NVIC_Init(&NVIC_InitStructure);
+	NVIC_Init(&NVIC_InitStructure);
 	DMA_ClearITPendingBit(DMA1_IT_TC3);
-// 	DMA_ITConfig(DMA1_Channel3, DMA_IT_TC, ENABLE);
+	DMA_ITConfig(DMA1_Channel3, DMA_IT_TC, ENABLE);
 
 //     TIM_SetCounter( TIM17, SIXAXIS_READ_PERIOD );
     DMA_Cmd( DMA1_Channel3, DISABLE );
     I2C_DMACmd( I2C1, I2C_DMAReq_Rx, DISABLE );
-//     TIM_Cmd( TIM17, DISABLE );
-    TIM_Cmd( TIM17, ENABLE );
-    TIM_SetCounter( TIM17, 0 );
+    TIM_Cmd( TIM17, DISABLE );
+//     TIM_Cmd( TIM17, ENABLE );
+//     TIM_SetCounter( TIM17, 0 );
 //     while( !DMA_GetFlagStatus( DMA1_FLAG_TC3 ) ) { };
 
 // 	}
@@ -230,26 +230,25 @@ void TIM17_IRQHandler(void)
 //     TIM_ClearFlag(TIM17, TIM_FLAG_Update);
 //     TIM17->SR = (uint16_t)~TIM_IT_Update;
 //     TIM_Cmd( TIM17, DISABLE );
-/*
 //     DMA_ClearFlag( DMA1_FLAG_GL3 );
+/*
     DMA1_Channel3->CNDTR = 14;
-
     DMA_Cmd( DMA1_Channel3, ENABLE );
     I2C_DMACmd( I2C1, I2C_DMAReq_Rx, ENABLE );
-
     hw_i2c_sendheader(SOFTI2C_GYRO_ADDRESS, 59 , 1 );
     //send restart + readaddress
     I2C_TransferHandling(I2C1, (SOFTI2C_GYRO_ADDRESS)<<1 , 14, I2C_AutoEnd_Mode, I2C_Generate_Start_Read);
 */
+    /*
     // gettime() needs to be called at least once per second
     unsigned long time;
     volatile float looptime;
     time = gettime();
     looptime = ((uint32_t)( time - lastlooptime)) * 1e-6f;
     lastlooptime = time;
-
+*/
 //     sixaxis_read(0); // 0 = No DMA mainloop
-//     mainloop();
+     mainloop();
 
 //     }
 }
@@ -258,14 +257,14 @@ void TIM17_IRQHandler(void)
 void DMA1_Channel2_3_IRQHandler(void)
 {
 	DMA_ClearITPendingBit(DMA1_IT_TC3);
-    DMA_ClearFlag( DMA1_FLAG_GL3 );
+//     DMA_ClearFlag( DMA1_FLAG_GL3 );
     I2C_DMACmd( I2C1, I2C_DMAReq_Rx, DISABLE );
     DMA_Cmd( DMA1_Channel3, DISABLE );
 
 //     TIM_SetCounter( TIM17, 0 );
 //     TIM_Cmd( TIM17, ENABLE );
-//     sixaxis_read(1); // 1 = DMA mainloop
-//     mainloop();
+    sixaxis_read(1); // 1 = DMA mainloop
+    mainloop();
 
 //     TIM_Cmd( TIM17, ENABLE );
 
