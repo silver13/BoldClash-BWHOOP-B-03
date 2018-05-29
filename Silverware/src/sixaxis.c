@@ -231,14 +231,13 @@ void TIM17_IRQHandler(void)
 //     TIM17->SR = (uint16_t)~TIM_IT_Update;
 //     TIM_Cmd( TIM17, DISABLE );
 //     DMA_ClearFlag( DMA1_FLAG_GL3 );
-/*
     DMA1_Channel3->CNDTR = 14;
     DMA_Cmd( DMA1_Channel3, ENABLE );
     I2C_DMACmd( I2C1, I2C_DMAReq_Rx, ENABLE );
     hw_i2c_sendheader(SOFTI2C_GYRO_ADDRESS, 59 , 1 );
     //send restart + readaddress
     I2C_TransferHandling(I2C1, (SOFTI2C_GYRO_ADDRESS)<<1 , 14, I2C_AutoEnd_Mode, I2C_Generate_Start_Read);
-*/
+
     /*
     // gettime() needs to be called at least once per second
     unsigned long time;
@@ -247,8 +246,8 @@ void TIM17_IRQHandler(void)
     looptime = ((uint32_t)( time - lastlooptime)) * 1e-6f;
     lastlooptime = time;
 */
-//     sixaxis_read(0); // 0 = No DMA mainloop
-     mainloop();
+//      sixaxis_read(1); // 0 = No DMA mainloop
+//      mainloop();
 
 //     }
 }
