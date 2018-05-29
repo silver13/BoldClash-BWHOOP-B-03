@@ -299,7 +299,7 @@ void mainloop(void)
 		}
 
         // read gyro and accelerometer data
-		sixaxis_read(0);
+// 		sixaxis_read(0);
 
 #ifdef ENABLE_BARO
         // read the altitude
