@@ -109,8 +109,8 @@
 // so they have to be referenced to the new gyro position
 //#define SENSOR_ROTATE_45_CCW
 //#define SENSOR_ROTATE_45_CW
-// #define SENSOR_ROTATE_90_CW  // Normal
-#define SENSOR_ROTATE_90_CCW    // Backwards
+#define SENSOR_ROTATE_90_CW  // Normal
+//#define SENSOR_ROTATE_90_CCW    // Backwards
 //#define SENSOR_ROTATE_180
 //#define SENSOR_FLIP_180
 
@@ -205,7 +205,7 @@
 // Assign one pin to one motor
 // pins PA0 - PA11 , PB0 , PB1
 
-/* Normal
+/* Normal */
 // back-left motor ( motor 0 )
 #define MOTOR0_PIN_PB1
 
@@ -217,13 +217,13 @@
 
 // front-right motor ( motor 3 )
 #define MOTOR3_PIN_PA7
-*/
-/* backwards */
+
+/* backwards
 #define MOTOR0_PIN_PA7
 #define MOTOR1_PIN_PA6
 #define MOTOR2_PIN_PA4
 #define MOTOR3_PIN_PB1
-
+*/
 
 
 
