@@ -29,61 +29,30 @@ THE SOFTWARE.
 #include "config.h"
 #include "led.h"
 #include "defines.h"
-#include "math.h"
 
 
 //************************************PIDS****************************************
 
-
-//Origional 6mm Whoop Tune 615 19600kv - set filtering to WEAK_FILTERING 
-//                         ROLL       PITCH     YAW
-//float pidkp[PIDNUMBER] = {19.5e-2 , 19.5e-2  , 7.5e-1 }; 
-//float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 13e-1 };	
-//float pidkd[PIDNUMBER] = { 6.9e-1 , 6.9e-1  , 5.5e-1 };
-
-//6mm & 7mm Abduction Pids (Team Alienwhoop)- set filtering to WEAK_FILTERING for 6mm, and STRONG_FILTERING or VERY_STRONG_FILTERING for 7mm
-//                         ROLL       PITCH     YAW
-float pidkp[PIDNUMBER] = {21.5e-2 , 21.5e-2  , 10.5e-1 }; 
-float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 15e-1 };	
-float pidkd[PIDNUMBER] = { 7.4e-1 , 7.4e-1  , 0.0e-1 };
-
-//6mm AwesomeSauce 20000kv Pids (Team Alienwhoop) - set filtering to WEAK_FILTERING
-//                         ROLL       PITCH     YAW
-//float pidkp[PIDNUMBER] = { 25.5e-2 , 25.5e-2  , 11.5e-1 }; 
-//float pidki[PIDNUMBER] = { 20.5e-1  , 20.5e-1 , 16e-1 };	
-//float pidkd[PIDNUMBER] = { 11.4e-1 , 11.4e-1  , 4.9e-1 };	
-
-//BOSS 6 & 7 - 615 and 716 motors, hm830 46mm props  - set filtering to VERY_STRONG_FILTERING
-//                         ROLL       PITCH     YAW
-//float pidkp[PIDNUMBER] = { 24.5e-2 , 24.5e-2  , 9.5e-1 }; 
-//float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 8e-1 };	
-//float pidkd[PIDNUMBER] = {14.1e-1 , 14.1e-1  , 7e-1 };
-
-//(EXPERIMENTAL) BOSS 7 with TORQUE_BOOST at 2.0 - set filtering to VERY_STRONG_FILTERING
+// Using Torque Boost 1 and Strong Filtering
+//(EXPERIMENTAL) chime13
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = { 22.7e-2 , 22.7e-2  , 9.5e-1 }; 
 //float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 8e-1 };	
-//float pidkd[PIDNUMBER] = {8.7e-1 , 8.7e-1  , 0e-1 };	
+//float pidkd[PIDNUMBER] = { 7.4e-1 , 7.4e-1  , 0.0e-1 };	
 
-//BOSS 8.0 - 816 motors, kingkong 66mm props  - set filtering to WEAK_FILTERING
+// Using Torque Boost 2 and Strong Filtering
+//(EXPERIMENTAL) chime13
 //                         ROLL       PITCH     YAW
-//float pidkp[PIDNUMBER] = { 26.7e-2 , 26.7e-2  , 9.5e-1 }; 
-//float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 8e-1 };	
-//float pidkd[PIDNUMBER] = {16.2e-1 , 16.2e-1  , 7e-1 };	
-
-//BOSS 8.5 - 820 motors, kingkong 66mm props  - set filtering to STRONG_FILTERING
-//                         ROLL       PITCH     YAW
-//float pidkp[PIDNUMBER] = { 29.5e-2 , 29.5e-2  , 11.5e-1 }; 
-//float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 12.0e-1 };	
-//float pidkd[PIDNUMBER] = {17.5e-1 , 17.5e-1  , 7e-1 };
-
+float pidkp[PIDNUMBER] = { 22.7e-2 , 22.7e-2  , 9.5e-1 }; 
+float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 8e-1 };	
+float pidkd[PIDNUMBER] = { 7.4e-1 , 7.4e-1  , 0.0e-1 };	
 
 //************************************Setpoint Weight****************************************
 // "setpoint weighting" 0.0 - 1.0 where 1.0 = normal pid
 #define ENABLE_SETPOINT_WEIGHTING
 //            Roll   Pitch   Yaw
-//float b[3] = { 0.97 , 0.98 , 0.95};   //RACE
-float b[3] = { 0.93 , 0.93 , 0.9};      //FREESTYLE
+float b[3] = { 0.99 , 0.99 , 0.95};   //RACE
+//float b[3] = { 0.93 , 0.93 , 0.9};      //FREESTYLE
 
 /// output limit			
 const float outlimit[PIDNUMBER] = { 1.7 , 1.7 , 0.5 };
@@ -220,7 +189,7 @@ float pid(int x )
     #endif
     
 #ifdef FEED_FORWARD_STRENGTH
-if (aux[CH_AUX1]){		
+//if (aux[CH_AUX1]){	//I want it full time	
 	if ( x < 2 ) {
 		static float lastSetpoint[2];
 		static float bucket[2];
@@ -293,17 +262,17 @@ if (aux[CH_AUX1]){
         
         #if (defined DTERM_LPF_2ND_HZ && defined ERROR_D_TERM)
         float dterm;
-        static float lastrate[3]; 
+        //static float lastrate[3]; 
 				static float lasterrorx[PIDNUMBER];
         float lpf2( float in, int num);
         if ( pidkd[x] > 0)
         {
-					if (aux[CH_AUX1]){
+					//if (aux[CH_AUX1]){
 						     dterm =  (error[x] - lasterrorx[x]) * pidkd[x] * timefactor;
                  lasterrorx[x] = error[x];
-					}else{	
-								 dterm = - (gyro[x] - lastrate[x]) * pidkd[x] * timefactor;
-								 lastrate[x] = gyro[x];	}
+					//}else{	
+								// dterm = - (gyro[x] - lastrate[x]) * pidkd[x] * timefactor;
+								// lastrate[x] = gyro[x];	}
 	
             dterm = lpf2(  dterm, x );
             pidoutput[x] += dterm;}

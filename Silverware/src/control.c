@@ -55,7 +55,6 @@ extern float rx[];
 extern float gyro[3];
 extern int failsafe;
 extern float pidoutput[PIDNUMBER];
-extern float setpoint[3];
 
 extern float angleerror[];
 extern float attitude[];
@@ -179,13 +178,10 @@ pid_precalc();
 	else
 	  {	// rate mode
 
-    setpoint[0] = rxcopy[0] * (float) MAX_RATE * DEGTORAD;
-		setpoint[1] = rxcopy[1] * (float) MAX_RATE * DEGTORAD;
-		setpoint[2] = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD;
-          
-		for ( int i = 0; i < 3; i++ ) {
-			error[i] = setpoint[i] - gyro[i];
-		}
+		  error[0] = rxcopy[0] * (float) MAX_RATE * DEGTORAD  - gyro[0];
+		  error[1] = rxcopy[1] * (float) MAX_RATE * DEGTORAD  - gyro[1];
+
+          error[2] = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD  - gyro[2];
 
 	  }
 

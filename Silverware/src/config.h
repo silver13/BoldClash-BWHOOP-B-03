@@ -1,134 +1,43 @@
 #include "defines.h"
 #include "hardware.h"
 
-//Universal pids are already loaded for 6mm and 7mm whoops by default.  Adjust pids in pid.c file for any non whoop builds.  
+#define E011
+#define ERROR_D_TERM
 
-//**********************************************************************************************************************
-//***********************************************HARDWARE SELECTION*****************************************************
-
-// *************DEFINE FLIGHT CONTROLLER HARDWARE
-// *************SELECT ONLY ONE 
-// *************uncomment BWHOOP define for bwhoop, bwhoop pro, E011C Santa Edition, and Beta FPV Lite Flight Controllers
-// *************uncomment E011 define for E011 flight Controller
-// *************uncomment H8mini_blue_board for the H8 mini flight controller with blue circuit board
-#define BWHOOP
-//#define E011
-//#define H8mini_blue_board
-//#define Alienwhoop_ZERO  // requires defining RX_SBUS radio protocol
-
-
-
-//**********************************************************************************************************************
-//***********************************************BETA TESTING ON STICK GESTURE******************************************
-// *************DEFINE ONLY ONE OPTION FROM THIS SECTION!!!
-// *************This is a new section that will allow certain beta testing features to be activated by the stick gesture
-// *************auxillary channel.  Even when defined - the quad will power up with these features off.  To activate -  
-// *************use the following stick gesture on the pitch/roll stick RIGHT-RIGHT-DOWN (leds will blink). To deactivate - 
-// *************stick gesture LEFT-LEFT-DOWN.  Please test the features you are interested in below and give feedback!!!
-
-// *************SPECIAL TEST MODE TO CHECK TRANSMITTER STICK THROWS
-// *************This define will allow you to check if your radio is reaching 100% throws entering <RIGHT-RIGHT-DOWN> gesture
-// ************* will disable throttle and will rapid blink the led when sticks are moved to 100% throws
-// *************entering <LEFT-LEFT-DOWN> will return the quad to normal operation.
-//#define STICK_TRAVEL_CHECK
-
-// *************SPECIAL TEST MODE TO CHANGE D TERM CALCULATION TO ERROR INSTEAD OF MEASUREMENT
-// *************This define will enable you to change the calculation of the PID's D term to track both sticks and gyro (error method)
-// *************instead of just gyro (measurement method).  The quad will start up using the measurement calculation.  Entering 
-// *************RIGHT-RIGHT-DOWN will change over to the error type D calculation.  LEFT-LEFT-DOWN will change back to measurement.
-//#define ERROR_D_TERM
-
-//WARNING WARNING WARNING - I FEEL LIKE THIS FEATURE IS BROKEN.  JOIN IN DISCUSSION ON MICRO MOTOR COMMUNITY OR RCGOUPS AFTER YOU TEST FOR YOURSELF.
-//I SEE/FEEL FEED FORWARD ACTIVATE WHEN STICKS LEAVE OR RETURN TO NEUTRAL POINT.  THAT SEEMS WRONG TO ME.
-// *************SPECIAL TEST MODE TO ACTIVATE FEEDFORWARD PID CONTROLLER
-// *************This define will allow you to test the feeling of a feed forward pid controller.  The quad will start up with the regular
-// *************pid controller running.  To activate feed forward - enter RIGHT-RIGHT-DOWN stick gesture.  When feed forward activates during
-// *************sharp stick commands - the leds will rapidly blink to indicate a feed forward condition.  This should help to tune this new feature.
-// *************The idea is for feed forward to accelerate sharp stick commands by replaceing the pidoutput for P with the derivative of stick inputs
-// *************but leave softer commands running on the stock pid controller with the softer feel of the measurement based D term.  LEFT-LEFT-DOWN gesture to exit.
-// *************https://www.rcgroups.com/forums/showpost.php?p=39667667&postcount=13956
-//#define FEED_FORWARD_STRENGTH 5.0f
-
-
-
-//**********************************************************************************************************************
-//***********************************************RECEIVER SETTINGS******************************************************
-
-// *************rate in deg/sec
-// *************for acro mode
-#define MAX_RATE 860.0
-#define MAX_RATEYAW 500.0
+#define MAX_RATE 1200.0
+#define MAX_RATEYAW 1000.0
 
 // *************max angle for level mode
-#define LEVEL_MAX_ANGLE 65.0f
+#define MAX_ANGLE_HI 65.0f
 
 // ************* low rates multiplier if rates are assigned to a channel
-#define LOW_RATES_MULTI 0.5f
+#define LOW_RATES_MULTI 0.6f
 
 // *************EXPO from 0.00 to 1.00 , 0 = no exp
 // *************positive = less sensitive near center 
-#define ACRO_EXPO_ROLL 0.80
-#define ACRO_EXPO_PITCH 0.80
-#define ACRO_EXPO_YAW 0.60
+#define ACRO_EXPO_ROLL 0.75
+#define ACRO_EXPO_PITCH 0.75
+#define ACRO_EXPO_YAW 0.65
 
 #define ANGLE_EXPO_ROLL 0.55
 #define ANGLE_EXPO_PITCH 0.0
 #define ANGLE_EXPO_YAW 0.55
 
-// *************transmitter stick adjustable deadband for roll/pitch/yaw
-// *************.01f = 1% of stick range - comment out to disable
-#define STICKS_DEADBAND .01f
-
-// *************Radio protocol selection
-// *************select only one
-//#define RX_BAYANG_PROTOCOL
-//#define RX_BAYANG_PROTOCOL_TELEMETRY
 #define RX_BAYANG_PROTOCOL_TELEMETRY_AUTOBIND
-//#define RX_BAYANG_PROTOCOL_BLE_BEACON
-//#define RX_BAYANG_BLE_APP
-//#define RX_NRF24_BAYANG_TELEMETRY
-//#define RX_SBUS
 
-// *************Transmitter Type Selection
-//#define USE_STOCK_TX
-//#define USE_DEVO
 #define USE_MULTI
 
-// *******************************SWITCH SELECTION*****************************
-// *************CHAN_ON - on always ( all protocols)
-// *************CHAN_OFF - off always ( all protocols)
-// *************Aux channels are selectable as CHAN_5 through CHAN_10 for DEVO and MULTIMODULE users
-// *************Toy transmitter mapping is CHAN_5 (rates button), CHAN_6 (stick gestures RRD/LLD), 
-//**************CHAN_7 (headfree button), CHAN_8 (roll trim buttons), CHAN_9 (pitch trim buttons)
-
-//*************Arm switch and Idle Up switch (idle up will behave like betaflight airmode)
-//*************comment out to disable arming or idle up features ONLY if not wanted.  Other features set to CHAN_OFF to disable
-
-//*************Assign feature to auxiliary channel.  NOTE - Switching on LEVELMODE is required for any leveling modes to 
-//*************be active.  With LEVELMODE active - MCU will apply RACEMODE if racemode channel is on, HORIZON if horizon 
-//*************channel is on, or racemodeHORIZON if both channels are on - and will be standard LEVELMODE if neither 
-//*************racemode or horizon are switched on.
 #define ARMING CHAN_5
-#define IDLE_UP CHAN_5
-#define IDLE_THR 0.05f                   //This designates an idle throttle of 5%
-#define LEVELMODE CHAN_6
-#define RACEMODE  CHAN_7
-#define HORIZON   CHAN_8
-#define RATES CHAN_ON
+#define IDLE_UP CHAN_6
+#define IDLE_THR 0.02f                   //This designates an idle throttle of 2%
+#define LEVELMODE CHAN_7
+#define RACEMODE  CHAN_9
+#define HORIZON   CHAN_ON
+#define RATES CHAN_8
 #define LEDS_ON CHAN_ON
 
-// *************switch for fpv / other, requires fet
-// *************comment out to disable
-//#define FPV_ON CHAN_ON
-
-// *************enable buzzer functionality
-// *************external buzzer requires pin assignment in hardware.h before defining below
-// *************change channel assignment from CHAN_OFF to a numbered aux switch if you want switch control
-// *************if no channel is assigned but buzzer is set to CHAN_ON - buzzer will activate on LVC and FAILSAFE.
-//#define BUZZER_ENABLE CHAN_OFF
-
 // *************start in level mode for toy tx.
-//#define AUX1_START_ON
+#define AUX1_START_ON
 
 // *************automatically remove center bias in toy tx ( needs throttle off for 1 second )
 //#define STOCK_TX_AUTOCENTER
@@ -137,34 +46,47 @@
 
 //**********************************************************************************************************************
 //***********************************************VOLTAGE SETTINGS*******************************************************
-
 // ************* Raises pids automatically as battery voltage drops in flight
 #define PID_VOLTAGE_COMPENSATION
+
+// *************battery saver
+// *************do not start software if battery is too low
+// *************flashes 2 times repeatedly at startup
+#define STOP_LOWBATTERY
+
+// *************voltage to start warning
+#define VBATTLOW 3.5
 
 // *************compensation for battery voltage vs throttle drop
 #define VDROP_FACTOR 0.7
 // *************calculate above factor automatically
 #define AUTO_VDROP_FACTOR
 
-// *************lower throttle when battery below threshold - forced landing low voltage cutoff
-//#define LVC_LOWER_THROTTLE
+// *************voltage hysteresys in volts
+#define HYST 0.10
+
+// *************lower throttle when battery below treshold - forced landing low voltage cutoff
+#define LVC_LOWER_THROTTLE
 #define LVC_LOWER_THROTTLE_VOLTAGE 3.30
 #define LVC_LOWER_THROTTLE_VOLTAGE_RAW 2.70
 #define LVC_LOWER_THROTTLE_KP 3.0
 
-// *************do not start software if battery is too low
-// *************flashes 2 times repeatedly at startup
-//#define STOP_LOWBATTERY
-
-// *************voltage to start warning led blinking
-#define VBATTLOW 3.5
-
-// *************voltage hysteresis in volts
-#define HYST 0.10
-
 // *************automatic voltage telemetry correction/calibration factor - change the values below if voltage telemetry is inaccurate
-#define ACTUAL_BATTERY_VOLTAGE 4.20
-#define REPORTED_TELEMETRY_VOLTAGE 4.20
+ // Corrects for an offset error in the telemetry measurement (same offset across the battery voltage range)
+ #define ACTUAL_BATTERY_VOLTAGE 4.12
+ #define REPORTED_TELEMETRY_VOLTAGE 4.21
+  
+ // *************two-point automatic voltage telemetry correction/calibration factor - change the values below if voltage telemetry is inaccurate
+ // Use this method when the difference at the high end is different than the difference at the low end. Corrects both slope and offset of the _assumed_ linear error.
+// #define USE_TWO_POINT_VOLTAGE_CORRECTION
+ //#define ACTUAL_BATTERY_VOLTAGE_LO 3.62
+ //#define ACTUAL_BATTERY_VOLTAGE_HI 4.15
+ //#define REPORTED_TELEMETRY_VOLTAGE_LO 3.72
+ //#define REPORTED_TELEMETRY_VOLTAGE_HI 4.29
+ //#define ACTUAL_BATTERY_VOLTAGE_RANGE (ACTUAL_BATTERY_VOLTAGE_HI - ACTUAL_BATTERY_VOLTAGE_LO)
+ //#define REPORTED_TELEMETRY_VOLTAGE_RANGE (REPORTED_TELEMETRY_VOLTAGE_HI - REPORTED_TELEMETRY_VOLTAGE_LO)
+ 
+  
 
 
 
@@ -227,10 +149,10 @@
 // *************is very noise sensative so D term specifically has to be lowered and gyro/d filtering may need to be increased.
 // *************reccomendation right now is to leave boost at or below 2, drop your p gains a few points, then cut your D in half and 
 // *************retune it back up to where it feels good.  I'm finding about 60 to 65% of my previous D value seems to work.
-//#define TORQUE_BOOST 0.5
+#define TORQUE_BOOST 2
 
 // *************makes throttle feel more poppy - can intensify small throttle imbalances visible in FPV if factor is set too high
-//#define THROTTLE_TRANSIENT_COMPENSATION 
+#define THROTTLE_TRANSIENT_COMPENSATION 
 #define THROTTLE_TRANSIENT_COMPENSATION_FACTOR 4.0 
  
 // *************throttle angle compensation in level mode
@@ -245,9 +167,9 @@
 
 //#define MIX_LOWER_THROTTLE_3
 #define MIX_INCREASE_THROTTLE_3
-//Currently eperimenting with the value 1.0f below for whoop format.  Default was previously .2f and should remain .2f
-//for anything other than a whoop.  The value 1.0f gives "airmode" 100% authority over throttle and is AWESOME on a whoop for locked in dives!!
-#define MIX_THROTTLE_INCREASE_MAX 0.2f
+//Currently eperimenting with the value below for whoop format.  Default was previously .2f and should be
+//changed back for anything other than a whoop.  This gives "airmode" 100% authority over throttle
+#define MIX_THROTTLE_INCREASE_MAX 0.6f
 
 // *************invert yaw pid for "PROPS OUT" configuration
 //#define INVERT_YAW_PID
@@ -255,16 +177,14 @@
 //**************joelucid's yaw fix
 #define YAW_FIX
 
-//**************joelucid's transient windup protection.  Removes roll and pitch bounce back after flips
-#define TRANSIENT_WINDUP_PROTECTION
-
 
 
 //**********************************************************************************************************************
 //***********************************************ADDITIONAL FEATURES****************************************************
 
-// *************lost quad beeps using motors (30 sec timeout) - pulses motors after timeout period to help find a lost model
+// *************lost quad beeps using motors (30 sec timeout)
 //#define MOTOR_BEEPS
+
 
 // *************0 - 7 - power for telemetry
 #define TX_POWER 7
@@ -285,6 +205,7 @@
 // *************flash_save 2: accel calibration to option bytes
 #define FLASH_SAVE1
 //#define FLASH_SAVE2
+
 
 // enable inverted flight code ( brushless only )
 //#define INVERTED_ENABLE
@@ -319,8 +240,10 @@
 
 // limit minimum motor output to a value (0.0 - 1.0)
 #define MOTOR_MIN_ENABLE
-#define MOTOR_MIN_VALUE 0.05
+#define MOTOR_MIN_VALUE 0.02
 
+// disable inbuilt expo functions
+//#define DISABLE_EXPO
 
 #ifdef WEAK_FILTERING
 #define SOFT_KALMAN_GYRO KAL1_HZ_90
@@ -654,11 +577,8 @@
 
 
 // MOTOR PINS
-// MOTOR PINS
 #define MOTOR0_PIN_PA7
-//#define MOTOR1_PIN_PA4  //2nd Draft prototype patch
-//#define MOTOR2_PIN_PB1  //2nd Draft prototype patch
-#define MOTOR1_PIN_PB1
-#define MOTOR2_PIN_PA4
+#define MOTOR1_PIN_PA4
+#define MOTOR2_PIN_PB1
 #define MOTOR3_PIN_PA6
 #endif

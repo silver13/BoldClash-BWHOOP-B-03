@@ -18,7 +18,9 @@
  * http://www.mikrocontroller.net/topic/avr-bootloader-mit-verschluesselung
 */
 
+//#include "platform.h"
 
+#include "serial_4way.h"
 #include "serial_4way_avrootloader.h"
 
 #ifdef  USE_SERIAL_4WAY_BLHELI_INTERFACE

@@ -28,6 +28,8 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include "serial_4way_impl.h"
+#include "serial_4way_impl.h"
+#include "config.h"
 
 #define imC2 0
 #define imSIL_BLB 1

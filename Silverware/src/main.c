@@ -471,10 +471,6 @@ if ( LED_NUMBER > 0)
 // RGB led control
 extern	void rgb_led_lvc( void);
 rgb_led_lvc( );
-#ifdef RGB_LED_DMA
-extern void rgb_dma_start();
-rgb_dma_start();
-#endif
 #endif
 
 
@@ -536,13 +532,12 @@ while ( (gettime() - time) < LOOPTIME );
 }
 
 // 2 - low battery at powerup - if enabled by config
-// 3 - radio chip not detected
+
 // 4 - Gyro not found
 // 5 - clock , intterrupts , systick
-// 6 - loop time issue
 // 7 - i2c error 
 // 8 - i2c error main loop
-
+// 6 - loop time issue
 
 void failloop( int val)
 {
