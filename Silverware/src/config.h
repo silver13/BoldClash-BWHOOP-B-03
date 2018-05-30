@@ -63,7 +63,7 @@
 // gyro filter 5 = 10hz
 // gyro filter 6 = 5hz
 // gyro filter 7 = 3600hz delay 0.17mS
-#define GYRO_LOW_PASS_FILTER 3
+#define GYRO_LOW_PASS_FILTER 4
 
 
 // software gyro lpf ( iir )
@@ -203,7 +203,7 @@
 //#define USE_STOCK_SPRINGLOADED_HOLD
 
 // Use BARO sensor - type in hardware.h
-#define ENABLE_BARO
+//#define ENABLE_BARO
 
 // Comment out to disable pid tuning gestures
 //#define PID_GESTURE_TUNING

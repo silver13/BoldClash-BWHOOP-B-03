@@ -14,16 +14,16 @@
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
-          <Device>STM32F030F4</Device>
+          <Device>STM32F030F4Px</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F0xx_DFP.1.5.0</PackID>
+          <PackID>Keil.STM32F0xx_DFP.2.0.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
-          <Cpu>IRAM(0x20000000,0x1000) IROM(0x08000000,0x4000) CPUTYPE("Cortex-M0") CLOCK(12000000) ELITTLE</Cpu>
+          <Cpu>IRAM(0x20000000,0x00001000) IROM(0x08000000,0x00004000) CPUTYPE("Cortex-M0") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F0xx_16 -FS08000000 -FL04000 -FP0($$Device:STM32F030F4$Flash\STM32F0xx_16.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F0xx_16 -FS08000000 -FL04000 -FP0($$Device:STM32F030F4Px$CMSIS\Flash\STM32F0xx_16.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
-          <RegisterFile>$$Device:STM32F030F4$Device\Include\stm32f0xx.h</RegisterFile>
+          <RegisterFile>$$Device:STM32F030F4Px$Drivers\CMSIS\Device\ST\STM32F0xx\Include\stm32f0xx.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -33,7 +33,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:STM32F030F4$SVD\STM32F0x0.svd</SFDFile>
+          <SFDFile>$$Device:STM32F030F4Px$CMSIS\SVD\STM32F0x0.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -274,7 +274,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x8000</Size>
+                <Size>0x4000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -574,6 +574,16 @@
               <FilePath>.\src\pid.c</FilePath>
             </File>
             <File>
+              <FileName>altitude.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\altitude.c</FilePath>
+            </File>
+            <File>
+              <FileName>barometer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\barometer.c</FilePath>
+            </File>
+            <File>
               <FileName>defines.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\src\defines.h</FilePath>
@@ -592,16 +602,6 @@
               <FileName>debug.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\src\debug.h</FilePath>
-            </File>
-            <File>
-              <FileName>altitude.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\altitude.c</FilePath>
-            </File>
-            <File>
-              <FileName>barometer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\barometer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -652,6 +652,11 @@
               <FileName>drv_dshot.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\drv_dshot.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_dshot_dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\drv_dshot_dma.c</FilePath>
             </File>
             <File>
               <FileName>drv_serial.c</FileName>

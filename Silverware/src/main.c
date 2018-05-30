@@ -262,7 +262,7 @@ if ( liberror )
 //     lastlooptime = gettime();
     looptime = 1e-3f;
 //     while(1) mainloop();
-//     while(1);
+     while(1);
 
 }
 
