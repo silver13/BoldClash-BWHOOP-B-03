@@ -26,8 +26,15 @@ void gestures( void)
                 //skip accel calibration if pid gestures used
                 if ( !pid_gestures_used )
                 {
+#ifdef SIXAXIS_READ_DMA
+                    sixaxis_stop();
+#endif
                     gyro_cal();	// for flashing lights
                     acc_cal();
+#ifdef SIXAXIS_READ_DMA
+                    sixaxis_start();
+#endif
+
                 }
                 else
                 {

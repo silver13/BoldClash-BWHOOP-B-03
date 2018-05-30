@@ -42,7 +42,7 @@ THE SOFTWARE.
 
 // this works only on newer boards (non mpu-6050)
 // on older boards the hw gyro setting controls the acc as well
-#define ACC_LOW_PASS_FILTER 5
+#define ACC_LOW_PASS_FILTER 4
 
 #ifdef SIXAXIS_READ_DMA
 	#ifndef USE_HARDWARE_I2C
@@ -69,7 +69,6 @@ THE SOFTWARE.
 // 	volatile uint16_t i2c_dma_phase = 0;			//	0:idel	1:delay is counting	2:DMA triggered
     extern void failloop(int);
     extern void mainloop(void);
-    uint16_t sixaxis_read_period;
 #endif
 
 extern debug_type debug;
@@ -139,7 +138,7 @@ void sixaxis_init( void)
 	i2c_writereg(SOFTI2C_GYRO_ADDRESS, 26 , GYRO_LOW_PASS_FILTER);
 
 #ifdef SIXAXIS_READ_DMA
-    sixaxis_read_period = SIXAXIS_READ_PERIOD;
+//     sixaxis_read_period = SIXAXIS_READ_PERIOD;
 
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
@@ -197,8 +196,8 @@ void sixaxis_init( void)
 //     TIM_SetCounter( TIM17, SIXAXIS_READ_PERIOD );
     DMA_Cmd( DMA1_Channel3, DISABLE );
     I2C_DMACmd( I2C1, I2C_DMAReq_Rx, DISABLE );
-    TIM_Cmd( TIM17, DISABLE );
-//     TIM_Cmd( TIM17, ENABLE );
+//     TIM_Cmd( TIM17, DISABLE );
+    TIM_Cmd( TIM17, ENABLE );
 //     TIM_SetCounter( TIM17, 0 );
 //     while( !DMA_GetFlagStatus( DMA1_FLAG_TC3 ) ) { };
 
@@ -216,9 +215,19 @@ void sixaxis_start(void)
 
 }
 
+void sixaxis_stop(void)
+{
+//     TIM_ClearITPendingBit( TIM17, TIM_IT_Update );
+//    	DMA_ClearITPendingBit(DMA1_IT_TC3);
+	TIM_ITConfig( TIM17, TIM_IT_Update, DISABLE );
+//     I2C_DMACmd( I2C1, I2C_DMAReq_Rx, DISABLE );
+//     DMA_Cmd( DMA1_Channel3, DISABLE );
+    i2c_init();
+}
+
 extern int hw_i2c_sendheader(int, int, int );
 
-unsigned int lastlooptime;
+// unsigned int lastlooptime;
 
 void TIM17_IRQHandler(void)
 {
@@ -231,6 +240,7 @@ void TIM17_IRQHandler(void)
 //     TIM17->SR = (uint16_t)~TIM_IT_Update;
 //     TIM_Cmd( TIM17, DISABLE );
 //     DMA_ClearFlag( DMA1_FLAG_GL3 );
+
     DMA1_Channel3->CNDTR = 14;
     DMA_Cmd( DMA1_Channel3, ENABLE );
     I2C_DMACmd( I2C1, I2C_DMAReq_Rx, ENABLE );
@@ -520,12 +530,6 @@ for (int i = 0; i < 3; i++)
 
 void gyro_cal(void)
 {
-#ifdef SIXAXIS_READ_DMA
-//     while(I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY) == SET);
-//     DMA_Cmd( DMA1_Channel3, DISABLE );
-//     I2C_DMACmd( I2C1, I2C_DMAReq_Rx, DISABLE );
-    TIM_Cmd( TIM17, DISABLE );
-#endif
     int data[6];
     float limit[3];
     unsigned long time = gettime();
@@ -614,13 +618,8 @@ if ( time - timestart < CAL_TIME )
 	gyrocal[i] = 0;
 
 	}
-
 }
 
-
-#ifdef SIXAXIS_READ_DMA
-    TIM_Cmd( TIM17, ENABLE );
-#endif
 
 }
 
@@ -653,6 +652,8 @@ void acc_cal(void)
 		  limitf(&accelcal[x], 500);
 	  }
 #endif
+
+
 }
 
 
