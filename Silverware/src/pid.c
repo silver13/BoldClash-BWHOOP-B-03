@@ -36,7 +36,7 @@ THE SOFTWARE.
 // Using Torque Boost 1 and Strong Filtering
 //(EXPERIMENTAL) chime13
 //                         ROLL       PITCH     YAW
-//float pidkp[PIDNUMBER] = { 22.7e-2 , 22.7e-2  , 9.5e-1 }; 
+//float pidkp[PIDNUMBER] = { 21.7e-2 , 21.7e-2  , 9.5e-1 }; 
 //float pidki[PIDNUMBER] = { 12e-1  , 12e-1 , 8e-1 };	
 //float pidkd[PIDNUMBER] = { 7.4e-1 , 7.4e-1  , 0.0e-1 };	
 
@@ -51,7 +51,7 @@ float pidkd[PIDNUMBER] = { 7.4e-1 , 7.4e-1  , 0.0e-1 };
 // "setpoint weighting" 0.0 - 1.0 where 1.0 = normal pid
 #define ENABLE_SETPOINT_WEIGHTING
 //            Roll   Pitch   Yaw
-float b[3] = { 0.99 , 0.99 , 0.95};   //RACE
+float b[3] = { 0.99 , 0.99 , 0.99};   //RACE
 //float b[3] = { 0.93 , 0.93 , 0.9};      //FREESTYLE
 
 /// output limit			
@@ -60,11 +60,7 @@ const float outlimit[PIDNUMBER] = { 1.7 , 1.7 , 0.5 };
 // limit of integral term (abs)
 const float integrallimit[PIDNUMBER] = { 1.7 , 1.7 , 0.5 };
 
-//#define RECTANGULAR_RULE_INTEGRAL
-//#define MIDPOINT_RULE_INTEGRAL
 #define SIMPSON_RULE_INTEGRAL
-
-//#define ANTI_WINDUP_DISABLE
 
 // non changable things below
 float * pids_array[3] = {pidkp, pidki, pidkd};
