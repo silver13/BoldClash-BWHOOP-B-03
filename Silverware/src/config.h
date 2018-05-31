@@ -58,7 +58,7 @@
 #define VBATTLOW 3.5
 
 // *************compensation for battery voltage vs throttle drop
-#define VDROP_FACTOR 0.7
+//#define VDROP_FACTOR 0.7
 // *************calculate above factor automatically
 #define AUTO_VDROP_FACTOR
 
