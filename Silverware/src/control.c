@@ -152,9 +152,30 @@ pid_precalc();
 
 	// flight control
 	if (aux[LEVELMODE]&&!acro_override)
-	  {	   // level mode
-           // level calculations done after to reduce latency in acro mode
-          
+	  {	 
+          // level mode
+      	extern void stick_vector( float rx_input[] , float maxangle);
+		extern float errorvect[]; // level mode angle error calculated by stick_vector.c					
+        extern float GEstG[3]; // gravity vector for yaw feedforward
+        float yawerror[3] = {0}; // yaw rotation vector
+
+        // calculate roll / pitch error
+		stick_vector( rxcopy , 0 ); 
+           
+        float yawrate = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD;            
+        // apply yaw from the top of the quad            
+        yawerror[0] = GEstG[1] * yawrate;
+        yawerror[1] = - GEstG[0] * yawrate;
+        yawerror[2] = GEstG[2] * yawrate;
+
+        // pitch and roll
+		for ( int i = 0 ; i <=1; i++)
+			{
+            angleerror[i] = errorvect[i] ;    
+			error[i] = apid(i) + yawerror[i] - gyro[i];
+			}
+        // yaw
+		error[2] = yawerror[2]  - gyro[2];
 	  }
 	else
 	  {	// rate mode
@@ -613,36 +634,6 @@ thrsum = 0;
 		thrsum = thrsum / 4;
 		
 	}// end motors on
-
-   
-    if (aux[LEVELMODE]&&!acro_override)
-    {
-        // level mode calculations done after to reduce latency
-        // the 1ms extra latency should not affect cascaded pids significantly
-        
-      	extern void stick_vector( float rx_input[] , float maxangle);
-		extern float errorvect[]; // level mode angle error calculated by stick_vector.c					
-        extern float GEstG[3]; // gravity vector for yaw feedforward
-        float yawerror[3] = {0}; // yaw rotation vector
-
-        // calculate roll / pitch error
-		stick_vector( rxcopy , 0 ); 
-           
-        float yawrate = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD;            
-        // apply yaw from the top of the quad            
-        yawerror[0] = GEstG[1] * yawrate;
-        yawerror[1] = - GEstG[0] * yawrate;
-        yawerror[2] = GEstG[2] * yawrate;
-
-        // pitch and roll
-		for ( int i = 0 ; i <=1; i++)
-			{
-            angleerror[i] = errorvect[i] ;    
-			error[i] = apid(i) + yawerror[i] - gyro[i];
-			}
-        // yaw
-		error[2] = yawerror[2]  - gyro[2];  
-    }
     
 	
 }
