@@ -64,6 +64,8 @@ extern float looptime;
 
 extern char auxchange[AUXNUMBER];
 extern char aux[AUXNUMBER];
+extern float aux_analog[AUXNUMBER];
+extern char aux_analogchange[AUXNUMBER];
 
 extern int ledcommand;
 extern int ledblink;
@@ -97,7 +99,10 @@ void control( void)
 
 // rates / expert mode
 float rate_multiplier = 1.0;
-	
+
+#if (defined USE_ANALOG_AUX && defined ANALOG_RATE_MULT)
+	rate_multiplier = aux_analog[ANALOG_RATE_MULT];
+#else
 	if ( aux[RATES]  )
 	{		
 		
@@ -107,7 +112,7 @@ float rate_multiplier = 1.0;
 		rate_multiplier = LOW_RATES_MULTI;
 	}
 	// make local copy
-	
+#endif
 	
 #ifdef INVERTED_ENABLE	
     extern int pwmdir;

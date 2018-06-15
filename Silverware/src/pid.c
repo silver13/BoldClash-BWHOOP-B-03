@@ -54,6 +54,13 @@ float pidki[PIDNUMBER] = { 12.8e-1  , 12.8e-1 , 3e-1 };
 // Kd			          ROLL       PITCH     YAW
 float pidkd[PIDNUMBER] = { 5.5e-1 , 5.5e-1  , 0.0e-1 };	
 
+
+//*********************************Saved Initial PIDs****************************************
+float pidkp_init[PIDNUMBER] = { 0, 0, 0 };
+float pidki_init[PIDNUMBER] = { 0, 0, 0 };
+float pidkd_init[PIDNUMBER] = { 0, 0, 0 };
+
+
 // "setpoint weighting" 0.0 - 1.0 where 1.0 = normal pid
 // #define ENABLE_SETPOINT_WEIGHTING
 float b[3] = { 1.0 , 1.0 , 1.0};
@@ -87,6 +94,13 @@ extern float looptime;
 extern float gyro[3];
 extern int onground;
 extern float looptime;
+extern char aux[AUXNUMBER];
+extern float aux_analog[AUXNUMBER];
+extern char aux_analogchange[AUXNUMBER];
+
+#ifdef ANALOG_AUX_PIDS
+int analog_aux_pids_adjusted = 0;
+#endif
 
 #ifdef NORMAL_DTERM
 static float lastrate[PIDNUMBER];
@@ -106,6 +120,108 @@ static float lasterror2[PIDNUMBER];
 
 float timefactor;
 
+void apply_analog_aux_to_pids()
+{
+    // aux_analog channels are in range 0 to 1. Shift to 0 to 2 so we can zero out or double selected PID value.
+    // only needs to perform multiplies when the channel in question has changed
+    // only performance hit, then, is the true/false check on each enabled channel and the call to this function each pid loop
+
+    // Roll PIDs
+#ifdef ANALOG_R_P
+    if (aux_analogchange[ANALOG_R_P]) {
+        pidkp[0] = pidkp_init[0] * (aux_analog[ANALOG_R_P] + 0.5f);
+        analog_aux_pids_adjusted = 1;
+    }
+#endif
+#ifdef ANALOG_R_I
+    if (aux_analogchange[ANALOG_R_I]) {
+        pidki[0] = pidki_init[0] * (aux_analog[ANALOG_R_I] + 0.5f);
+        analog_aux_pids_adjusted = 1;
+    }
+#endif
+#ifdef ANALOG_R_D
+    if (aux_analogchange[ANALOG_R_D]) {
+        pidkd[0] = pidkd_init[0] * (aux_analog[ANALOG_R_D] + 0.5f);
+        analog_aux_pids_adjusted = 1;
+    }
+#endif
+
+    // Pitch PIDs
+#ifdef ANALOG_P_P
+    if (aux_analogchange[ANALOG_P_P]) {
+        pidkp[1] = pidkp_init[1] * (aux_analog[ANALOG_P_P] + 0.5f);
+        analog_aux_pids_adjusted = 1;
+    }
+#endif
+#ifdef ANALOG_P_I
+    if (aux_analogchange[ANALOG_P_I]) {
+        pidki[1] = pidki_init[1] * (aux_analog[ANALOG_P_I] + 0.5f);
+        analog_aux_pids_adjusted = 1;
+    }
+#endif
+#ifdef ANALOG_P_D
+    if (aux_analogchange[ANALOG_P_D]) {
+        pidkd[1] = pidkd_init[1] * (aux_analog[ANALOG_P_D] + 0.5f);
+        analog_aux_pids_adjusted = 1;
+    }
+#endif
+
+    // Yaw PIDs
+#ifdef ANALOG_Y_P
+    if (aux_analogchange[ANALOG_Y_P]) {
+        pidkp[2] = pidkp_init[2] * (aux_analog[ANALOG_Y_P] + 0.5f);
+        analog_aux_pids_adjusted = 1;
+    }
+#endif
+#ifdef ANALOG_Y_I
+    if (aux_analogchange[ANALOG_Y_I]) {
+        pidki[2] = pidki_init[2] * (aux_analog[ANALOG_Y_I] + 0.5f);
+        analog_aux_pids_adjusted = 1;
+    }
+#endif
+#ifdef ANALOG_Y_D
+    if (aux_analogchange[ANALOG_Y_D]) {
+        pidkd[2] = pidkd_init[2] * (aux_analog[ANALOG_Y_D] + 0.5f);
+        analog_aux_pids_adjusted = 1;
+    }
+#endif
+
+    // Combined Roll and Pitch PIDs
+#ifdef ANALOG_RP_P
+    if (aux_analogchange[ANALOG_RP_P]) {
+        pidkp[0] = pidkp_init[0] * (aux_analog[ANALOG_RP_P] + 0.5f);
+        pidkp[1] = pidkp_init[1] * (aux_analog[ANALOG_RP_P] + 0.5f);
+        analog_aux_pids_adjusted = 1;
+    }
+#endif
+#ifdef ANALOG_RP_I
+    if (aux_analogchange[ANALOG_RP_I]) {
+        pidki[0] = pidki_init[0] * (aux_analog[ANALOG_RP_I] + 0.5f);
+        pidki[1] = pidki_init[1] * (aux_analog[ANALOG_RP_I] + 0.5f);
+        analog_aux_pids_adjusted = 1;
+    }
+#endif
+#ifdef ANALOG_RP_D
+    if (aux_analogchange[ANALOG_RP_D]) {
+        pidkd[0] = pidkd_init[0] * (aux_analog[ANALOG_RP_D] + 0.5f);
+        pidkd[1] = pidkd_init[1] * (aux_analog[ANALOG_RP_D] + 0.5f);
+        analog_aux_pids_adjusted = 1;
+    }
+#endif
+
+    // Combined Roll and Pitch P and D
+#ifdef ANALOG_RP_PD
+    if (aux_analogchange[ANALOG_RP_PD]) {
+        pidkp[0] = pidkp_init[0] * (aux_analog[ANALOG_RP_PD] + 0.5f);
+        pidkp[1] = pidkp_init[1] * (aux_analog[ANALOG_RP_PD] + 0.5f);
+        pidkd[0] = pidkd_init[0] * (aux_analog[ANALOG_RP_PD] + 0.5f);
+        pidkd[1] = pidkd_init[1] * (aux_analog[ANALOG_RP_PD] + 0.5f);
+        analog_aux_pids_adjusted = 1;
+    }
+#endif
+}
+
+
 // pid calculation for acro ( rate ) mode
 // input: error[x] = setpoint - gyro
 // output: pidoutput[x] = change required from motors
@@ -117,6 +233,10 @@ float pid(int x )
     ierror[x] *= 0.98f;
     }
 
+// pid tuning via analog aux channels
+#ifdef ANALOG_AUX_PIDS
+    apply_analog_aux_to_pids();
+#endif
     
 #ifdef TRANSIENT_WINDUP_PROTECTION
     static float avgSetpoint[3];
@@ -255,6 +375,23 @@ return pidoutput[x];
 void pid_precalc()
 {
 	timefactor = 0.0032f / looptime;
+}
+
+// call at quad startup, and when wanting to save pids
+void pid_init()
+{
+  // save initial PID values
+  pidkp_init[0] = pidkp[0]; // Roll
+  pidkp_init[1] = pidkp[1]; // Pitch
+  pidkp_init[2] = pidkp[2]; // Yaw
+  
+  pidki_init[0] = pidki[0];
+  pidki_init[1] = pidki[1];
+  pidki_init[2] = pidki[2];
+  
+  pidkd_init[0] = pidkd[0];
+  pidkd_init[1] = pidkd[1];
+  pidkd_init[2] = pidkd[2];
 }
 
 

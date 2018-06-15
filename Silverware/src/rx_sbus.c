@@ -23,6 +23,9 @@ extern float rx[4];
 extern char aux[AUXNUMBER];
 extern char lastaux[AUXNUMBER];
 extern char auxchange[AUXNUMBER];
+extern float aux_analog[AUXNUMBER];
+extern float lastaux_analog[AUXNUMBER];
+extern char aux_analogchange[AUXNUMBER];
 int failsafe = 0;
 int rxmode = 0;
 
@@ -313,6 +316,24 @@ if ( frame_received )
 		aux[CH_EXPERT] = (channels[6] > 993) ? 1 : 0;
 		aux[CH_HEADFREE] = (channels[7] > 993) ? 1 : 0;
 		aux[CH_RTH] = (channels[8] > 993) ? 1 : 0;
+
+#ifdef USE_ANALOG_AUX
+        // Map to range 0 to 1
+        aux_analog[CH_FLIP] = (channels[5] - 173) * 0.000610128f;
+        aux_analog[CH_EXPERT] = (channels[6] - 173) * 0.000610128f;
+        aux_analog[CH_HEADFREE] = (channels[7] - 173) * 0.000610128f;
+        aux_analog[CH_RTH] = (channels[8] - 173) * 0.000610128f;
+
+        aux_analogchange[CH_FLIP] = (aux_analog[CH_FLIP] != lastaux_analog[CH_FLIP]) ? 1 : 0;
+        aux_analogchange[CH_EXPERT] = (aux_analog[CH_EXPERT] != lastaux_analog[CH_EXPERT]) ? 1 : 0;
+        aux_analogchange[CH_HEADFREE] = (aux_analog[CH_HEADFREE] != lastaux_analog[CH_HEADFREE]) ? 1 : 0;
+        aux_analogchange[CH_RTH] = (aux_analog[CH_RTH] != lastaux_analog[CH_RTH]) ? 1 : 0;
+
+        lastaux_analog[CH_FLIP] = aux_analog[CH_FLIP];
+        lastaux_analog[CH_EXPERT] = aux_analog[CH_EXPERT];
+        lastaux_analog[CH_HEADFREE] = aux_analog[CH_HEADFREE];
+        lastaux_analog[CH_RTH] = aux_analog[CH_RTH];
+#endif
         
         time_lastframe = gettime(); 
         if (sbus_stats) stat_frames_accepted++;       
