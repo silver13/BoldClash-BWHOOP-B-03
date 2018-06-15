@@ -10,6 +10,9 @@ extern debug_type debug;
 
 #ifndef DISABLE_LVC
 
+#ifndef ADC_REF
+#define ADC_REF 1.17857f
+#endif
 
 typedef struct {
 __IO uint16_t word1;
@@ -87,9 +90,7 @@ void adc_init(void)
   DMA_Cmd(DMA1_Channel1, ENABLE);
  
  // reference is measured a 3.3v, we are powered by 2.8, so a 1.17 multiplier
- // different vccs will translate to a different adc scale factor,
- // so actual vcc is not important as long as the voltage is correct in the end 
-  vref_cal =  1.17857f * (float) ( adcref_read ((adcrefcal *) 0x1FFFF7BA) );
+  vref_cal = ADC_REF * (float) ( adcref_read ((adcrefcal *) 0x1FFFF7BA) );
 }
 
 float adc_read(int channel)
