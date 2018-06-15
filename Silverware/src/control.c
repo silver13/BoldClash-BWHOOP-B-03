@@ -705,11 +705,9 @@ float clip_ff(float motorin, int number)
 
 
     //initial values for the kalman filter 
-    float x_est_last[4] ;
-    float P_last[4] ; 
-    //the noise in the system 
+    float x_est_last[4]={0};
+    float P_last[4]={0}; 
     const float Q = 0.02;
-//the noise in the system ( variance -  squared )
    
     #ifdef MOTOR_KAL
     const float R = Q/(float)MOTOR_KAL;
@@ -719,23 +717,13 @@ float clip_ff(float motorin, int number)
 
 float  motor_kalman( float in , int x)   
 {    
+    float P_temp = P_last[x] + Q; 
+    float K = P_temp/(P_temp + R);
 
+    x_est_last[x] = x_est_last[x] + K * (in - x_est_last[x]);  
+    P_last[x] = (1- K) * P_temp; 
 
-    
-        //do a prediction 
-       float x_temp_est = x_est_last[x]; 
-       float P_temp = P_last[x] + Q; 
-
-       float K = P_temp * (1.0f/(P_temp + R));
-       float x_est = x_temp_est + K * (in - x_temp_est);  
-       float P = (1- K) * P_temp; 
-       
-        //update our last's 
-        P_last[x] = P; 
-        x_est_last[x] = x_est; 
-//
-
-return x_est;
+return x_est_last[x];
 }	
 	
 	
