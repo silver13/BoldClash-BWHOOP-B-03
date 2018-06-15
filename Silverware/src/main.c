@@ -272,7 +272,7 @@ if ( liberror )
 	
 		#ifdef DEBUG				
 		debug.totaltime += looptime;
-		lpf ( &debug.timefilt , looptime, 0.998 );
+		LPF( &debug.timefilt , looptime, 0.998 );
 		#endif
 		lastlooptime = time;
 		
@@ -298,7 +298,7 @@ if ( liberror )
         // read acd and scale based on processor voltage
 		float battadc = adc_read(0)*vreffilt; 
         // read and filter internal reference
-        lpf ( &vreffilt , adc_read(1)  , 0.9968f);	
+        LPF( &vreffilt , adc_read(1)  , 0.9968f);	
   
 		
 
@@ -308,13 +308,13 @@ if ( liberror )
 	
 		// filter motorpwm so it has the same delay as the filtered voltage
 		// ( or they can use a single filter)		
-		lpf ( &thrfilt , thrsum , 0.9968f);	// 0.5 sec at 1.6ms loop time	
+		LPF( &thrfilt , thrsum , 0.9968f);	// 0.5 sec at 1.6ms loop time	
 
         static float vbattfilt_corr = 4.2;
         // li-ion battery model compensation time decay ( 18 seconds )
-        lpf ( &vbattfilt_corr , vbattfilt , FILTERCALC( 1000 , 18000e3) );
+        LPF( &vbattfilt_corr , vbattfilt , FILTERCALC( 1000 , 18000e3) );
 	
-        lpf ( &vbattfilt , battadc , 0.9968f);
+        LPF( &vbattfilt , battadc , 0.9968f);
 
 
 // compensation factor for li-ion internal model
@@ -350,7 +350,7 @@ if( thrfilt > 0.1f )
 	ans = vcomp[z] - lastin[z] + FILTERCALC( 1000*12 , 6000e3) *lastout[z];
 	lastin[z] = vcomp[z];
 	lastout[z] = ans;
-	lpf ( &score[z] , ans*ans , FILTERCALC( 1000*12 , 60e6 ) );	
+	LPF( &score[z] , ans*ans , FILTERCALC( 1000*12 , 60e6 ) );	
 	z++;
        
     if ( z >= 12 )

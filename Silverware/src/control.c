@@ -390,7 +390,7 @@ pidoutput[2] = -pidoutput[2];
 	
         }
 
-
+        
 #if ( defined MIX_LOWER_THROTTLE || defined MIX_INCREASE_THROTTLE)
 
 //#define MIX_INCREASE_THROTTLE
@@ -647,10 +647,10 @@ thrsum = 0;
 float motor_filt[4];
 
 float motorlpf( float in , int x)
-{
+{ 
     
-    lpf(&motor_filt[x] , in , 1 - MOTOR_FILTER2_ALPHA);
-       
+    LPF( &motor_filt[x] , in , 1.0f - (float)MOTOR_FILTER2_ALPHA);
+    
     return motor_filt[x];
 }
 

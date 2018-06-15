@@ -21,6 +21,7 @@
 // this should be precalculated by the compiler as it's a constant
 #define FILTERCALC( sampleperiod, filtertime) (1.0f - ( 6.0f*(float)sampleperiod) / ( 3.0f *(float)sampleperiod + (float)filtertime))
 
+#define LPF(x , y , z )  lpfx( (x), (y) , ( z) , 1.0f - (z) )
 
 #define RXMODE_BIND 0
 #define RXMODE_NORMAL (!RXMODE_BIND)
