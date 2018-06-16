@@ -129,6 +129,7 @@
 //#define MOTOR_FILTER
 #define MOTOR_FILTER2_ALPHA 0.3
 //#define MOTOR_KAL KAL1_HZ_70
+//#define MOTOR_KAL_2ND KAL1_HZ_90
 
 // clip feedforward attempts to resolve issues that occur near full throttle
 //#define CLIP_FF
