@@ -177,6 +177,7 @@
 //#define RX_NRF24_BAYANG_TELEMETRY
 //#define RX_BAYANG_BLE_APP
 //#define RX_SBUS
+//#define RX_SUMD
 
 // 0 - 7 - power for telemetry
 #define TX_POWER 7
