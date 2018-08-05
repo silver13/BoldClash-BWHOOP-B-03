@@ -196,12 +196,20 @@ extern char auxchange[AUXNUMBER];
 
 char lasttrim[4];
 char rfchannel[4];
-int rxaddress[5];
+
 int rxmode = 0;
 int rf_chan = 0;
 int rxdata[17 + 2* crc_en];
 
 
+uint8_t rxaddress[5];
+int telemetry_enabled = 0;
+int rx_bind_enable = 0;
+int rx_bind_load = 0;
+
+unsigned long autobindtime = 0;
+int autobind_inhibit = 0;
+int packet_period = PACKET_PERIOD;
 
 
 void rx_init()
@@ -246,6 +254,25 @@ void rx_init()
     xn_writereg(RF_CH, 0);      // bind on channel 0
     xn_command(FLUSH_RX);
     xn_writereg(0, XN_TO_RX);   // power up, crc disabled, rx mode
+
+
+ 
+    if ( rx_bind_load )
+    {
+
+          // write new rx and tx address
+          nrf24_set_xn297_address( rxaddress );
+
+          xn_writereg(0x25, rfchannel[rf_chan]);    // Set channel frequency 
+          rxmode = RX_MODE_NORMAL;
+        
+          if ( telemetry_enabled ) packet_period = PACKET_PERIOD_TELEMETRY;
+    }
+    else
+    {
+        autobind_inhibit = 1;
+    }
+    
 
 }
 
@@ -517,8 +544,7 @@ int failsafe = 0;
 unsigned int skipchannel = 0;
 int lastrxchan;
 int timingfail = 0;
-int telemetry_enabled = 0;
-int packet_period = PACKET_PERIOD;
+
 
 uint8_t rxaddr[5];
 int packets = 0;
@@ -550,16 +576,17 @@ void checkrx(void)
                       rfchannel[3] = rxdata[9];
                         
                        
-                      
+
+           
                       for ( int i = 0 ; i < 5; i++)
                       {
-                        rxaddr[i] = rxdata[i+1];
+                        rxaddress[i] = rxaddr[i] = rxdata[i+1];
                       }
                       // write new rx and tx address
                       nrf24_set_xn297_address( rxaddr );
                       
-                      xn_writereg(0x25, rfchannel[rf_chan]);    // Set channel frequency 
                       
+                      xn_writereg(0x25, rfchannel[rf_chan]);    // Set channel frequency 
                       rxmode = RX_MODE_NORMAL;
 
                   }
@@ -658,13 +685,27 @@ void checkrx(void)
           rx[2] = 0;
           rx[3] = 0;
       }
-
+      
+    if ( !failsafe) autobind_inhibit = 1;
+      else if ( !autobind_inhibit && time - autobindtime > 15000000 )
+    {
+        autobind_inhibit = 1;
+        rxmode = RX_MODE_BIND;
+        static uint8_t rxaddr[5] = { 0 , 0 , 0 , 0 , 0  };
+        nrf24_set_xn297_address( rxaddr );
+        
+        xn_writereg(RF_CH, 0);      // bind on channel 0
+    }
+ 
+        
+      
     if (gettime() - secondtimer > 1000000)
       {
           packetpersecond = packetrx;
           packetrx = 0;
           secondtimer = gettime();
       }
+
 
 
 }

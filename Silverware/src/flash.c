@@ -62,7 +62,7 @@ void flash_save( void) {
     fmc_write_float(addresscount++, accelcal[2]);
 
    
-#ifdef RX_BAYANG_PROTOCOL_TELEMETRY
+#if (defined RX_BAYANG_PROTOCOL_TELEMETRY || defined RX_NRF24_BAYANG_TELEMETRY )
 // autobind info     
 extern char rfchannel[4];
 extern char rxaddress[5];
@@ -115,7 +115,8 @@ void flash_load( void) {
     accelcal[2] = fmc_read_float(addresscount++ );  
 
        
- #ifdef RX_BAYANG_PROTOCOL_TELEMETRY  
+#if (defined RX_BAYANG_PROTOCOL_TELEMETRY || defined RX_NRF24_BAYANG_TELEMETRY )
+     
 extern char rfchannel[4];
 extern char rxaddress[5];
 extern int telemetry_enabled;
