@@ -191,6 +191,11 @@
 // comment out to disable
 //#define AUTO_THROTTLE
 
+
+// Betaflight like mix scaling
+//#define MIX_SCALING
+
+
 // enable auto lower throttle near max throttle to keep control
 // mix3 works better with brushless
 // comment out to disable
