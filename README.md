@@ -117,7 +117,7 @@ For Bayang, you can use a modified version of the Bayang protocol I've made to t
 
 The Multiprotocol module uses channels 14 and 15 for these analog channels. Set the "Option/Telemetry" value for the Bayang protocol on the Taranis to 2 or 3 (2 to get only the analog channels, 3 to get both Telemetry and the analog channels).
 
-Deviation uses channels 11 and 12. Enable the Aux Analog option for the Bayang protocol.
+Deviation uses channels 13 and 14. Enable the Aux Analog option for the Bayang protocol.
 
 For both the Multiprotocol module and Deviation, Silverware will not bind with a transmitter that does not have matching options (both Telemetry and Analog Aux channels).
 

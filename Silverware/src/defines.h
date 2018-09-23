@@ -101,8 +101,8 @@
 #define CHAN_8 CH_VID
 #define CHAN_9 CH_HEADFREE
 #define CHAN_10 CH_RTH
-#define CHAN_11 CH_ANA_AUX1
-#define CHAN_12 CH_ANA_AUX2
+#define CHAN_13 CH_ANA_AUX1
+#define CHAN_14 CH_ANA_AUX2
 #define CHAN_ON CH_ON
 #define CHAN_OFF CH_OFF
 #endif
