@@ -120,14 +120,14 @@
 // CH_EMG , CH_TO - boldclash stock tx
 
 // DEVO channels (bayang protocol)
-// DEVO_CHAN_5 - DEVO_CHAN_10
+// DEVO_CHAN_5 - DEVO_CHAN_12
 
-// Multiprotocol can use MULTI_CHAN_5 - MULTI_CHAN_10  (bayang protocol)
+// Multiprotocol can use MULTI_CHAN_5 - MULTI_CHAN_13, but not MULTI_CHAN_11  (bayang protocol)
 
 // CH_ON - on always ( all protocols)
 // CH_OFF - off always ( all protocols)
 
-// CHAN_5 - CHAN_10 - auto based on tx selection
+// CHAN_5 - CHAN_12/13 - auto based on tx selection
 
 // rates / expert mode
 #define RATES CH_EXPERT
