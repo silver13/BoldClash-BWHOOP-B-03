@@ -46,6 +46,8 @@
 #define CH_AUX2 5
 #define CH_EMG 10
 #define CH_TO 11
+#define CH_ANA_AUX1 12
+#define CH_ANA_AUX2 13
 // trims numbers have to be sequential, start at CH_PIT_TRIM
 #define CH_PIT_TRIM 6
 #define CH_RLL_TRIM 7
@@ -80,6 +82,10 @@
 #define DEVO_CHAN_8 CH_VID
 #define DEVO_CHAN_9 CH_HEADFREE
 #define DEVO_CHAN_10 CH_RTH
+#define DEVO_CHAN_11 CH_TO
+#define DEVO_CHAN_12 CH_EMG
+#define DEVO_CHAN_13 CH_ANA_AUX1
+#define DEVO_CHAN_14 CH_ANA_AUX2
 
 // multimodule mapping ( taranis )
 #define MULTI_CHAN_5 CH_FLIP
@@ -88,6 +94,10 @@
 #define MULTI_CHAN_8 CH_VID
 #define MULTI_CHAN_9 CH_HEADFREE
 #define MULTI_CHAN_10 CH_INV
+#define MULTI_CHAN_12 CH_TO
+#define MULTI_CHAN_13 CH_EMG
+#define MULTI_CHAN_14 CH_ANA_AUX1
+#define MULTI_CHAN_15 CH_ANA_AUX2
 
 
 #ifdef USE_DEVO
@@ -99,6 +109,10 @@
 #define CHAN_8 CH_VID
 #define CHAN_9 CH_HEADFREE
 #define CHAN_10 CH_RTH
+#define CHAN_11 CH_TO
+#define CHAN_12 CH_EMG
+#define CHAN_13 CH_ANA_AUX1
+#define CHAN_14 CH_ANA_AUX2
 #define CHAN_ON CH_ON
 #define CHAN_OFF CH_OFF
 #endif
@@ -111,6 +125,10 @@
 #define CHAN_8 CH_VID
 #define CHAN_9 CH_HEADFREE
 #define CHAN_10 CH_INV
+#define CHAN_12 CH_TO
+#define CHAN_13 CH_EMG
+#define CHAN_14 CH_ANA_AUX1
+#define CHAN_15 CH_ANA_AUX2
 #define CHAN_ON CH_ON
 #define CHAN_OFF CH_OFF
 #endif

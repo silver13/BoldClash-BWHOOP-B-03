@@ -25,6 +25,36 @@
 
 
 
+// *******************************ANALOG AUX CHANNELS*****************************
+// For some protocols, use Tx channels as auxiliary analog values
+// Bayang with analog aux protocol (Tx optional mode enabled in modified Multimodule and DeviationTx) has two analog channels available:
+//     Multimodule: channels 14 and 15
+//     Deviation: channels 13 and 14
+// Sbus and DSM can use analog values from any channel
+// comment to disable
+//#define USE_ANALOG_AUX
+// Select analog feature for each channel
+// comment to disable
+#define ANALOG_RATE_MULT CHAN_13
+#define ANALOG_MAX_ANGLE CHAN_14
+//#define ANALOG_RP_P  CHAN_13 // Adjust Roll and Pitch together
+//#define ANALOG_RP_I  CHAN_13
+//#define ANALOG_RP_D  CHAN_14
+//#define ANALOG_RP_PD CHAN_14 // Adjust Roll and Pitch P & D together
+//#define ANALOG_R_P   CHAN_13 // Adjust Roll only
+//#define ANALOG_R_I   CHAN_13
+//#define ANALOG_R_D   CHAN_14
+//#define ANALOG_P_P   CHAN_13 // Adjust Pitch only
+//#define ANALOG_P_I   CHAN_13
+//#define ANALOG_P_D   CHAN_14
+//#define ANALOG_Y_P   CHAN_13 // Adjust Yaw only
+//#define ANALOG_Y_I   CHAN_13
+//#define ANALOG_Y_D   CHAN_14
+// The following define can always be left uncommented. It just gathers all analog aux PID settings together into one define.
+#if defined USE_ANALOG_AUX && (defined ANALOG_R_P || defined ANALOG_R_I || defined ANALOG_R_D || defined ANALOG_P_P || defined ANALOG_P_I || defined ANALOG_P_D || defined ANALOG_Y_P || defined ANALOG_Y_I || defined ANALOG_Y_D || defined ANALOG_RP_P || defined ANALOG_RP_I || defined ANALOG_RP_D || defined ANALOG_RP_PD)
+    #define ANALOG_AUX_PIDS
+#endif
+
 
 // battery saver
 // do not start software if battery is too low
@@ -90,14 +120,14 @@
 // CH_EMG , CH_TO - boldclash stock tx
 
 // DEVO channels (bayang protocol)
-// DEVO_CHAN_5 - DEVO_CHAN_10
+// DEVO_CHAN_5 - DEVO_CHAN_12
 
-// Multiprotocol can use MULTI_CHAN_5 - MULTI_CHAN_10  (bayang protocol)
+// Multiprotocol can use MULTI_CHAN_5 - MULTI_CHAN_13, but not MULTI_CHAN_11  (bayang protocol)
 
 // CH_ON - on always ( all protocols)
 // CH_OFF - off always ( all protocols)
 
-// CHAN_5 - CHAN_10 - auto based on tx selection
+// CHAN_5 - CHAN_12/13 - auto based on tx selection
 
 // rates / expert mode
 #define RATES CH_EXPERT
@@ -160,6 +190,11 @@
 // throttle angle compensation in level mode
 // comment out to disable
 //#define AUTO_THROTTLE
+
+
+// Betaflight like mix scaling
+//#define MIX_SCALING
+
 
 // enable auto lower throttle near max throttle to keep control
 // mix3 works better with brushless
