@@ -489,7 +489,7 @@ unsigned long lastrxtime;
 unsigned long failsafetime;
 unsigned long secondtimer;
 
-int failsafe = 0;
+int failsafe = 1;
 
 
 unsigned int skipchannel = 0;
